@@ -15,7 +15,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toast.makeText(this, "Come on", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Anke says you stink!", Toast.LENGTH_LONG).show();
     }
 
     @Override
