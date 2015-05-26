@@ -14,7 +14,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toast.makeText(this, "Testing branches!", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Testing branches again!", Toast.LENGTH_LONG).show();
     }
 
     @Override
