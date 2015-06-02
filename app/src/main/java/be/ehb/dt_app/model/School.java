@@ -6,11 +6,11 @@ import com.orm.dsl.Ignore;
 public class School extends SugarRecord<School> {
 	@Ignore
 	private long id;
-	
-	private String naam, gemeente;
+
+	private String name, gemeente;
 	private short postcode;
-	
-	public School(){
+
+	public School() {
 
 	}
 
@@ -23,12 +23,12 @@ public class School extends SugarRecord<School> {
 		this.id = id;
 	}
 
-	public String getNaam() {
-		return naam;
+	public String getNane() {
+		return name;
 	}
 
-	public void setNaam(String naam) {
-		this.naam = naam;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getGemeente() {
@@ -47,3 +47,4 @@ public class School extends SugarRecord<School> {
 		this.postcode = postcode;
 	}
 }
+
