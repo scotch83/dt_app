@@ -1,12 +1,10 @@
 package be.ehb.dt_app.model;
 
-import java.util.Date;
-import java.util.HashMap;
-
 import com.orm.SugarRecord;
 import com.orm.dsl.Ignore;
 
-import java.lang.String;
+import java.util.Date;
+import java.util.HashMap;
 
 public class Student extends SugarRecord<Student> {
 	
@@ -157,5 +155,14 @@ public class Student extends SugarRecord<Student> {
 
     public void setDocent(Teacher docent) {
         this.docent = docent;
+    }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                '}';
     }
 }

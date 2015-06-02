@@ -12,14 +12,14 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.web.client.RestTemplate;
 
 import be.ehb.dt_app.model.Event;
-import be.ehb.dt_app.model.EventList;
+import be.ehb.dt_app.model.Student;
 
 
 public class MainActivity extends Activity {
 
     private String username = "bert.developman@gmail.com";
     private String password = "mobapp1234ehb";
-    private String url = "http://vdabsidin.appspot.com/rest/events";
+    private String url = "http://vdabsidin.appspot.com/rest/subscription";
     private Event test_event;
 
     @Override
@@ -56,14 +56,16 @@ public class MainActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    private class HttpRequestTask extends AsyncTask<Void, Void, EventList> {
+    private class HttpRequestTask extends AsyncTask<Void, Void, String> {
         @Override
-        protected EventList doInBackground(Void... params) {
+        protected String doInBackground(Void... params) {
+            android.os.Debug.waitForDebugger();
             try {
 
                 RestTemplate restTemplate = new RestTemplate();
                 restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
-                EventList greetings = restTemplate.getForObject(url, EventList.class);
+                Student mattia = new Student("Mattia","Collalti","Ferdinand Kinnenstraat","66", (short) 1950,"Kraainem","collalti.mattia@gmail.com");
+                String greetings = restTemplate.postForObject(url, mattia, String.class);
                 return greetings;
             } catch (Exception e) {
                 Log.e("MainActivity", e.getMessage(), e);
@@ -73,9 +75,9 @@ public class MainActivity extends Activity {
         }
 
         @Override
-        protected void onPostExecute(EventList greetings) {
+        protected void onPostExecute(String greetings) {
             TextView test_txt = (TextView) findViewById(R.id.test_txt);
-            test_txt.setText(greetings.toString());
+            test_txt.setText(greetings);
 
 
         }
