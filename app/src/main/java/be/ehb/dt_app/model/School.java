@@ -27,8 +27,8 @@ public class School extends SugarRecord<School> {
 		return name;
 	}
 
-	public void setName(String namee) {
-		this.name = namee;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getGemeente() {
