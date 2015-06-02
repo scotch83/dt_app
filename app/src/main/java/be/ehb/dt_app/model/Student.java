@@ -22,6 +22,7 @@ public class Student extends SugarRecord<Student> {
     private Teacher docent;
     
     public Student(){
+        timestamp = new Date();
         interessesInstellen(false, false, false);
     }
 

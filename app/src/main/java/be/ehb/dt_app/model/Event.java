@@ -7,42 +7,43 @@ import java.lang.String;
 
 
 public class Event extends SugarRecord<Event> {
-	@Ignore
-    private long _id;
+    @Ignore
+    private long id;
 
-    private String naam;
-    private short academiejaar;
-    
-    public Event(){
-    	
+    private String name;
+    private short acadyear;
+
+    public Event() {
+
     }
 
     public Event(String naam, short academiejaar) {
-        this.naam = naam;
-        this.academiejaar = academiejaar;
+        this.name = naam;
+        this.acadyear = academiejaar;
     }
 
-    public short getAcademiejaar() {
-        return academiejaar;
+    @Override
+    public Long getId() {
+        return id;
     }
 
-    public void setAcademiejaar(short academiejaar) {
-        this.academiejaar = academiejaar;
+    public void setId(long id) {
+        this.id = id;
     }
 
-    public long get_id() {
-        return _id;
+    public String getName() {
+        return name;
     }
 
-    public void set_id(long _id) {
-        this._id = _id;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getNaam() {
-        return naam;
+    public short getAcadyear() {
+        return acadyear;
     }
 
-    public void setNaam(String naam) {
-        this.naam = naam;
+    public void setAcadyear(short acadyear) {
+        this.acadyear = acadyear;
     }
 }
