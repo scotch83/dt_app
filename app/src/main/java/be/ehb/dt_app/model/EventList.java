@@ -8,8 +8,7 @@ import java.util.List;
  * Created by Mattia on 01/06/15.
  */
 public class EventList extends SugarRecord<Event> {
-
-    List<Event> events;
+    private List<Event> events;
 
     public EventList() {
     }
@@ -28,4 +27,6 @@ public class EventList extends SugarRecord<Event> {
                 "events=" + events +
                 '}';
     }
+
+
 }
