@@ -4,50 +4,50 @@ import com.orm.SugarRecord;
 
 import java.util.Arrays;
 
-public class Image extends SugarRecord<Image>{
-	
-	//@JsonIgnore
-	private Long id;
-	
-	private short priority;
-	private byte [] image;
+public class Image extends SugarRecord<Image> {
 
-	public Image(){
+    //@JsonIgnore
+    private Long id;
 
-	}
+    private short priority;
+    private byte[] image;
+
+    public Image() {
+
+    }
 
 
-	@Override
-	public Long getId() {
-		return id;
-	}
+    @Override
+    public Long getId() {
+        return id;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public short getPriority() {
-		return priority;
-	}
+    public short getPriority() {
+        return priority;
+    }
 
-	public void setPriority(short priority) {
-		this.priority = priority;
-	}
+    public void setPriority(short priority) {
+        this.priority = priority;
+    }
 
-	public byte[] getImage() {
-		return image;
-	}
+    public byte[] getImage() {
+        return image;
+    }
 
-	public void setImage(byte[] image) {
-		this.image = image;
-	}
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
 
-	@Override
-	public String toString() {
-		return "Image{" +
-				"id=" + id +
-				", priority=" + priority +
-				", image=" + Arrays.toString(image) +
-				'}';
-	}
+    @Override
+    public String toString() {
+        return "Image{" +
+                "id=" + id +
+                ", priority=" + priority +
+                ", image=" + Arrays.toString(image) +
+                '}';
+    }
 }

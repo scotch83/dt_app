@@ -1,8 +1,6 @@
 package be.ehb.dt_app.model;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.util.Date;
 import java.util.HashMap;
 
@@ -10,7 +8,7 @@ public class Subscription {
 
 
 
-    @JsonIgnore
+    //@JsonIgnore
     private Long id;
     private String firstName;
     private String lastName;
