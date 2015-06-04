@@ -1,12 +1,13 @@
 package be.ehb.dt_app.model;
 
 import com.orm.SugarRecord;
-import com.orm.dsl.Ignore;
+
+import java.util.Arrays;
 
 public class Image extends SugarRecord<Image>{
 	
-	@Ignore
-	private long id;
+	//@JsonIgnore
+	private Long id;
 	
 	private short priority;
 	private byte [] image;
@@ -21,7 +22,7 @@ public class Image extends SugarRecord<Image>{
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -39,5 +40,14 @@ public class Image extends SugarRecord<Image>{
 
 	public void setImage(byte[] image) {
 		this.image = image;
+	}
+
+	@Override
+	public String toString() {
+		return "Image{" +
+				"id=" + id +
+				", priority=" + priority +
+				", image=" + Arrays.toString(image) +
+				'}';
 	}
 }

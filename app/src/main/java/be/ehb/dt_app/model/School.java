@@ -1,50 +1,68 @@
 package be.ehb.dt_app.model;
 
-import com.orm.SugarRecord;
-import com.orm.dsl.Ignore;
+public class School {
 
-public class School extends SugarRecord<School> {
-	@Ignore
-	private long id;
+    //@JsonIgnore
+    private Long id;
 
-	private String name, gemeente;
-	private short postcode;
+    private String name;
+    private String gemeente;
+    private short postcode;
 
-	public School() {
+    public School() {
 
-	}
+        this.name = "Unknown school";
+        this.gemeente = "Unknown";
+        this.postcode = 0;
 
-	@Override
-	public Long getId() {
-		return id;
-	}
+    }
 
-	public void setId(long id) {
-		this.id = id;
-	}
+    public School(String name, String gemeente, short postcode) {
+        this.name = name;
+        this.gemeente = gemeente;
+        this.postcode = postcode;
+    }
 
-	public String getNane() {
-		return name;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public String getGemeente() {
-		return gemeente;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setGemeente(String gemeente) {
-		this.gemeente = gemeente;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public short getPostcode() {
-		return postcode;
-	}
+    public String getGemeente() {
+        return gemeente;
+    }
 
-	public void setPostcode(short postcode) {
-		this.postcode = postcode;
-	}
+    public void setGemeente(String gemeente) {
+        this.gemeente = gemeente;
+    }
+
+    public short getPostcode() {
+        return postcode;
+    }
+
+    public void setPostcode(short postcode) {
+        this.postcode = postcode;
+    }
+
+    @Override
+    public String toString() {
+        return "School{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", gemeente='" + gemeente + '\'' +
+                ", postcode=" + postcode +
+                '}';
+    }
 }
 

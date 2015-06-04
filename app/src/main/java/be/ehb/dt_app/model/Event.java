@@ -1,24 +1,29 @@
 package be.ehb.dt_app.model;
 
-import com.orm.SugarRecord;
-import com.orm.dsl.Ignore;
+public class Event {
 
-
-
-public class Event extends SugarRecord<Event> {
-    @Ignore
-    private long _id;
-
+    //@JsonIgnore
+    private Long id;
     private String name;
     private short acadyear;
-    
-    public Event(){
-    	
+
+    public Event() {
+
+        name = "Unknown event";
+        acadyear = 0;
     }
 
     public Event(String name, short acadyear) {
         this.name = name;
         this.acadyear = acadyear;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public short getAcadyear() {
@@ -29,13 +34,6 @@ public class Event extends SugarRecord<Event> {
         this.acadyear = acadyear;
     }
 
-    public long get_id() {
-        return _id;
-    }
-
-    public void set_id(long _id) {
-        this._id = _id;
-    }
 
     public String getName() {
         return name;
@@ -48,7 +46,7 @@ public class Event extends SugarRecord<Event> {
     @Override
     public String toString() {
         return "Event{" +
-                "_id=" + _id +
+                "id=" + id +
                 ", name='" + name + '\'' +
                 ", acadyear=" + acadyear +
                 '}';
