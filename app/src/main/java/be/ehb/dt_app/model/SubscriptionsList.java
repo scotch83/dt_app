@@ -1,13 +1,12 @@
 package be.ehb.dt_app.model;
 
-import com.orm.SugarRecord;
 
 import java.util.List;
 
 /**
  * Created by Bart on 2/06/2015.
  */
-public class SubscriptionsList extends SugarRecord<Subscription> {
+public class SubscriptionsList  {
     private List<Subscription> subscriptions;
 
     public SubscriptionsList(){

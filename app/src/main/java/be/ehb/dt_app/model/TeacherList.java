@@ -1,13 +1,12 @@
 package be.ehb.dt_app.model;
 
-import com.orm.SugarRecord;
 
 import java.util.List;
 
 /**
  * Created by Bart on 2/06/2015.
  */
-public class TeacherList extends SugarRecord<Teacher> {
+public class TeacherList  {
     private List<Teacher> teachers;
 
 

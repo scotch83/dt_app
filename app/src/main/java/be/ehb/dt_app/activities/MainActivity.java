@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -13,6 +14,7 @@ import android.widget.Spinner;
 import org.springframework.web.client.RestTemplate;
 
 import be.ehb.dt_app.R;
+import be.ehb.dt_app.model.Event;
 import be.ehb.dt_app.model.EventList;
 import be.ehb.dt_app.model.SchoolList;
 import be.ehb.dt_app.model.TeacherList;
@@ -33,8 +35,10 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        new HttpRequestTask();
+
         setUpDesign();
+
+        new HttpRequestTask();
     }
 
 
@@ -85,6 +89,8 @@ public class MainActivity extends Activity {
         @Override
         protected Void doInBackground(Void... params) {
 
+            android.os.Debug.waitForDebugger();
+
             RestTemplate restTemplate = new RestTemplate();
 
             eventList = restTemplate.getForObject(server,EventList.class,"events");
@@ -92,7 +98,12 @@ public class MainActivity extends Activity {
             schoolList = restTemplate.getForObject(server,SchoolList.class,"schools");
 
 
+            ArrayAdapter<Event> eventAdapter = new ArrayAdapter<Event>(
+                    getApplicationContext(),
+                    android.R.layout.simple_spinner_item,
+                    eventList.getEvents());
 
+            eventSP.setAdapter(eventAdapter);
 
 
             return null;

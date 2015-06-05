@@ -1,13 +1,12 @@
 package be.ehb.dt_app.model;
 
-import com.orm.SugarRecord;
 
 import java.util.List;
 
 /**
  * Created by Bart on 2/06/2015.
  */
-public class ImageList extends SugarRecord<Image> {
+public class ImageList  {
     private List<Image> images;
 
     public ImageList(){
