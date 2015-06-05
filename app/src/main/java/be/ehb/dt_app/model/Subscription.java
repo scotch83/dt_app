@@ -39,13 +39,12 @@ public class Subscription {
         this.event = event;
         this.isNew = isNew;
         this.school = school;
-        this.interests = new HashMap<String, String>();
-        this.interests.put("Dig-X", "true");
+        this.interests = interests;
         this.timestamp = new Date();
-        this.teacher = new Teacher();
-        this.event = new Event();
+        this.teacher = teacher;
+        this.event = event;
         this.isNew = false;
-        this.school = new School();
+        this.school = school;
     }
 
     public Subscription(String firstName, String lastName, String email, String street, String streetNumber, String zip, String city) {

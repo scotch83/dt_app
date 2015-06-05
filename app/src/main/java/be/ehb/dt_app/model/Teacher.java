@@ -9,8 +9,7 @@ public class Teacher {
     private short acadyear;
 
     public Teacher() {
-        this.name = "Unknown teacher";
-        this.acadyear = 0;
+
     }
 
     public Teacher(String name, short acadyear) {

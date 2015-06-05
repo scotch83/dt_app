@@ -9,8 +9,6 @@ public class Event {
 
     public Event() {
 
-        name = "Unknown event";
-        acadyear = 0;
     }
 
     public Event(String name, short acadyear) {

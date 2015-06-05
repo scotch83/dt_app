@@ -21,7 +21,7 @@ import java.util.HashMap;
 
 import be.ehb.dt_app.model.Event;
 import be.ehb.dt_app.model.EventList;
-import be.ehb.dt_app.model.School;
+import be.ehb.dt_app.model.SchoolList;
 import be.ehb.dt_app.model.Subscription;
 import be.ehb.dt_app.model.TeacherList;
 
@@ -114,10 +114,17 @@ public class MainActivity extends Activity {
                         EventList.class,
                         "events"
                 );
-                Log.d("TEACHERS", teacherList.toString());
-                Log.d("EVENTS", eventList.toString());
+                SchoolList schoolList = restTemplate.getForObject(
+                        url,
+                        SchoolList.class,
+                        "schools"
+                );
+//                Log.d("TEACHERS", teacherList.toString());
+//                Log.d("EVENTS", eventList.toString());
                 HashMap<String, String> interests = new HashMap<>();
-                interests.put("Dig-X", "true");
+                interests.put("digx", "true");
+                interests.put("multec", "true");
+                interests.put("werkstudent", "true");
 //                public Subscription(
 // String firstName,
 // String lastName,
@@ -146,17 +153,16 @@ public class MainActivity extends Activity {
                         teacherList.getTeachers().get(0),
                         eventList.getEvents().get(0),
                         true,
-                        new School(
-                                "Sint-Jan Berchmanscollege",
-
-                                "Brussel-Stad", (short) 1000)
-
+                        schoolList.getSchools().get(0)
                 );
 
 
                 HttpHeaders requestHeaders = new HttpHeaders();
                 requestHeaders.setContentType(new MediaType("application", "json"));
                 HttpEntity<Subscription> requestEntity = new HttpEntity<Subscription>(message, requestHeaders);
+                Log.d("XXXX", message.toString());
+                Log.d("XXXX", teacherList.getTeachers().get(0).toString());
+                Log.d("XXXX", eventList.getEvents().get(0).toString());
 
 //// Make the HTTP POST request, marshaling the request to JSON, and the response to a StringHash
                 HashMap<String, String> vars = new HashMap<>();
@@ -167,9 +173,6 @@ public class MainActivity extends Activity {
                     event = responseEntity.getBody();
                 else if (responseEntity.getStatusCode() == HttpStatus.OK)
                     event = "Upload succesful";
-//                Log.d("XXXX",message.toString());
-//                Log.d("XXXX",teacherList.getTeachers().get(0).toString());
-//                Log.d("XXXX", eventList.getEvents().get(0).toString());
                 return event;
             } catch (Exception e) {
                 Log.e("MainActivity", e.getMessage(), e);

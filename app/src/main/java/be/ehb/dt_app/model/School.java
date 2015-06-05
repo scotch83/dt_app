@@ -11,9 +11,6 @@ public class School {
 
     public School() {
 
-        this.name = "Unknown school";
-        this.gemeente = "Unknown";
-        this.postcode = 0;
 
     }
 
