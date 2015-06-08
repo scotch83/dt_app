@@ -1,6 +1,8 @@
 package be.ehb.dt_app.model;
 
-public class Teacher {
+import com.orm.SugarRecord;
+
+public class Teacher extends SugarRecord<Teacher> {
 
     //@JsonIgnore
     private Long id;

@@ -20,10 +20,13 @@ import java.util.HashMap;
 import java.util.List;
 
 import be.ehb.dt_app.R;
-import be.ehb.dt_app.Utils;
+import be.ehb.dt_app.controller.Utils;
 import be.ehb.dt_app.model.Event;
 import be.ehb.dt_app.model.EventList;
+import be.ehb.dt_app.model.Image;
+import be.ehb.dt_app.model.School;
 import be.ehb.dt_app.model.SchoolList;
+import be.ehb.dt_app.model.Subscription;
 import be.ehb.dt_app.model.Teacher;
 import be.ehb.dt_app.model.TeacherList;
 
@@ -36,6 +39,8 @@ public class MainActivity extends Activity {
     private static final String TEACHERS_LIST_URL = "teachers";
     private static final String SCHOOLS_LIST_URL = "schools";
     private static final String SUBSCRIPTIONS_LIST_URL = "subscriptions";
+    //GLOBAL VARIABLES FOR PRACTICAL USE
+    protected boolean just_started = true;
     //GRAPHICAL ELEMENTS AND DATA LISTS FOR ADAPTERS DECLARATION
     LinearLayout lgnCenterLayout;
     View lay,progressOverlay;
@@ -44,9 +49,10 @@ public class MainActivity extends Activity {
     TeacherList teacherList;
     SchoolList schoolList;
     ArrayAdapter<Event> eventAdapter;
+    private ArrayAdapter<Teacher> teacherAdapter;
+    private ArrayAdapter<School> schoolAdapter;
     //DEBUG APPLICATION
     private boolean debugging = Debug.isDebuggerConnected();
-    private ArrayAdapter<Teacher> teacherAdapter;
 
 
 
@@ -56,11 +62,14 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
 
+
         setUpDesign();
         List<Event> events = new ArrayList<>();
         eventList = new EventList();
         eventList.setEvents(events);
-        new HttpRequestEventsTask().execute();
+
+        if (Utils.isNetworkAvailable(this))
+            new HttpRequestEventsTask().execute("teachers", "events");
 
 
         //eventSP.setAdapter(eventAdapter);
@@ -113,36 +122,81 @@ public class MainActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    private class HttpRequestEventsTask extends AsyncTask<Void, Void, HashMap<String, ArrayAdapter>> {
+    private class HttpRequestEventsTask extends AsyncTask<String, Void, HashMap<String, ArrayAdapter>> {
+
+
 
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            Utils.animateView(progressOverlay, View.VISIBLE, 0.4f, 200);
-            Toast.makeText(getApplicationContext(), "Please wait while loading data", Toast.LENGTH_LONG);
-            docentSP.setEnabled(false);
-            eventSP.setEnabled(false);
+            if (just_started) {
+                Utils.animateView(progressOverlay, View.VISIBLE, 0.4f, 200);
+                Toast.makeText(getApplicationContext(), "Please wait while loading data", Toast.LENGTH_LONG);
+                docentSP.setEnabled(false);
+                eventSP.setEnabled(false);
+            }
         }
 
         @Override
-        protected HashMap<String, ArrayAdapter> doInBackground(Void... params) {
+        protected HashMap<String, ArrayAdapter> doInBackground(String... params) {
             if (debugging)
                 android.os.Debug.waitForDebugger();
 
-            ArrayList<ArrayAdapter> result = new ArrayList<>();
+
             HashMap<String,ArrayAdapter> adaptersList = new HashMap<>();
+            Class convertClass;
+            ArrayAdapter dataAdapter = null;
             RestTemplate restTemplate = new RestTemplate();
 
-            EventList data = restTemplate.getForObject(SERVER, EventList.class, EVENTS_LIST_URL);
-            TeacherList teachers = restTemplate.getForObject(SERVER, TeacherList.class, TEACHERS_LIST_URL);
+            for (String requestedData : params) {
+
+                switch (requestedData) {
+                    case "events":
+                        EventList eventList;
+                        eventList = restTemplate.getForObject(SERVER, EventList.class, requestedData);
+                        eventAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, eventList.getEvents());
+                        adaptersList.put(requestedData, eventAdapter);
+                        for (Event item : eventList.getEvents()) {
+                            item.save();
+                        }
+                        break;
+                    case "teachers":
+                        TeacherList teacherList;
+                        teacherList = restTemplate.getForObject(SERVER, TeacherList.class, requestedData);
+                        teacherAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, teacherList.getTeachers());
+                        adaptersList.put(requestedData, teacherAdapter);
+                        for (Teacher item : teacherList.getTeachers()) {
+                            item.save();
+                        }
+                        break;
+                    case "schools":
+                        SchoolList schoolList;
+                        schoolList = restTemplate.getForObject(SERVER, SchoolList.class, requestedData);
+                        schoolAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, schoolList.getSchools());
+                        adaptersList.put(requestedData, teacherAdapter);
+                        for (School item : schoolList.getSchools()) {
+                            item.save();
+                        }
+                        break;
+                    case "subscriptions":
+                        convertClass = Subscription.class;
+                        break;
+                    case "images":
+                        convertClass = Image.class;
+                        break;
+                    default:
+                        convertClass = null;
+                        dataAdapter = null;
+                        break;
+                }
+
+            }
 
 
-            eventAdapter = new ArrayAdapter<Event>(getApplicationContext(), R.layout.support_simple_spinner_dropdown_item, data.getEvents());
-            teacherAdapter = new ArrayAdapter<Teacher>(getApplicationContext(), R.layout.support_simple_spinner_dropdown_item, teachers.getTeachers());
-            result.add(eventAdapter);
             adaptersList.put("events", eventAdapter);
             adaptersList.put("teachers", teacherAdapter);
+
             return adaptersList;
         }
 
@@ -167,8 +221,11 @@ public class MainActivity extends Activity {
 
 
             Toast.makeText(getApplicationContext(), toastMessage, Toast.LENGTH_LONG);
-
+            just_started = false;
         }
+
+
     }
+
 
 }

@@ -1,9 +1,11 @@
 package be.ehb.dt_app.model;
 
 
+import com.orm.SugarRecord;
+
 import java.util.Arrays;
 
-public class Image{
+public class Image extends SugarRecord<Image> {
 
     //@JsonIgnore
     private Long id;

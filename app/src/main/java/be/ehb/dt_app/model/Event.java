@@ -1,6 +1,8 @@
 package be.ehb.dt_app.model;
 
-public class Event {
+import com.orm.SugarRecord;
+
+public class Event extends SugarRecord<Event> {
 
     //@JsonIgnore
     private Long id;
