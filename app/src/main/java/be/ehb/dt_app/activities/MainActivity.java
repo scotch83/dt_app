@@ -3,7 +3,6 @@ package be.ehb.dt_app.activities;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Debug;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +16,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import be.ehb.dt_app.R;
 import be.ehb.dt_app.Utils;
@@ -29,14 +29,16 @@ import be.ehb.dt_app.model.TeacherList;
 
 public class MainActivity extends Activity {
 
+    //DEBUG APPLICATION
+    private static final boolean DEBUG = true;
     //DATA SOURCES URL CONFIGURATION
     private static final String SERVER = "http://vdabsidin.appspot.com/rest/{required_dataset}";
     private static final String EVENTS_LIST_URL = "events";
     private static final String TEACHERS_LIST_URL = "teachers";
     private static final String SCHOOLS_LIST_URL = "schools";
     private static final String SUBSCRIPTIONS_LIST_URL = "subscriptions";
-    //DEBUG APPLICATION
-    protected boolean debugging = false;
+
+
     //GRAPHICAL ELEMENTS AND DATA LISTS FOR ADAPTERS DECLARATION
     LinearLayout lgnCenterLayout;
     View lay,progressOverlay;
@@ -55,15 +57,18 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        debugging = Debug.isDebuggerConnected();
-        Toast.makeText(getApplicationContext(), "Debug is " + debugging, Toast.LENGTH_LONG).show();
 
         setUpDesign();
+        List<Event> events = new ArrayList<>();
+        eventList = new EventList();
+        eventList.setEvents(events);
+        new HttpRequestEventsTask().execute();
 
 
-        HttpRequestEventsTask dataTask = new HttpRequestEventsTask();
+        //eventSP.setAdapter(eventAdapter);
 
-        dataTask.execute();
+
+
 
     }
 
@@ -76,6 +81,7 @@ public class MainActivity extends Activity {
         //assign spinners for latter assignment of teachers and events lists
         docentSP = (Spinner) findViewById(R.id.sp_docent);
         eventSP = (Spinner) findViewById(R.id.sp_event);
+
 
         //set ehb picture as background in de main layout element
         lay = findViewById(R.id.lgn_main_layout);
@@ -109,44 +115,43 @@ public class MainActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    private class HttpRequestEventsTask extends AsyncTask<Void, Integer, HashMap<String, ArrayAdapter>> {
+    private class HttpRequestEventsTask extends AsyncTask<Void, Void, HashMap<String, ArrayAdapter>> {
+
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             Utils.animateView(progressOverlay, View.VISIBLE, 0.4f, 200);
-            Toast.makeText(getApplicationContext(), "Please wait while loading data", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Please wait while loading data", Toast.LENGTH_LONG);
             docentSP.setEnabled(false);
             eventSP.setEnabled(false);
         }
 
         @Override
         protected HashMap<String, ArrayAdapter> doInBackground(Void... params) {
-            if (debugging) {
+            if (DEBUG)
                 android.os.Debug.waitForDebugger();
-            }
 
             ArrayList<ArrayAdapter> result = new ArrayList<>();
             HashMap<String,ArrayAdapter> adaptersList = new HashMap<>();
             RestTemplate restTemplate = new RestTemplate();
-            try {
-                eventList = restTemplate.getForObject(SERVER, EventList.class, EVENTS_LIST_URL);
-                teacherList = restTemplate.getForObject(SERVER, TeacherList.class, TEACHERS_LIST_URL);
-                eventAdapter = new ArrayAdapter<>(getApplicationContext(), R.layout.support_simple_spinner_dropdown_item, eventList.getEvents());
-                teacherAdapter = new ArrayAdapter<>(getApplicationContext(), R.layout.support_simple_spinner_dropdown_item, teacherList.getTeachers());
-                result.add(eventAdapter);
-                adaptersList.put("events", eventAdapter);
-                adaptersList.put("teachers", teacherAdapter);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+
+            EventList data = restTemplate.getForObject(SERVER, EventList.class, EVENTS_LIST_URL);
+            TeacherList teachers = restTemplate.getForObject(SERVER, TeacherList.class, TEACHERS_LIST_URL);
+
+
+            eventAdapter = new ArrayAdapter<Event>(getApplicationContext(), R.layout.support_simple_spinner_dropdown_item, data.getEvents());
+            teacherAdapter = new ArrayAdapter<Teacher>(getApplicationContext(), R.layout.support_simple_spinner_dropdown_item, teachers.getTeachers());
+            result.add(eventAdapter);
+            adaptersList.put("events", eventAdapter);
+            adaptersList.put("teachers", teacherAdapter);
             return adaptersList;
         }
 
         @Override
         protected void onPostExecute(HashMap<String, ArrayAdapter> arrayAdapters) {
             super.onPostExecute(arrayAdapters);
-            String toastMessage;
+            String toastMessage = "";
             if(!(arrayAdapters.containsKey("events")|| arrayAdapters.containsKey("teachers"))) {
                 toastMessage = "There has been a problem downloading data. Please check your internet connection";
             }
@@ -157,13 +162,13 @@ public class MainActivity extends Activity {
 
                 docentSP.setAdapter(arrayAdapters.get("teachers"));
                 docentSP.setEnabled(true);
-                toastMessage = "Select teacher and event to proceed";
+                toastMessage = "Please select a teacher and event to proceed";
             }
 
             Utils.animateView(progressOverlay, View.GONE, 0.4f, 200);
 
 
-            Toast.makeText(getApplicationContext(), toastMessage, Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), toastMessage, Toast.LENGTH_LONG);
 
         }
     }
