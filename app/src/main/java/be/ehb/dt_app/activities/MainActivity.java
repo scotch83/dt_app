@@ -3,6 +3,7 @@ package be.ehb.dt_app.activities;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Debug;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,16 +30,12 @@ import be.ehb.dt_app.model.TeacherList;
 
 public class MainActivity extends Activity {
 
-    //DEBUG APPLICATION
-    private static final boolean DEBUG = true;
     //DATA SOURCES URL CONFIGURATION
     private static final String SERVER = "http://vdabsidin.appspot.com/rest/{required_dataset}";
     private static final String EVENTS_LIST_URL = "events";
     private static final String TEACHERS_LIST_URL = "teachers";
     private static final String SCHOOLS_LIST_URL = "schools";
     private static final String SUBSCRIPTIONS_LIST_URL = "subscriptions";
-
-
     //GRAPHICAL ELEMENTS AND DATA LISTS FOR ADAPTERS DECLARATION
     LinearLayout lgnCenterLayout;
     View lay,progressOverlay;
@@ -46,8 +43,9 @@ public class MainActivity extends Activity {
     EventList eventList;
     TeacherList teacherList;
     SchoolList schoolList;
-
     ArrayAdapter<Event> eventAdapter;
+    //DEBUG APPLICATION
+    private boolean debugging = Debug.isDebuggerConnected();
     private ArrayAdapter<Teacher> teacherAdapter;
 
 
@@ -129,7 +127,7 @@ public class MainActivity extends Activity {
 
         @Override
         protected HashMap<String, ArrayAdapter> doInBackground(Void... params) {
-            if (DEBUG)
+            if (debugging)
                 android.os.Debug.waitForDebugger();
 
             ArrayList<ArrayAdapter> result = new ArrayList<>();
