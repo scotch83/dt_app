@@ -1,24 +1,27 @@
 package be.ehb.dt_app.model;
 
-import com.orm.SugarRecord;
-import com.orm.dsl.Ignore;
+public class Teacher {
 
-import java.lang.String;
-
-
-public class Teacher extends SugarRecord<Teacher> {
-    @Ignore
-    private long id;
+    //@JsonIgnore
+    private Long id;
 
     private String name;
     private short acadyear;
 
-    @Override
+    public Teacher() {
+
+    }
+
+    public Teacher(String name, short acadyear) {
+        this.name = name;
+        this.acadyear = acadyear;
+    }
+
     public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -36,5 +39,10 @@ public class Teacher extends SugarRecord<Teacher> {
 
     public void setAcadyear(short acadyear) {
         this.acadyear = acadyear;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

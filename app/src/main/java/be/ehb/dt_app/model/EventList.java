@@ -1,13 +1,13 @@
 package be.ehb.dt_app.model;
 
-import com.orm.SugarRecord;
+
 
 import java.util.List;
 
 /**
  * Created by Mattia on 01/06/15.
  */
-public class EventList extends SugarRecord<Event> {
+public class EventList  {
     private List<Event> events;
 
     public EventList() {

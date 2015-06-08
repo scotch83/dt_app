@@ -1,0 +1,75 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="be.ehb.dt_app.activities.HomeScreenActivity"
+    android:id="@+id/rl_homescreen">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="250dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:background="@color/color_ehb_zwart"
+        android:id="@+id/linearLayout"
+        android:paddingTop="50dp"
+        android:paddingBottom="50dp"
+        android:paddingLeft="100dp">
+
+        <ImageButton
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:id="@+id/ib_student_formulier"
+            android:src="@drawable/iconstudenten"
+            android:background="@android:color/transparent"
+            android:scaleType="fitCenter"
+            android:layout_marginRight="130dp"
+            android:layout_marginLeft="30dp" />
+
+        <ImageButton
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:id="@+id/ib_pdf_presentatie"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/iconpdf"
+            android:background="@android:color/transparent"
+            android:scaleType="fitCenter"
+            android:layout_marginRight="130dp" />
+
+        <ImageButton
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:id="@+id/ib_beheer"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/iconbeheer"
+            android:background="@android:color/transparent"
+            android:scaleType="fitCenter"
+            android:layout_marginRight="130dp" />
+
+        <ImageButton
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:id="@+id/ib_todaylijst"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/icontodaylijst"
+            android:background="@android:color/transparent"
+            android:scaleType="fitCenter"
+            android:layout_marginRight="130dp" />
+
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/linearLayout"
+        android:weightSum="1">
+
+
+    </LinearLayout>
+</RelativeLayout>

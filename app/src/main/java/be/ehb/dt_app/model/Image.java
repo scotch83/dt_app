@@ -1,43 +1,50 @@
 package be.ehb.dt_app.model;
 
-import com.orm.SugarRecord;
-import com.orm.dsl.Ignore;
 
-public class Image extends SugarRecord<Image>{
-	
-	@Ignore
-	private long id;
-	
-	private short priority;
-	private byte [] image;
+import java.util.Arrays;
 
-	public Image(){
+public class Image{
 
-	}
+    //@JsonIgnore
+    private Long id;
 
+    private short priority;
+    private byte[] image;
 
-	@Override
-	public Long getId() {
-		return id;
-	}
+    public Image() {
 
-	public void setId(long id) {
-		this.id = id;
-	}
+    }
 
-	public short getPriority() {
-		return priority;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setPriority(short priority) {
-		this.priority = priority;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public byte[] getImage() {
-		return image;
-	}
+    public short getPriority() {
+        return priority;
+    }
 
-	public void setImage(byte[] image) {
-		this.image = image;
-	}
+    public void setPriority(short priority) {
+        this.priority = priority;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
+
+    @Override
+    public String toString() {
+        return "Image{" +
+                "id=" + id +
+                ", priority=" + priority +
+                ", image=" + Arrays.toString(image) +
+                '}';
+    }
 }
