@@ -1,11 +1,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
 
-    android:id="@+id/RelativeLayout">
+    android:id="@+id/lgn_main_layout">
+    <include layout="@layout/overlay_loading_data"/>
 
     <LinearLayout
         android:orientation="horizontal"
@@ -15,7 +14,7 @@
         android:layout_alignParentTop="false"
         android:weightSum="1"
         android:alpha="0.5"
-        android:id="@+id/LinearLayout_loginscreen"
+        android:id="@+id/lgn_screen_layout"
 
         android:layout_marginTop="270dp"
 
@@ -27,10 +26,12 @@
             android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/LinearLayout_logo"
+            android:id="@+id/lgn_logo_layout"
             android:layout_marginRight="50dp"
-            android:paddingTop="20dp"
-            android:paddingLeft="40dp">
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin"
+            android:paddingBottom="@dimen/activity_vertical_margin">
 
             <ImageView
                 android:layout_width="match_parent"
@@ -46,7 +47,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:id="@+id/LinearLayout_login"
+            android:id="@+id/lgn_fields_layout"
             android:paddingLeft="50dp"
             android:paddingTop="55dp">
 
@@ -55,16 +56,19 @@
                 android:layout_width="250dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/sp_docent"
-                android:spinnerMode="dropdown"
+                android:spinnerMode="dialog"
+                android:textColor = "#000"
                 />
 
             <Spinner
                 style="@style/SpinnerCustomHolo"
                 android:layout_width="250dp"
                 android:layout_height="wrap_content"
-                android:spinnerMode="dropdown"
+                android:spinnerMode="dialog"
                 android:id="@+id/sp_event"
-                android:layout_marginTop="50dp" />
+                android:layout_marginTop="50dp"
+                android:textColor = "#000"
+                />
 
         </LinearLayout>
 

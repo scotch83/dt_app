@@ -12,7 +12,7 @@
         <item name="android:dividerHeight">0dp</item>
         <item name="android:dropDownHeight">70dp</item>
         <item name="android:scrollbarAlwaysDrawVerticalTrack">true</item>
-        <item name="android:dropDownSelector">@android:color/white</item>
+        <item name="android:dropDownSelector">@android:color/black</item>
     </style>
 
     <style name="App_EditTextStyle">
@@ -25,7 +25,7 @@
 
     <style name="SpinnerCustomHolo" parent="android:Widget.Spinner">
         <item name="android:background">@drawable/sidintheme_spinner_background_holo_light</item>
-        <item name="android:textColor">#000000</item>
+        <item name="android:textColor">#FF471413</item>
 
     </style>
 
