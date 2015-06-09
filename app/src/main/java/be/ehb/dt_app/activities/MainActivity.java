@@ -48,6 +48,8 @@ public class MainActivity extends Activity {
     EventList eventList;
     TeacherList teacherList;
     SchoolList schoolList;
+
+
     ArrayAdapter<Event> eventAdapter;
     private ArrayAdapter<Teacher> teacherAdapter;
     private ArrayAdapter<School> schoolAdapter;
@@ -60,7 +62,6 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
 
         setUpDesign();
@@ -155,7 +156,8 @@ public class MainActivity extends Activity {
                     case "events":
                         EventList eventList;
                         eventList = restTemplate.getForObject(SERVER, EventList.class, requestedData);
-                        eventAdapter = new ArrayAdapter<>(getApplicationContext(), R.layout.ehb_spinner_list_item, R.id.tv_spinneritem, eventList.getEvents());
+                        eventAdapter = new ArrayAdapter<>(getApplicationContext(), R.layout.ehb_spinner_list_item, eventList.getEvents());
+
                         adaptersList.put(requestedData, eventAdapter);
                         for (Event item : eventList.getEvents()) {
                             item.save();
@@ -164,7 +166,7 @@ public class MainActivity extends Activity {
                     case "teachers":
                         TeacherList teacherList;
                         teacherList = restTemplate.getForObject(SERVER, TeacherList.class, requestedData);
-                        teacherAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, teacherList.getTeachers());
+                        teacherAdapter = new ArrayAdapter<>(getApplicationContext(), R.layout.ehb_spinner_list_item, teacherList.getTeachers());
                         adaptersList.put(requestedData, teacherAdapter);
                         for (Teacher item : teacherList.getTeachers()) {
                             item.save();
