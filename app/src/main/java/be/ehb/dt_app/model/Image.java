@@ -8,7 +8,7 @@ import java.util.Arrays;
 public class Image extends SugarRecord<Image> {
 
     //@JsonIgnore
-    private Long id;
+    private Long _id;
 
     private short priority;
     private byte[] image;

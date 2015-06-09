@@ -5,7 +5,7 @@ import com.orm.SugarRecord;
 public class School extends SugarRecord<School> {
 
     //@JsonIgnore
-    private Long id;
+    private Long _id;
 
     private String name;
     private String gemeente;

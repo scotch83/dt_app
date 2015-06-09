@@ -17,9 +17,7 @@
         android:layout_alignParentTop="false"
         android:layout_marginTop="270dp"
 
-        android:alpha="0.5"
-
-        android:background="@color/color_wit"
+        android:background="@color/login_white_bar_alpha"
         android:orientation="horizontal"
         android:weightSum="1">
 

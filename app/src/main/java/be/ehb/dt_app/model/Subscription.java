@@ -1,15 +1,17 @@
 package be.ehb.dt_app.model;
 
 
+import com.orm.SugarRecord;
+
 import java.util.Date;
 import java.util.HashMap;
 
-public class Subscription {
+public class Subscription extends SugarRecord<Subscription> {
 
 
 
     //@JsonIgnore
-    private Long id;
+    private Long _id;
     private String firstName;
     private String lastName;
     private String email;

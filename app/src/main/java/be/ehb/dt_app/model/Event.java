@@ -4,8 +4,8 @@ import com.orm.SugarRecord;
 
 public class Event extends SugarRecord<Event> {
 
-    //@JsonIgnore
-    private Long id;
+
+    private Long _id;
     private String name;
     private short acadyear;
 
@@ -46,5 +46,14 @@ public class Event extends SugarRecord<Event> {
     @Override
     public String toString() {
         return name;
+    }
+
+
+    public String strinRap() {
+        return "Event{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", acadyear=" + acadyear +
+                '}';
     }
 }

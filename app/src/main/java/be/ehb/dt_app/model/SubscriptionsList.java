@@ -13,8 +13,16 @@ public class SubscriptionsList  {
 
     }
 
+    public SubscriptionsList(List<Subscription> subscriptions) {
+        this.subscriptions = subscriptions;
+    }
+
     public List<Subscription> getSubscriptions() {
         return subscriptions;
+    }
+
+    public void setSubscriptions(List<Subscription> subscriptions) {
+        this.subscriptions = subscriptions;
     }
 
     @Override
@@ -23,4 +31,5 @@ public class SubscriptionsList  {
                 "subscriptions=" + subscriptions +
                 '}';
     }
+
 }
