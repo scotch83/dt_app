@@ -155,7 +155,7 @@ public class MainActivity extends Activity {
                     case "events":
                         EventList eventList;
                         eventList = restTemplate.getForObject(SERVER, EventList.class, requestedData);
-                        eventAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, eventList.getEvents());
+                        eventAdapter = new ArrayAdapter<>(getApplicationContext(), R.layout.ehb_spinner_list_item, R.id.tv_spinneritem, eventList.getEvents());
                         adaptersList.put(requestedData, eventAdapter);
                         for (Event item : eventList.getEvents()) {
                             item.save();

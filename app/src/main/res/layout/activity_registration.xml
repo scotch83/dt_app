@@ -1,340 +1,42 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rl_registratie"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="be.ehb.dt_app.activities.RegistrationActivity"
-    android:id="@+id/rl_registratie">
+    tools:context="be.ehb.dt_app.activities.RegistrationActivity">
 
-    <ViewSwitcher
+    <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/pager_registratie"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/viewswitcher_registratie">
+        android:layout_alignParentBottom="true" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal"
+        android:padding="20dp">
 
+        <ImageView
+            android:id="@+id/iv_page1"
+            android:layout_width="15dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/dotsselected" />
 
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="125dp"
-                android:background="@color/color_ehb_zwart"
-                android:alpha="0.7">
-
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.5"
-                    android:paddingLeft="200dp"
-                    android:paddingTop="65dp"
-                    android:paddingRight="50dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="emailadres"
-                        android:id="@+id/tv_email"
-                        android:textColor="#e6ffffff"
-                        android:textStyle="italic" />
-
-                    <EditText
-                        style="@style/EditTextCustomHolo"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ems="10"
-                        android:id="@+id/et_email"
-                        android:ellipsize="end"
-                        android:singleLine="true"
-                        android:layout_marginBottom="40dp"
-                        android:typeface="normal"
-                        />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="voornaam"
-                        android:id="@+id/tv_voornaam"
-                        android:textColor="#e6ffffff"
-                        android:textStyle="italic" />
-
-                    <EditText
-                        style="@style/EditTextCustomHolo"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/et_voornaam"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginBottom="40dp"
-                        />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="achternaam"
-                        android:id="@+id/tv_achternaam"
-                        android:textColor="#e6ffffff"
-                        android:textStyle="italic" />
-
-                    <EditText
-                        style="@style/EditTextCustomHolo"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textPersonName"
-                        android:id="@+id/et_achternaam" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:paddingRight="200dp"
-                    android:paddingLeft="50dp"
-                    android:paddingTop="65dp"
-                    android:layout_weight="0.5">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="straat en nummer"
-                        android:id="@+id/textView4"
-                        android:textColor="#e6ffffff"
-                        android:textStyle="italic" />
-
-                    <EditText
-                        style="@style/EditTextCustomHolo"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textPersonName"
-                        android:id="@+id/et_straat"
-                        android:layout_marginBottom="40dp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="postcode"
-                        android:id="@+id/textView5"
-                        android:textColor="#e6ffffff"
-                        android:textStyle="italic" />
-
-                    <EditText
-                        style="@style/EditTextCustomHolo"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="number"
-                        android:id="@+id/et_postcode"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginBottom="40dp"
-                        />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="stad"
-                        android:id="@+id/textView6"
-                        android:textColor="#e6ffffff"
-                        android:textStyle="italic" />
-
-                    <EditText
-                        style="@style/EditTextCustomHolo"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textPersonName"
-                        android:id="@+id/et_stad" />
-
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Volgende pagina"
-                        android:id="@+id/btn_nextpage"
-                        android:layout_gravity="center_horizontal" />
-
-                </LinearLayout>
-            </LinearLayout>
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="fill_parent"
-                android:layout_height="125dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:id="@+id/iv_ehbletter"
-                    android:src="@drawable/ehbletter"
-                    android:layout_marginLeft="130dp"
-                    android:layout_marginTop="20dp"
-                    android:scaleType="fitCenter" />
-            </LinearLayout>
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="125dp"
-                android:background="@color/color_ehb_zwart"
-                android:alpha="0.7">
-
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.5"
-                    android:paddingLeft="200dp"
-                    android:paddingTop="65dp"
-                    android:paddingRight="50dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="Huidige school"
-                        android:id="@+id/tv_huidige_school"
-                        android:textColor="#e6ffffff"
-                        android:textStyle="italic" />
-
-                    <EditText
-                        style="@style/EditTextCustomHolo"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ems="10"
-                        android:id="@+id/et_huidigeschool"
-                        android:ellipsize="end"
-                        android:singleLine="true"
-                        android:layout_marginBottom="40dp"
-                        android:typeface="normal"
-                        />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="In welke opleiding bent u geïnteresseerd?"
-                        android:id="@+id/tv_interesse_opleiding"
-                        android:textColor="#e6ffffff"
-                        android:textStyle="bold"
-                        android:layout_marginBottom="20dp" />
-
-
-                    <CheckBox
-                        style="@style/CheckBoxCustomHolo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Multec"
-                        android:id="@+id/cb_multex"
-                        android:textSize="20sp" />
-
-                    <CheckBox
-                        style="@style/CheckBoxCustomHolo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Dig-X"
-                        android:id="@+id/cb_digx"
-                        android:textSize="20sp"
-                        android:layout_marginTop="15dp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="Werkstudent?"
-                        android:id="@+id/tv_werkstudent"
-                        android:textColor="#e6ffffff"
-                        android:textStyle="bold"
-                        android:layout_marginTop="30dp"
-                        android:layout_marginBottom="30dp" />
-
-                    <RadioGroup
-                        android:layout_width="fill_parent"
-                        android:layout_height="fill_parent">
-
-                        <RadioButton
-                            style="@style/RadioButtonCustumHolo"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Ja"
-                            android:id="@+id/rb_ja"
-                            android:checked="false"
-                            android:layout_marginBottom="15dp"
-                            android:textSize="20sp" />
-
-                        <RadioButton
-                            style="@style/RadioButtonCustumHolo"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Nee"
-                            android:id="@+id/rb_nee"
-                            android:checked="false"
-                            android:textSize="20sp" />
-                    </RadioGroup>
-
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:paddingRight="200dp"
-                    android:paddingLeft="50dp"
-                    android:paddingTop="65dp"
-                    android:layout_weight="0.5">
-
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Vorige pagina"
-                        android:id="@+id/btn_previouspage"
-                        android:layout_gravity="center_horizontal" />
-
-
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="fill_parent"
-                android:layout_height="125dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:id="@+id/iv_ehbletter2"
-                    android:src="@drawable/ehbletter"
-                    android:layout_marginLeft="130dp"
-                    android:layout_marginTop="20dp"
-                    android:scaleType="fitCenter" />
-            </LinearLayout>
-        </RelativeLayout>
-
-    </ViewSwitcher>
-
+        <ImageView
+            android:id="@+id/iv_page2"
+            android:layout_width="15dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/dotsunselected" />
+    </LinearLayout>
 
 
 </RelativeLayout>

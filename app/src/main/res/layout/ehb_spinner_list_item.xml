@@ -1,23 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_spinneritem"
     android:layout_width="match_parent"
-    android:layout_height="30dp"
-    android:background="#fff" >
+    android:layout_height="40dp">
 
     <TextView
-        android:id="@+id/tvCust"
+        android:id="@+id/tv_spinneritem"
         android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:layout_toLeftOf="@+id/radio_spinner"
-        android:gravity="left|center_vertical"
-        android:textColor="#000"
-        android:textSize="15sp" />
+        android:layout_height="40dp"
+        android:autoText="true"
+        android:text="Anke Cannaerts"
+        android:textColor="#ff555555"
+        android:textIsSelectable="false"
+        android:textSize="25sp"
+        android:textStyle="normal" />
 
-    <RadioButton
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:layout_alignParentRight="true"
-        android:gravity="right|center_vertical"
-        android:id="@+id/radio_spinner"/>
 
 </RelativeLayout>
