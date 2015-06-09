@@ -4,14 +4,11 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.view.View;
-
-import be.ehb.dt_app.activities.MainActivity;
 
 /**
  * Created by Mattia on 07/06/15.
@@ -44,10 +41,6 @@ public class Utils {
 
     }
 
-    public static void readOwnImageVersion(MainActivity mainActivity) {
-        SharedPreferences preferences = mainActivity.getSharedPreferences("EHBeursSharedPrefs", Context.MODE_PRIVATE);
-        mainActivity.setImage_version(preferences.getInt("Images version", 1));
-    }
 
     public static Bitmap scaleImage(Bitmap image, Context context) {
         // Get current dimensions AND the desired bounding box

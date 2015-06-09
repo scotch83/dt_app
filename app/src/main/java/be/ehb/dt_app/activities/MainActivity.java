@@ -3,6 +3,7 @@ package be.ehb.dt_app.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -40,10 +41,8 @@ import be.ehb.dt_app.model.TeacherList;
 
 public class MainActivity extends Activity {
 
-    //DATA SOURCES URL CONFIGURATION
+    //DATA SOURCES URL CONFIGURATION and RestTemplate INITIALIZATION
     private static final String SERVER = "http://vdabsidin.appspot.com/rest/{required_dataset}";
-    //GLOBAL VARIABLES FOR PRACTICAL USE
-    protected int image_version;
     //GRAPHICAL ELEMENTS AND DATA LISTS FOR ADAPTERS DECLARATION
     LinearLayout lgnCenterLayout;
     View lay, progressOverlay;
@@ -51,7 +50,7 @@ public class MainActivity extends Activity {
     EventList eventList;
     TeacherList teacherList;
     SchoolList schoolList;
-
+    private RestTemplate restTemplate;
     private ArrayAdapter<Event> eventAdapter;
     private ArrayAdapter<Teacher> teacherAdapter;
     private ArrayAdapter<School> schoolAdapter;
@@ -69,11 +68,17 @@ public class MainActivity extends Activity {
 
         setUpDesign();
 
-        Utils.readOwnImageVersion(this);
 
         if (Utils.isNetworkAvailable(this)) {
-            new HttpRequestEventsTask().execute("teachers", "events");
-            new ImageAsyncDownload().execute();
+
+            restTemplate = new RestTemplate();
+            new HttpRequestEventsTask().execute("teachers", "events", "schools", "subscriptions");
+
+            SharedPreferences preferences = this.getSharedPreferences("EHB App SharedPreferences", Context.MODE_PRIVATE);
+            int ourversion = preferences.getInt("Images Version Number", 1);
+            int serverversion = restTemplate.getForObject(SERVER, ImageVersion.class, "imageversion").getVersion();
+            if (ourversion > serverversion)
+                new ImageAsyncDownload().execute();
         }
 
     }
@@ -123,13 +128,6 @@ public class MainActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    public int getImage_version() {
-        return image_version;
-    }
-
-    public void setImage_version(int image_version) {
-        this.image_version = image_version;
-    }
 
     private class HttpRequestEventsTask extends AsyncTask<String, Void, HashMap<String, ArrayAdapter>> {
 
@@ -154,7 +152,7 @@ public class MainActivity extends Activity {
             HashMap<String, ArrayAdapter> adaptersList = new HashMap<>();
             Class convertClass;
             ArrayAdapter dataAdapter = null;
-            RestTemplate restTemplate = new RestTemplate();
+
 
             for (String requestedData : params) {
 
@@ -233,7 +231,6 @@ public class MainActivity extends Activity {
 
             Utils.animateView(progressOverlay, View.GONE, 0.4f, 200);
 
-
             Toast.makeText(getApplicationContext(), toastMessage, Toast.LENGTH_LONG);
 
         }
@@ -242,16 +239,16 @@ public class MainActivity extends Activity {
     private class ImageAsyncDownload extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... params) {
-            RestTemplate restTemplate = new RestTemplate();
+
             ImageVersion version_check = restTemplate.getForObject(SERVER, ImageVersion.class, "imageversion");
 
-            if (image_version != version_check.getVersion()) {
-                ImageList imageList = restTemplate.getForObject(SERVER, ImageList.class, "images");
-                for (Image item : imageList.getImages()) {
-                    Bitmap imageToSave = BitmapFactory.decodeByteArray(item.getImage(), 0, item.getImage().length);
-                    saveToInternalStorage(String.valueOf("EHBpicture_id_" + item.getId()) + ".jpg", imageToSave);
-                }
+
+            ImageList imageList = restTemplate.getForObject(SERVER, ImageList.class, "images");
+            for (Image item : imageList.getImages()) {
+                Bitmap imageToSave = BitmapFactory.decodeByteArray(item.getImage(), 0, item.getImage().length);
+                saveToInternalStorage(String.valueOf("EHBpicture_id_" + item.getId()) + ".jpg", imageToSave);
             }
+
 
             return null;
         }
