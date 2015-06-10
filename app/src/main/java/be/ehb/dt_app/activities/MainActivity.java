@@ -3,6 +3,7 @@ package be.ehb.dt_app.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -42,20 +43,20 @@ public class MainActivity extends Activity {
 
     View progressOverlay, lay;
     Spinner docentSP, eventSP;
+    SharedPreferences preferences;
     private RestTemplate restTemplate;
     private ArrayAdapter<Event> eventAdapter;
     private ArrayAdapter<Teacher> teacherAdapter;
     private ArrayAdapter<School> schoolAdapter;
     private ArrayAdapter<Subscription> subscriptionAdapter;
-
     //DEBUG APPLICATION
     private boolean debugging = Debug.isDebuggerConnected();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        preferences = getSharedPreferences("EHB App SharedPreferences", Context.MODE_PRIVATE);
 
 
         setUpDesign();
@@ -72,6 +73,14 @@ public class MainActivity extends Activity {
 
     }
 
+    public void loginClicked(View v) {
+        Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
+
+        preferences.edit().putString("Teacher", docentSP.getSelectedItem().toString()).commit();
+
+        preferences.edit().putString("Event", eventSP.getSelectedItem().toString()).commit();
+        startActivity(i);
+    }
 
     public void setUpDesign() {
 
@@ -188,12 +197,12 @@ public class MainActivity extends Activity {
 
             }
 
-            SharedPreferences preferences = getApplication().getSharedPreferences("EHB App SharedPreferences", Context.MODE_PRIVATE);
             int ourversion = preferences.getInt("Images Version Number", 1);
             int serverversion = restTemplate.getForObject(SERVER, Integer.class, "imagesversion");
-            if (ourversion != serverversion)
+            if (ourversion < serverversion) {
                 new ImageAsyncDownload().execute();
-
+                preferences.edit().putInt("Image Version Number", serverversion);
+            }
 
             return adaptersList;
         }
