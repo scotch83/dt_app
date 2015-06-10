@@ -23,7 +23,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="125dp"
+                android:layout_marginTop="100dp"
                 android:background="#b4000000"
                 android:orientation="horizontal"
                 android:weightSum="1">
@@ -77,10 +77,10 @@
                         android:layout_marginBottom="40dp" />
 
                     <TextView
-                        android:id="@+id/tv_achternaam"
+                        android:id="@+id/tv_postcode"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="achternaam"
+                        android:text="postcode"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textColor="#e6ffffff"
                         android:textStyle="italic" />
@@ -90,19 +90,8 @@
                         style="@style/EditTextCustomHolo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="40dp"
                         android:inputType="textPersonName" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/ll_registratie1_adresgegevens"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.5"
-                    android:orientation="vertical"
-                    android:paddingLeft="50dp"
-                    android:paddingRight="200dp"
-                    android:paddingTop="65dp">
 
                     <TextView
                         android:id="@+id/textView4"
@@ -121,7 +110,19 @@
                         android:layout_marginBottom="40dp"
                         android:inputType="textPersonName" />
 
-                    <TextView
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_registratie1_adresgegevens"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5"
+                    android:orientation="vertical"
+                    android:paddingLeft="50dp"
+                    android:paddingRight="200dp"
+                    android:paddingTop="65dp">
+
+                <TextView
                         android:id="@+id/textView5"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -162,7 +163,7 @@
             <LinearLayout
                 android:id="@+id/ll_registratie1_top"
                 android:layout_width="fill_parent"
-                android:layout_height="125dp"
+                android:layout_height="100dp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"

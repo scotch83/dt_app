@@ -3,21 +3,16 @@ package be.ehb.dt_app.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Debug;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -41,14 +36,13 @@ import be.ehb.dt_app.model.TeacherList;
 
 public class MainActivity extends Activity {
 
-    //DATA SOURCES URL CONFIGURATION
+    //DATA SOURCES URL CONFIGURATION and RestTemplate INITIALIZATION
     private static final String SERVER = "http://vdabsidin.appspot.com/rest/{required_dataset}";
-    private static RestTemplate restTemplate;
+    //GRAPHICAL ELEMENTS AND DATA LISTS FOR ADAPTERS DECLARATION
 
-    //GRAPHICAL ELEMENTS AND ADAPTERS DECLARATION
-    private View progressOverlay;
-    private Spinner docentSP, eventSP;
-
+    View progressOverlay, lay;
+    Spinner docentSP, eventSP;
+    private RestTemplate restTemplate;
     private ArrayAdapter<Event> eventAdapter;
     private ArrayAdapter<Teacher> teacherAdapter;
     private ArrayAdapter<School> schoolAdapter;
@@ -56,9 +50,6 @@ public class MainActivity extends Activity {
 
     //DEBUG APPLICATION
     private boolean debugging = Debug.isDebuggerConnected();
-    private SharedPreferences preferences;
-    private Button loginBTN;
-    private RelativeLayout lay;
 
 
     @Override
@@ -68,25 +59,17 @@ public class MainActivity extends Activity {
 
 
         setUpDesign();
-        preferences = getApplication().getSharedPreferences("EHB App SharedPreferences", Context.MODE_PRIVATE);
+
+        lay = findViewById(R.id.lgn_main_layout);
+
 
         if (Utils.isNetworkAvailable(this)) {
 
             restTemplate = new RestTemplate();
-            new AsyncDataImport().execute("teachers", "events", "schools");
+            new HttpRequestEventsTask().execute("teachers", "events", "schools");
 
         }
 
-    }
-
-    public void loginClicked(View v) {
-        Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
-        Log.d("xxx", docentSP.getSelectedItem().toString());
-        preferences.edit().putString("Teacher", docentSP.getSelectedItem().toString()).commit();
-        Log.d("xxx", getSharedPreferences("EHB App SharedPreferences", Context.MODE_PRIVATE).getString("Teacher", "(teacher not set)"));
-        Log.d("xxx", preferences.getString("Teacher", "(teacher not set)"));
-        preferences.edit().putString("Event", eventSP.getSelectedItem().toString()).commit();
-        startActivity(i);
     }
 
 
@@ -96,11 +79,6 @@ public class MainActivity extends Activity {
         //assign spinners for latter assignment of teachers and events lists
         docentSP = (Spinner) findViewById(R.id.sp_docent);
         eventSP = (Spinner) findViewById(R.id.sp_event);
-        loginBTN = (Button) findViewById(R.id.login_btn);
-
-        lay = (RelativeLayout) findViewById(R.id.lgn_main_layout);
-
-
 
     }
 
@@ -134,7 +112,7 @@ public class MainActivity extends Activity {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    private class AsyncDataImport extends AsyncTask<String, Void, HashMap<String, ArrayAdapter>> {
+    private class HttpRequestEventsTask extends AsyncTask<String, Void, HashMap<String, ArrayAdapter>> {
 
 
         @Override
@@ -145,7 +123,6 @@ public class MainActivity extends Activity {
             Toast.makeText(getApplicationContext(), "Please wait while loading data", Toast.LENGTH_LONG);
             docentSP.setEnabled(false);
             eventSP.setEnabled(false);
-            loginBTN.setEnabled(false);
         }
 
 
@@ -211,13 +188,13 @@ public class MainActivity extends Activity {
 
             }
 
-            preferences.edit().putInt("Image Version", restTemplate.getForObject(SERVER, Integer.class, "imagesversion")).commit();
-
-
+            SharedPreferences preferences = getApplication().getSharedPreferences("EHB App SharedPreferences", Context.MODE_PRIVATE);
             int ourversion = preferences.getInt("Images Version Number", 1);
             int serverversion = restTemplate.getForObject(SERVER, Integer.class, "imagesversion");
             if (ourversion != serverversion)
                 new ImageAsyncDownload().execute();
+
+
             return adaptersList;
         }
 
@@ -233,8 +210,6 @@ public class MainActivity extends Activity {
 
                 docentSP.setAdapter(arrayAdapters.get("teachers"));
                 docentSP.setEnabled(true);
-
-                loginBTN.setEnabled(true);
                 toastMessage = "Please select a teacher and event to proceed";
             }
 
@@ -256,9 +231,8 @@ public class MainActivity extends Activity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            lay.setBackground(Drawable.createFromPath(s));
+//            lay.setBackground(Drawable.createFromPath(s));
         }
-
 
         @Override
         protected String doInBackground(Void... params) {
@@ -274,7 +248,9 @@ public class MainActivity extends Activity {
 
             ContextWrapper cw = new ContextWrapper(getApplicationContext());
 
-            return cw.getDir("presentation_images", Context.MODE_PRIVATE).toString() + "/EHBpicture_id_" + imageList.getImages().get(0).getId() + ".jpg";
+            return cw.getDir("presentation_images", Context.MODE_PRIVATE).toString();
         }
+
+
     }
 }
