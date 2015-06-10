@@ -7,5 +7,6 @@
     <item name="color_wit" type="color">#FFFFFF</item>
 
 
+    <color name="login_white_bar_alpha">#7dffffff</color>
 </resources>
 

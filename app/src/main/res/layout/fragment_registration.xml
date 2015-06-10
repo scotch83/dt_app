@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_registratie1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:fillViewport="true">
+
+        <FrameLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+
+            <LinearLayout
+                android:id="@+id/ll_registratie1_bottom"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="125dp"
+                android:background="#b4000000"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+                <LinearLayout
+                    android:id="@+id/ll_registratie1_persoonsgegevens"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5"
+                    android:orientation="vertical"
+                    android:paddingLeft="200dp"
+                    android:paddingRight="50dp"
+                    android:paddingTop="65dp">
+
+                    <TextView
+                        android:id="@+id/tv_email"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="emailadres"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="#e6ffffff"
+                        android:textStyle="italic" />
+
+                    <EditText
+                        android:id="@+id/et_email"
+                        style="@style/EditTextCustomHolo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="40dp"
+
+                        android:ellipsize="end"
+                        android:ems="10"
+                        android:singleLine="true"
+                        android:typeface="normal" />
+
+                    <TextView
+                        android:id="@+id/tv_voornaam"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="voornaam"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="#e6ffffff"
+                        android:textStyle="italic" />
+
+                    <EditText
+                        android:id="@+id/et_voornaam"
+                        style="@style/EditTextCustomHolo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="40dp" />
+
+                    <TextView
+                        android:id="@+id/tv_achternaam"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="achternaam"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="#e6ffffff"
+                        android:textStyle="italic" />
+
+                    <EditText
+                        android:id="@+id/et_achternaam"
+                        style="@style/EditTextCustomHolo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPersonName" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_registratie1_adresgegevens"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5"
+                    android:orientation="vertical"
+                    android:paddingLeft="50dp"
+                    android:paddingRight="200dp"
+                    android:paddingTop="65dp">
+
+                    <TextView
+                        android:id="@+id/textView4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="straat en nummer"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="#e6ffffff"
+                        android:textStyle="italic" />
+
+                    <EditText
+                        android:id="@+id/et_straat"
+                        style="@style/EditTextCustomHolo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="40dp"
+                        android:inputType="textPersonName" />
+
+                    <TextView
+                        android:id="@+id/textView5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="postcode"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="#e6ffffff"
+                        android:textStyle="italic" />
+
+                    <EditText
+                        android:id="@+id/et_postcode"
+                        style="@style/EditTextCustomHolo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="40dp"
+                        android:inputType="number" />
+
+                    <TextView
+                        android:id="@+id/textView6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="stad"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="#e6ffffff"
+                        android:textStyle="italic" />
+
+                    <EditText
+                        android:id="@+id/et_stad"
+                        style="@style/EditTextCustomHolo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPersonName" />
+
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_registratie1_top"
+                android:layout_width="fill_parent"
+                android:layout_height="125dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/iv_ehbletter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="130dp"
+                    android:layout_marginTop="20dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ehbletter" />
+            </LinearLayout>
+        </FrameLayout>
+    </ScrollView>
+</RelativeLayout>

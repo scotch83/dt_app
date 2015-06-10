@@ -4,13 +4,29 @@
     package="be.ehb.dt_app" >
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
+        android:name="com.orm.SugarApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme"
-        tools:replace="icon, label" >
+        android:theme="@style/AppBackground"
+        tools:replace="icon, label">
+
+        <meta-data
+            android:name="DATABASE"
+            android:value="beurs_app_local.db" />
+        <meta-data
+            android:name="VERSION"
+            android:value="1" />
+        <meta-data
+            android:name="QUERY_LOG"
+            android:value="true" />
+        <meta-data
+            android:name="DOMAIN_PACKAGE_NAME"
+            android:value="be.ehb.dt_app.model" />
+
         <activity
             android:name=".activities.MainActivity"
             android:label="@string/app_name"
@@ -31,6 +47,14 @@
             android:label="@string/title_activity_registration"
             android:screenOrientation="landscape" >
         </activity>
+
+        <receiver android:name=".controller.ConnectionChangeReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+
+
     </application>
 
 </manifest>

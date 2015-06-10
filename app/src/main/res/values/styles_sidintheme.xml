@@ -6,6 +6,8 @@
     <style name="SpinnerSidInTheme" parent="android:Widget.Holo.Light.Spinner">
         <item name="android:background">@drawable/sidintheme_spinner_background_holo_light</item>
         <item name="android:dropDownSelector">@drawable/sidintheme_list_selector_holo_light</item>
+
     </style>
+
 
 </resources>

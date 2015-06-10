@@ -1,15 +1,17 @@
 package be.ehb.dt_app.model;
 
 
+import com.orm.SugarRecord;
+
 import java.util.Date;
 import java.util.HashMap;
 
-public class Subscription {
+public class Subscription extends SugarRecord<Subscription> {
 
 
 
     //@JsonIgnore
-    private Long id;
+    private Long _id;
     private String firstName;
     private String lastName;
     private String email;
@@ -59,11 +61,11 @@ public class Subscription {
 
 
     public Long getId() {
-        return id;
+        return _id;
     }
 
     public void setId(Long id) {
-        this.id = id;
+        this._id = id;
     }
 
     public String getFirstName() {
@@ -173,7 +175,7 @@ public class Subscription {
     @Override
     public String toString() {
         return "Subscription{" +
-                "id=" + id +
+                "id=" + _id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +

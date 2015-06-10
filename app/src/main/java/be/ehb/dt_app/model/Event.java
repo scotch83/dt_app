@@ -1,9 +1,11 @@
 package be.ehb.dt_app.model;
 
-public class Event {
+import com.orm.SugarRecord;
 
-    //@JsonIgnore
-    private Long id;
+public class Event extends SugarRecord<Event> {
+
+
+    private Long _id;
     private String name;
     private short acadyear;
 
@@ -44,5 +46,14 @@ public class Event {
     @Override
     public String toString() {
         return name;
+    }
+
+
+    public String strinRap() {
+        return "Event{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", acadyear=" + acadyear +
+                '}';
     }
 }

@@ -6,7 +6,8 @@ import java.util.List;
 /**
  * Created by Bart on 2/06/2015.
  */
-public class ImageList  {
+public class ImageList {
+
     private List<Image> images;
 
     public ImageList(){
@@ -15,6 +16,10 @@ public class ImageList  {
 
     public List<Image> getImages() {
         return images;
+    }
+
+    public void setImages(List<Image> images) {
+        this.images = images;
     }
 
     @Override

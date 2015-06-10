@@ -1,13 +1,12 @@
 package be.ehb.dt_app.model;
 
 
-
 import java.util.List;
 
 /**
  * Created by Mattia on 01/06/15.
  */
-public class EventList  {
+public class EventList {
     private List<Event> events;
 
     public EventList() {
