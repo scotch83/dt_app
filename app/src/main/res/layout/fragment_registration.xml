@@ -86,7 +86,7 @@
                         android:textStyle="italic" />
 
                     <EditText
-                        android:id="@+id/et_achternaam"
+                        android:id="@+id/et_postcode"
                         style="@style/EditTextCustomHolo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -123,10 +123,10 @@
                     android:paddingTop="65dp">
 
                 <TextView
-                        android:id="@+id/textView5"
+                    android:id="@+id/tv_achternaam"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="postcode"
+                    android:text="achternaam"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textColor="#e6ffffff"
                         android:textStyle="italic" />
