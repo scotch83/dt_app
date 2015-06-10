@@ -80,6 +80,7 @@ public class MainActivity extends Activity {
 
         preferences.edit().putString("Event", eventSP.getSelectedItem().toString()).commit();
         startActivity(i);
+
     }
 
     public void setUpDesign() {

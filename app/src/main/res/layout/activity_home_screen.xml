@@ -28,6 +28,7 @@
             android:layout_gravity="center"
             android:layout_row="0"
             android:background="#00000000"
+            android:onClick="registrationClicked"
             android:scaleType="centerInside"
             android:src="@drawable/iconstudenten" />
 
