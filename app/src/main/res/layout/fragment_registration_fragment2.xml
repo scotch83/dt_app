@@ -22,7 +22,7 @@
                 android:layout_height="fill_parent"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="125dp"
+                android:layout_marginTop="100dp"
                 android:background="#b4000000"
                 android:orientation="horizontal">
 
@@ -32,11 +32,11 @@
                     android:layout_height="match_parent"
                     android:layout_weight="0.5"
                     android:orientation="vertical"
-                    android:paddingLeft="200dp"
+                    android:paddingLeft="150dp"
                     android:paddingRight="50dp"
-                    android:paddingTop="65dp">
+                    android:paddingTop="50dp">
 
-                    <TextView
+                <TextView
                         android:id="@+id/tv_stad_secundaireschool"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -70,11 +70,11 @@
                     android:layout_weight="0.5"
                     android:orientation="vertical"
                     android:paddingLeft="50dp"
-                    android:paddingRight="200dp"
-                    android:paddingTop="65dp">
+                    android:paddingRight="150dp"
+                    android:paddingTop="50dp">
 
 
-                    <TextView
+                <TextView
                         android:id="@+id/tv_interesse_opleiding"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -141,7 +141,7 @@
             <LinearLayout
                 android:id="@+id/ll_registratie2_top"
                 android:layout_width="fill_parent"
-                android:layout_height="125dp"
+                android:layout_height="100dp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"

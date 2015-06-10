@@ -32,11 +32,13 @@
                     android:id="@+id/ll_registratie1_persoonsgegevens"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginBottom="90dp"
                     android:layout_weight="0.5"
+                    android:gravity="center|bottom|left"
                     android:orientation="vertical"
-                    android:paddingLeft="200dp"
+                    android:paddingLeft="150dp"
                     android:paddingRight="50dp"
-                    android:paddingTop="65dp">
+                    android:paddingTop="20dp">
 
                     <TextView
                         android:id="@+id/tv_email"
@@ -45,14 +47,14 @@
                         android:text="emailadres"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textColor="#e6ffffff"
-                        android:textStyle="italic" />
+                        android:textStyle="bold" />
 
                     <EditText
                         android:id="@+id/et_email"
                         style="@style/EditTextCustomHolo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="40dp"
+                        android:layout_marginBottom="30dp"
 
                         android:ellipsize="end"
                         android:ems="10"
@@ -74,7 +76,24 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:layout_marginBottom="40dp" />
+                        android:layout_marginBottom="30dp" />
+
+                    <TextView
+                        android:id="@+id/tv_straatnaam"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="straat"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="#e6ffffff"
+                        android:textStyle="italic" />
+
+                    <EditText
+                        android:id="@+id/et_straatnaam"
+                        style="@style/EditTextCustomHolo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="30dp"
+                        android:inputType="textPersonName" />
 
                     <TextView
                         android:id="@+id/tv_postcode"
@@ -90,24 +109,7 @@
                         style="@style/EditTextCustomHolo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="40dp"
-                        android:inputType="textPersonName" />
-
-                    <TextView
-                        android:id="@+id/textView4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="straat en nummer"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:textColor="#e6ffffff"
-                        android:textStyle="italic" />
-
-                    <EditText
-                        android:id="@+id/et_straat"
-                        style="@style/EditTextCustomHolo"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="40dp"
+                        android:layout_marginBottom="30dp"
                         android:inputType="textPersonName" />
 
                 </LinearLayout>
@@ -116,13 +118,15 @@
                     android:id="@+id/ll_registratie1_adresgegevens"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginBottom="90dp"
                     android:layout_weight="0.5"
+                    android:gravity="center|bottom|left"
                     android:orientation="vertical"
                     android:paddingLeft="50dp"
-                    android:paddingRight="200dp"
-                    android:paddingTop="65dp">
+                    android:paddingRight="150dp"
+                    android:paddingTop="20dp">
 
-                <TextView
+                    <TextView
                     android:id="@+id/tv_achternaam"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -132,16 +136,32 @@
                         android:textStyle="italic" />
 
                     <EditText
-                        android:id="@+id/et_postcode"
+                        android:id="@+id/et_achternaam"
                         style="@style/EditTextCustomHolo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:layout_marginBottom="40dp"
-                        android:inputType="number" />
+                        android:layout_marginBottom="30dp" />
 
                     <TextView
-                        android:id="@+id/textView6"
+                        android:id="@+id/tv_straatnummer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="nummer"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="#e6ffffff"
+                        android:textStyle="italic" />
+
+                    <EditText
+                        android:id="@+id/et_straatnummer"
+                        style="@style/EditTextCustomHolo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="30dp"
+                        android:inputType="textPersonName" />
+
+                    <TextView
+                        android:id="@+id/tv_stad"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="stad"
@@ -154,6 +174,7 @@
                         style="@style/EditTextCustomHolo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="30dp"
                         android:inputType="textPersonName" />
 
 
