@@ -10,7 +10,7 @@
     <LinearLayout
         android:id="@+id/lgn_screen_layout"
         android:layout_width="fill_parent"
-        android:layout_height="350dp"
+        android:layout_height="fill_parent"
         android:layout_alignParentBottom="false"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -26,17 +26,16 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_weight="0.5"
+            android:gravity="bottom"
             android:orientation="vertical"
-            android:paddingLeft="40dp"
-            android:paddingTop="20dp">
+            android:paddingLeft="40dp">
 
             <ImageView
                 android:id="@+id/iv_logo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="30dp"
+                android:layout_marginBottom="40dp"
                 android:layout_marginLeft="50dp"
-                android:layout_marginTop="50dp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/logo_wit" />
         </LinearLayout>
@@ -47,37 +46,35 @@
             android:layout_height="match_parent"
             android:layout_alignParentBottom="true"
             android:layout_weight="0.5"
+            android:gravity="bottom"
             android:orientation="vertical"
             android:paddingTop="15dp">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
+            <Spinner
+                android:id="@+id/sp_docent"
+                style="@style/SpinnerCustomHolo"
+                android:layout_width="350dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="0.5"
-                android:baselineAligned="false"
-                android:gravity="bottom"
-                android:orientation="vertical"
-                android:paddingBottom="80dp">
+                android:layout_marginBottom="20dp"
+                android:gravity="left"
+                android:spinnerMode="dialog" />
 
-                <Spinner
-                    android:id="@+id/sp_docent"
-                    style="@style/SpinnerCustomHolo"
-                    android:layout_width="350dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
-                    android:gravity="left"
-                    android:spinnerMode="dialog" />
+            <Spinner
+                android:id="@+id/sp_event"
+                style="@style/SpinnerCustomHolo"
+                android:layout_width="350dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="5dp"
+                android:gravity="left"
+                android:spinnerMode="dialog" />
 
-                <Spinner
-                    android:id="@+id/sp_event"
-                    style="@style/SpinnerCustomHolo"
-                    android:layout_width="350dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:gravity="left"
-                    android:spinnerMode="dialog" />
-            </LinearLayout>
+            <Button
+                android:id="@+id/button"
+                android:layout_width="350dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="40dp"
+                android:text="New Button" />
 
         </LinearLayout>
 
