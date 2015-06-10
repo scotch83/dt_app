@@ -36,7 +36,7 @@
                     android:paddingRight="50dp"
                     android:paddingTop="50dp">
 
-                <TextView
+                    <TextView
                         android:id="@+id/tv_stad_secundaireschool"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -74,7 +74,7 @@
                     android:paddingTop="50dp">
 
 
-                <TextView
+                    <TextView
                         android:id="@+id/tv_interesse_opleiding"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
