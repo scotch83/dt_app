@@ -36,7 +36,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="40dp"
                 android:layout_marginLeft="50dp"
-                android:layout_marginTop="10dp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/logo_wit" />
         </LinearLayout>
@@ -70,7 +69,7 @@
                 android:spinnerMode="dialog" />
 
             <Button
-                android:id="@+id/linearLayout"
+                android:id="@+id/button"
                 android:layout_width="350dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="40dp"

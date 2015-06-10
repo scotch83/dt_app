@@ -1,10 +1,12 @@
 package be.ehb.dt_app.activities;
 
-import android.support.v7.app.ActionBarActivity;
+import android.content.Context;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import be.ehb.dt_app.R;
 
@@ -12,6 +14,7 @@ import be.ehb.dt_app.R;
 public class HomeScreenActivity extends ActionBarActivity {
 
 
+    private boolean once_only = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +26,9 @@ public class HomeScreenActivity extends ActionBarActivity {
 
         int pic = R.drawable.achtergrond2;
         lay.setBackgroundResource(pic);
+        if (once_only) {
+            Toast.makeText(getApplicationContext(), "Welkom Prof. " + getSharedPreferences("EHB App SharedPreferences", Context.MODE_PRIVATE).getString("Teacher", "(teacher not set)"), Toast.LENGTH_LONG).show();
+        }
     }
 
 

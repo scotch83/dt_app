@@ -15,6 +15,7 @@
     <string name="title_activity_registration_scherm2">RegistrationScherm2</string>
     <string name="title_activity_main_activity2">MainActivity2Activity</string>
     <string name="title_activity_registration2">Registration2Activity</string>
+    <string name="btn_login_txt">LOGIN</string>
 
 
 </resources>
