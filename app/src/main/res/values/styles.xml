@@ -5,15 +5,16 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="spinner_style">
-        <item name="android:paddingLeft">0dp</item>
-        <item name="android:dropDownWidth">250dp</item>
-        <item name="android:showDividers">none</item>
-        <item name="android:dividerHeight">0dp</item>
-        <item name="android:dropDownHeight">70dp</item>
-        <item name="android:scrollbarAlwaysDrawVerticalTrack">true</item>
-        <item name="android:dropDownSelector">@android:color/black</item>
-    </style>
+    <!--<style name="spinner_style">-->
+    <!--<item name="android:paddingLeft">0dp</item>-->
+    <!--<item name="android:dropDownWidth">250dp</item>-->
+    <!--<item name="android:showDividers">none</item>-->
+    <!--<item name="android:dividerHeight">0dp</item>-->
+    <!--<item name="android:dropDownHeight">70dp</item>-->
+    <!--<item name="android:scrollbarAlwaysDrawVerticalTrack">true</item>-->
+    <!--<item name="android:dropDownSelector">@android:color/black</item>-->
+    <!--</style>-->
+    m
 
     <style name="App_EditTextStyle">
 
@@ -35,6 +36,7 @@
         <item name="android:textSize">25sp</item>
 
     </style>
+
     <style name="CheckBoxCustomHolo" parent="android:Widget.CompoundButton.CheckBox">
         <item name="android:button">@drawable/sidintheme_btn_check_holo_light</item>
         <item name="android:textColor">#ffbababa</item>
