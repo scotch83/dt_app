@@ -1,24 +1,28 @@
 package be.ehb.dt_app.activities;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ViewSwitcher;
+import android.widget.Toast;
 
 import be.ehb.dt_app.R;
+import be.ehb.dt_app.controller.ZoomOutPageTransformer;
+import be.ehb.dt_app.fragments.RegistrationFragment;
+import be.ehb.dt_app.fragments.RegistrationFragment2;
 
 public class RegistrationActivity extends ActionBarActivity {
 
-    private Button volgende, vorige;
-    private ViewSwitcher registratieVS;
-    private Animation naarRechts, naarLinks;
-
+    protected Fragment form1, form2;
+    private ViewPager mPagerRegistratie;
+    private PagerAdapter mPagerAdapter;
+    private ImageView img_page1, img_page2;
 
 
     @Override
@@ -26,55 +30,55 @@ public class RegistrationActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
 
-        volgende = (Button) findViewById(R.id.btn_nextpage);
-        vorige = (Button) findViewById(R.id.btn_previouspage);
+        form1 = new RegistrationFragment();
+        form2 = new RegistrationFragment2();
 
-        registratieVS = (ViewSwitcher) findViewById(R.id.viewswitcher_registratie);
+        img_page1 = (ImageView) findViewById(R.id.iv_page1);
+        img_page2 = (ImageView) findViewById(R.id.iv_page2);
 
-        naarLinks = AnimationUtils.loadAnimation(this, android.R.anim.slide_in_left);
-        naarRechts = AnimationUtils.loadAnimation(this, android.R.anim.slide_out_right);
+        mPagerRegistratie = (ViewPager) findViewById(R.id.pager_registratie);
+        mPagerAdapter = new RegistratiePagerAdapter(getSupportFragmentManager(), form1, form2);
+        mPagerRegistratie.setAdapter(mPagerAdapter);
+        mPagerRegistratie.setPageTransformer(true, new ZoomOutPageTransformer());
 
-        volgende.setOnClickListener(new View.OnClickListener() {
+        mPagerRegistratie.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onClick(View v) {
-                registratieVS.showNext();
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                switch (position) {
+                    case 0:
+                        img_page1.setImageResource(R.drawable.dotsselected);
+                        img_page2.setImageResource(R.drawable.dotsunselected);
+
+                        break;
+
+                    case 1:
+                        img_page1.setImageResource(R.drawable.dotsunselected);
+                        img_page2.setImageResource(R.drawable.dotsselected);
+
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
             }
         });
 
-        vorige.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                registratieVS.showPrevious();
-            }
-        });
-
-        registratieVS.setAnimation(naarLinks);
-        registratieVS.setAnimation(naarRechts);
-
-        setUpDesign();
-
-
+        Toast.makeText(this, "Testing branches again!", Toast.LENGTH_LONG).show();
     }
-
-    public void setUpDesign(){
-
-        View lay = findViewById(R.id.rl_registratie);
-        lay.setBackgroundResource(R.drawable.achtergrond2);
-
-        int pic = R.drawable.achtergrond2;
-        lay.setBackgroundResource(pic);
-
-        ImageView logo = (ImageView) findViewById(R.id.iv_ehbletter);
-        logo.setAlpha(1f);
-
-
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_registration, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
@@ -91,5 +95,34 @@ public class RegistrationActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private class RegistratiePagerAdapter extends FragmentStatePagerAdapter {
+
+        Fragment formPart1, formPart2;
+
+        public RegistratiePagerAdapter(FragmentManager supportFragmentManager, Fragment formPart1, Fragment formPart2) {
+            super(supportFragmentManager);
+            this.formPart1 = formPart1;
+            this.formPart2 = formPart2;
+
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+
+            switch (position) {
+                case 0:
+                    return formPart1;
+                case 1:
+                    return formPart2;
+            }
+            return null;
+        }
+
+        @Override
+        public int getCount() {
+            return 2;
+        }
     }
 }

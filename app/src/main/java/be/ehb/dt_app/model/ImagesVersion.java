@@ -5,14 +5,14 @@ import com.orm.SugarRecord;
 /**
  * Created by Mattia on 09/06/15.
  */
-public class ImageVersion extends SugarRecord<ImageVersion> {
+public class ImagesVersion extends SugarRecord<ImagesVersion> {
     private Long _id;
-    private int version;
+    private Integer version;
 
-    public ImageVersion() {
+    public ImagesVersion() {
     }
 
-    public ImageVersion(Long _id, int version) {
+    public ImagesVersion(Long _id, int version) {
         this._id = _id;
         this.version = version;
     }
@@ -25,17 +25,17 @@ public class ImageVersion extends SugarRecord<ImageVersion> {
         this._id = _id;
     }
 
-    public int getVersion() {
+    public Integer getVersion() {
         return version;
     }
 
-    public void setVersion(int version) {
+    public void setVersion(Integer version) {
         this.version = version;
     }
 
     @Override
     public String toString() {
-        return "ImageVersion{" +
+        return "ImagesVersion{" +
                 "_id=" + _id +
                 ", version=" + version +
                 '}';

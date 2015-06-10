@@ -4,11 +4,15 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.view.View;
+
+import java.io.File;
+import java.io.FileOutputStream;
 
 /**
  * Created by Mattia on 07/06/15.
@@ -67,5 +71,28 @@ public class Utils {
     private static int dpToPx(int dp, Context context) {
         float density = context.getResources().getDisplayMetrics().density;
         return Math.round((float) dp * density);
+    }
+
+    public static void saveImage(String fileName, Bitmap imageToSave, Context applicationContext) {
+
+        ContextWrapper cw = new ContextWrapper(applicationContext);
+
+        File directory = cw.getDir("presentation_images", Context.MODE_PRIVATE);
+
+        File mypath = new File(directory, fileName);
+
+        Bitmap scaledImageToSave = Utils.scaleImage(imageToSave, applicationContext);
+
+        FileOutputStream fos = null;
+        try {
+
+            fos = new FileOutputStream(mypath);
+            // Use the compress method on the BitMap object to write image to the OutputStream
+            scaledImageToSave.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            fos.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+//            return directory.getAbsolutePath();
     }
 }

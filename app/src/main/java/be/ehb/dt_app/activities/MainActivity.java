@@ -6,6 +6,7 @@ import android.content.ContextWrapper;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Debug;
@@ -13,15 +14,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import org.springframework.web.client.RestTemplate;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.util.HashMap;
 
 import be.ehb.dt_app.R;
@@ -30,7 +27,6 @@ import be.ehb.dt_app.model.Event;
 import be.ehb.dt_app.model.EventList;
 import be.ehb.dt_app.model.Image;
 import be.ehb.dt_app.model.ImageList;
-import be.ehb.dt_app.model.ImageVersion;
 import be.ehb.dt_app.model.School;
 import be.ehb.dt_app.model.SchoolList;
 import be.ehb.dt_app.model.Subscription;
@@ -44,12 +40,9 @@ public class MainActivity extends Activity {
     //DATA SOURCES URL CONFIGURATION and RestTemplate INITIALIZATION
     private static final String SERVER = "http://vdabsidin.appspot.com/rest/{required_dataset}";
     //GRAPHICAL ELEMENTS AND DATA LISTS FOR ADAPTERS DECLARATION
-    LinearLayout lgnCenterLayout;
-    View lay, progressOverlay;
+
+    View progressOverlay, lay;
     Spinner docentSP, eventSP;
-    EventList eventList;
-    TeacherList teacherList;
-    SchoolList schoolList;
     private RestTemplate restTemplate;
     private ArrayAdapter<Event> eventAdapter;
     private ArrayAdapter<Teacher> teacherAdapter;
@@ -68,17 +61,14 @@ public class MainActivity extends Activity {
 
         setUpDesign();
 
+        lay = findViewById(R.id.lgn_main_layout);
+
 
         if (Utils.isNetworkAvailable(this)) {
 
             restTemplate = new RestTemplate();
-            new HttpRequestEventsTask().execute("teachers", "events", "schools", "subscriptions");
+            new HttpRequestEventsTask().execute("teachers", "events", "schools");
 
-            SharedPreferences preferences = this.getSharedPreferences("EHB App SharedPreferences", Context.MODE_PRIVATE);
-            int ourversion = preferences.getInt("Images Version Number", 1);
-            int serverversion = restTemplate.getForObject(SERVER, ImageVersion.class, "imageversion").getVersion();
-            if (ourversion > serverversion)
-                new ImageAsyncDownload().execute();
         }
 
     }
@@ -86,23 +76,10 @@ public class MainActivity extends Activity {
 
     public void setUpDesign() {
 
-        lgnCenterLayout = (LinearLayout) findViewById(R.id.lgn_screen_layout);
         progressOverlay = findViewById(R.id.progress_overlay);
         //assign spinners for latter assignment of teachers and events lists
         docentSP = (Spinner) findViewById(R.id.sp_docent);
         eventSP = (Spinner) findViewById(R.id.sp_event);
-
-
-        //set ehb picture as background in de main layout element
-        lay = findViewById(R.id.lgn_main_layout);
-        lay.setBackgroundResource(R.drawable.achtergrond2);
-
-        //set transparency for logo image
-        ImageView logo = (ImageView) findViewById(R.id.iv_logo);
-        logo.setAlpha(1f);
-
-        //retrieve and hide action bar if present
-//        getActionBar().hide();
 
     }
 
@@ -129,6 +106,13 @@ public class MainActivity extends Activity {
     }
 
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////                                                                                ////////////////
+    ////////////////                        ASYNC TASKS FOR DATA RETRIEVAL                          ////////////////
+    ////////////////                                                                                ////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
     private class HttpRequestEventsTask extends AsyncTask<String, Void, HashMap<String, ArrayAdapter>> {
 
 
@@ -142,6 +126,7 @@ public class MainActivity extends Activity {
             eventSP.setEnabled(false);
         }
 
+
         @Override
         protected HashMap<String, ArrayAdapter> doInBackground(String... params) {
             //if running in debug mode waitForDebugger to debug thread
@@ -150,9 +135,6 @@ public class MainActivity extends Activity {
 
 
             HashMap<String, ArrayAdapter> adaptersList = new HashMap<>();
-            Class convertClass;
-            ArrayAdapter dataAdapter = null;
-
 
             for (String requestedData : params) {
 
@@ -160,7 +142,9 @@ public class MainActivity extends Activity {
                     case "events":
                         EventList eventList;
                         eventList = restTemplate.getForObject(SERVER, EventList.class, requestedData);
-                        eventAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, eventList.getEvents());
+                        eventAdapter = new ArrayAdapter<>(getApplicationContext(),
+                                android.R.layout.simple_spinner_item,
+                                eventList.getEvents());
                         adaptersList.put(requestedData, eventAdapter);
                         for (Event item : eventList.getEvents()) {
                             if (Event.findById(Event.class, item.getId()) == null)
@@ -181,7 +165,7 @@ public class MainActivity extends Activity {
                         SchoolList schoolList;
                         schoolList = restTemplate.getForObject(SERVER, SchoolList.class, requestedData);
                         schoolAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, schoolList.getSchools());
-                        adaptersList.put(requestedData, teacherAdapter);
+                        adaptersList.put(requestedData, schoolAdapter);
                         for (School item : schoolList.getSchools()) {
                             if (School.findById(School.class, item.getId()) == null)
                                 item.save();
@@ -191,7 +175,7 @@ public class MainActivity extends Activity {
                         SubscriptionsList subscriptionsList;
                         subscriptionsList = restTemplate.getForObject(SERVER, SubscriptionsList.class, requestedData);
                         subscriptionAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, subscriptionsList.getSubscriptions());
-                        adaptersList.put(requestedData, teacherAdapter);
+                        adaptersList.put(requestedData, subscriptionAdapter);
                         for (Subscription item : subscriptionsList.getSubscriptions()) {
                             if (Subscription.findById(Subscription.class, item.getId()) == null)
                                 item.save();
@@ -205,11 +189,12 @@ public class MainActivity extends Activity {
 
             }
 
+            SharedPreferences preferences = getApplication().getSharedPreferences("EHB App SharedPreferences", Context.MODE_PRIVATE);
+            int ourversion = preferences.getInt("Images Version Number", 1);
+            int serverversion = restTemplate.getForObject(SERVER, Integer.class, "imagesversion");
+            if (ourversion != serverversion)
+                new ImageAsyncDownload().execute();
 
-            adaptersList.put("events", eventAdapter);
-            adaptersList.put("teachers", teacherAdapter);
-            adaptersList.put("subscriptions", subscriptionAdapter);
-            adaptersList.put("schools", schoolAdapter);
 
             return adaptersList;
         }
@@ -236,43 +221,35 @@ public class MainActivity extends Activity {
         }
     }
 
-    private class ImageAsyncDownload extends AsyncTask<Void, Void, Void> {
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////                                                                                ////////////////
+    ////////////////                        ASYNC TASKS FOR IMAGES RETRIEVAL                        ////////////////
+    ////////////////                                                                                ////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private class ImageAsyncDownload extends AsyncTask<Void, Void, String> {
+
         @Override
-        protected Void doInBackground(Void... params) {
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            lay.setBackground(Drawable.createFromPath(s));
+        }
 
-            ImageVersion version_check = restTemplate.getForObject(SERVER, ImageVersion.class, "imageversion");
-
+        @Override
+        protected String doInBackground(Void... params) {
+            //if running in debug mode waitForDebugger to debug thread
+            if (debugging)
+                android.os.Debug.waitForDebugger();
 
             ImageList imageList = restTemplate.getForObject(SERVER, ImageList.class, "images");
             for (Image item : imageList.getImages()) {
                 Bitmap imageToSave = BitmapFactory.decodeByteArray(item.getImage(), 0, item.getImage().length);
-                saveToInternalStorage(String.valueOf("EHBpicture_id_" + item.getId()) + ".jpg", imageToSave);
+                Utils.saveImage(String.valueOf("EHBpicture_id_" + item.getId()) + ".jpg", imageToSave, getApplicationContext());
             }
 
-
-            return null;
-        }
-
-        private String saveToInternalStorage(String fileName, Bitmap bitmapImage) {
             ContextWrapper cw = new ContextWrapper(getApplicationContext());
 
-            File directory = cw.getDir("imageDir", Context.MODE_PRIVATE);
-
-            File mypath = new File(directory, fileName);
-
-            Bitmap scaledImageToSave = Utils.scaleImage(bitmapImage, getApplicationContext());
-
-            FileOutputStream fos = null;
-            try {
-
-                fos = new FileOutputStream(mypath);
-                // Use the compress method on the BitMap object to write image to the OutputStream
-                scaledImageToSave.compress(Bitmap.CompressFormat.JPEG, 100, fos);
-                fos.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return directory.getAbsolutePath();
+            return cw.getDir("presentation_images", Context.MODE_PRIVATE) + "/EHBpicture_id_" + imageList.getImages().get(0).getId() + ".jpg";
         }
 
 
