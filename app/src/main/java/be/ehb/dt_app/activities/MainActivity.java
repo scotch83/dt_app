@@ -6,7 +6,6 @@ import android.content.ContextWrapper;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Debug;
@@ -232,7 +231,7 @@ public class MainActivity extends Activity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            lay.setBackground(Drawable.createFromPath(s));
+//            lay.setBackground(Drawable.createFromPath(s));
         }
 
         @Override
@@ -249,7 +248,7 @@ public class MainActivity extends Activity {
 
             ContextWrapper cw = new ContextWrapper(getApplicationContext());
 
-            return cw.getDir("presentation_images", Context.MODE_PRIVATE) + "/EHBpicture_id_" + imageList.getImages().get(0).getId() + ".jpg";
+            return cw.getDir("presentation_images", Context.MODE_PRIVATE).toString();
         }
 
 
