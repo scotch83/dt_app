@@ -17,5 +17,11 @@
     <string name="title_activity_registration2">Registration2Activity</string>
     <string name="btn_login_txt">LOGIN</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_data_list">DataListActivity</string>
+
+    <string name="hello_world">Hello world!</string>
+
 
 </resources>

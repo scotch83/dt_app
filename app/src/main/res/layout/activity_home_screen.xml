@@ -39,8 +39,8 @@
             android:layout_column="1"
             android:layout_columnSpan="1"
             android:layout_gravity="center"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
+            android:layout_marginLeft="80dp"
+            android:layout_marginRight="80dp"
             android:layout_row="0"
             android:background="#00000000"
             android:scaleType="fitCenter"
@@ -53,7 +53,7 @@
             android:layout_column="2"
             android:layout_columnSpan="1"
             android:layout_gravity="center"
-            android:layout_marginRight="50dp"
+            android:layout_marginRight="80dp"
             android:layout_row="0"
             android:background="@android:color/transparent"
             android:scaleType="fitCenter"
@@ -67,6 +67,7 @@
             android:layout_gravity="center"
             android:layout_row="0"
             android:background="@android:color/transparent"
+            android:nestedScrollingEnabled="false"
             android:scaleType="fitCenter"
             android:src="@drawable/icontodaylijst" />
 

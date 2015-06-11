@@ -34,7 +34,7 @@
                     android:orientation="vertical"
                     android:paddingLeft="150dp"
                     android:paddingRight="50dp"
-                    android:paddingTop="50dp">
+                    android:paddingTop="40dp">
 
                     <TextView
                         android:id="@+id/tv_stad_secundaireschool"
@@ -56,6 +56,7 @@
 
                     <Spinner
                         android:id="@+id/sp_secundaire_school"
+                        style="@style/ColoredSpinnerCustom"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:spinnerMode="dialog" />
@@ -71,10 +72,10 @@
                     android:orientation="vertical"
                     android:paddingLeft="50dp"
                     android:paddingRight="150dp"
-                    android:paddingTop="50dp">
+                    android:paddingTop="40dp">
 
 
-                    <TextView
+                <TextView
                         android:id="@+id/tv_interesse_opleiding"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -151,7 +152,7 @@
                     android:id="@+id/iv_ehbletter"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="130dp"
+                    android:layout_marginLeft="70dp"
                     android:layout_marginTop="20dp"
                     android:scaleType="fitCenter"
                     android:src="@drawable/ehbletter" />

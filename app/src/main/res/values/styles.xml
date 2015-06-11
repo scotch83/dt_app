@@ -49,4 +49,10 @@
         <item name="android:textColor">#ffbababa</item>
     </style>
 
+    <style name="ColoredSpinnerCustom" parent="android:Widget.Spinner">
+        <item name="android:background">@drawable/sidintheme_spinner_background_holo_dark</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">#FFF</item>
+    </style>
+
 </resources>
