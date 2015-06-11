@@ -5,11 +5,18 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ScrollView;
+import android.widget.TextView;
 
 import be.ehb.dt_app.R;
 
 
 public class RegistrationFragment extends Fragment {
+
+    EditText emailET;
+    TextView emailTV;
+    ScrollView mScrollView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -34,8 +41,31 @@ public class RegistrationFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_registration, container, false);
+        View v = inflater.inflate(R.layout.fragment_registration, container, false);
+
+        emailET = (EditText) v.findViewById(R.id.et_email);
+        emailTV = (TextView) v.findViewById(R.id.tv_email);
+        mScrollView = (ScrollView) v.findViewById(R.id.sv_registratie1);
+
+        return v;
     }
 
+
+    /*public void onFocusChange(final View v, boolean hasFocus) {
+        // TODO Auto-generated method stub
+
+        final ScrollView mScrollView = (ScrollView) v.findViewById(R.id.sv_registratie1);
+
+        if (hasFocus) {
+
+            new Handler().post(new Runnable() {
+                @Override
+                public void run() {
+                    mScrollView.smoothScrollTo(0, emailTV.getTop());
+
+                }
+            });
+        }
+    }*/
 
 }

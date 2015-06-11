@@ -18,7 +18,7 @@ public class HomeScreenActivity extends ActionBarActivity {
 
     private boolean once_only = true;
     private View lay;
-    private ImageButton registrationBTN;
+    private ImageButton registrationBTN, datalistBTN;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +29,15 @@ public class HomeScreenActivity extends ActionBarActivity {
             Toast.makeText(getApplicationContext(), "Welkom " + getSharedPreferences("EHB App SharedPreferences", Context.MODE_PRIVATE).getString("Teacher", "(teacher not set)"), Toast.LENGTH_LONG).show();
             once_only = false;
         }
+
+        datalistBTN = (ImageButton) findViewById(R.id.ib_todaylijst);
+        datalistBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(), DataListActivity.class);
+                startActivity(i);
+            }
+        });
     }
 
     private void setupDesign() {

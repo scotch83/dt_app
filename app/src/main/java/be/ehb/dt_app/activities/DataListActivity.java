@@ -14,10 +14,10 @@ import android.widget.Toast;
 
 import be.ehb.dt_app.R;
 import be.ehb.dt_app.controller.ZoomOutPageTransformer;
-import be.ehb.dt_app.fragments.RegistrationFragment;
-import be.ehb.dt_app.fragments.RegistrationFragment2;
+import be.ehb.dt_app.fragments.HeatmapFragment;
+import be.ehb.dt_app.fragments.StudentenlijstFragment;
 
-public class RegistrationActivity extends ActionBarActivity {
+public class DataListActivity extends ActionBarActivity {
 
     protected Fragment form1, form2;
     private ViewPager mPagerRegistratie;
@@ -28,16 +28,16 @@ public class RegistrationActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_registration);
+        setContentView(R.layout.activity_data_list);
 
-        form1 = new RegistrationFragment();
-        form2 = new RegistrationFragment2();
+        form1 = new StudentenlijstFragment();
+        form2 = new HeatmapFragment();
 
-        img_page1 = (ImageView) findViewById(R.id.iv_page1);
-        img_page2 = (ImageView) findViewById(R.id.iv_page2);
+        img_page1 = (ImageView) findViewById(R.id.iv_page1_data);
+        img_page2 = (ImageView) findViewById(R.id.iv_page2_data);
 
-        mPagerRegistratie = (ViewPager) findViewById(R.id.pager_registratie);
-        mPagerAdapter = new RegistratiePagerAdapter(getSupportFragmentManager(), form1, form2);
+        mPagerRegistratie = (ViewPager) findViewById(R.id.pager_datalist);
+        mPagerAdapter = new DatalistPagerAdapter(getSupportFragmentManager(), form1, form2);
         mPagerRegistratie.setAdapter(mPagerAdapter);
         mPagerRegistratie.setPageTransformer(true, new ZoomOutPageTransformer());
 
@@ -100,11 +100,11 @@ public class RegistrationActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private class RegistratiePagerAdapter extends FragmentStatePagerAdapter {
+    private class DatalistPagerAdapter extends FragmentStatePagerAdapter {
 
         Fragment formPart1, formPart2;
 
-        public RegistratiePagerAdapter(FragmentManager supportFragmentManager, Fragment formPart1, Fragment formPart2) {
+        public DatalistPagerAdapter(FragmentManager supportFragmentManager, Fragment formPart1, Fragment formPart2) {
             super(supportFragmentManager);
             this.formPart1 = formPart1;
             this.formPart2 = formPart2;
