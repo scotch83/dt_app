@@ -49,6 +49,10 @@
             android:label="@string/title_activity_registration"
             android:screenOrientation="landscape" >
         </activity>
+        <activity
+            android:name=".activities.DataListActivity"
+            android:label="@string/title_activity_data_list"
+            android:screenOrientation="landscape"></activity>
 
         <receiver android:name=".controller.ConnectionChangeReceiver">
             <intent-filter>

@@ -9,13 +9,17 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
+
+import java.util.ArrayList;
 
 import be.ehb.dt_app.R;
 import be.ehb.dt_app.controller.ZoomOutPageTransformer;
 import be.ehb.dt_app.fragments.RegistrationFragment;
 import be.ehb.dt_app.fragments.RegistrationFragment2;
+import be.ehb.dt_app.model.Subscription;
 
 public class RegistrationActivity extends ActionBarActivity {
 
@@ -23,6 +27,7 @@ public class RegistrationActivity extends ActionBarActivity {
     private ViewPager mPagerRegistratie;
     private PagerAdapter mPagerAdapter;
     private ImageView img_page1, img_page2;
+
 
 
     @Override
@@ -33,14 +38,53 @@ public class RegistrationActivity extends ActionBarActivity {
         form1 = new RegistrationFragment();
         form2 = new RegistrationFragment2();
 
+        initializeDesign();
+
+        initializePager();
+    }
+
+    private void initializeDesign() {
         img_page1 = (ImageView) findViewById(R.id.iv_page1);
         img_page2 = (ImageView) findViewById(R.id.iv_page2);
 
+        ArrayList<String> dataToSend = new ArrayList<>();
+
+        Subscription newSubscription = new Subscription();
+
+        EditText temp;
+
+
+//        temp = (EditText) findViewById(R.id.et_voornaam);
+//        newSubscription.setFirstName(temp.getText().toString());
+//
+//        temp= (EditText) findViewById(R.id.et_achternaam);
+//        newSubscription.setLastName(temp.getText().toString());
+//
+//        temp = (EditText) findViewById(R.id.et_email);
+//        newSubscription.setEmail(temp.getText().toString());
+//
+//        temp = (EditText) findViewById(R.id.et_straatnaam);
+//        newSubscription.setStreet(temp.getText().toString());
+//
+//        String straatnummer = "69";
+//        newSubscription.setStreetNumber(straatnummer);
+//
+//        temp = (EditText) findViewById(R.id.et_stad);
+//        newSubscription.setCity(temp.getText().toString());
+//
+//        temp = (EditText) findViewById(R.id.et_postcode);
+//        newSubscription.setZip(temp.getText().toString());
+
+    }
+
+    private void initializePager() {
+
         mPagerRegistratie = (ViewPager) findViewById(R.id.pager_registratie);
+
         mPagerAdapter = new RegistratiePagerAdapter(getSupportFragmentManager(), form1, form2);
+
         mPagerRegistratie.setAdapter(mPagerAdapter);
         mPagerRegistratie.setPageTransformer(true, new ZoomOutPageTransformer());
-
         mPagerRegistratie.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -71,12 +115,7 @@ public class RegistrationActivity extends ActionBarActivity {
 
             }
         });
-
-        Toast.makeText(this, "Testing branches again!", Toast.LENGTH_LONG).show();
-
-
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -100,6 +139,10 @@ public class RegistrationActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void sendSubscriptionClicked(View v) {
+
+    }
+
     private class RegistratiePagerAdapter extends FragmentStatePagerAdapter {
 
         Fragment formPart1, formPart2;
@@ -108,8 +151,8 @@ public class RegistrationActivity extends ActionBarActivity {
             super(supportFragmentManager);
             this.formPart1 = formPart1;
             this.formPart2 = formPart2;
-
         }
+
 
         @Override
         public Fragment getItem(int position) {

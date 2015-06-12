@@ -4,8 +4,6 @@ import com.orm.SugarRecord;
 
 public class School extends SugarRecord<School> {
 
-    //@JsonIgnore
-    private Long _id;
 
     private String name;
     private String gemeente;
@@ -22,13 +20,7 @@ public class School extends SugarRecord<School> {
         this.postcode = postcode;
     }
 
-    public Long getId() {
-        return id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;

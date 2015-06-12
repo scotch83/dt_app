@@ -14,15 +14,22 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
+import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import be.ehb.dt_app.R;
 import be.ehb.dt_app.controller.Utils;
+import be.ehb.dt_app.model.CustomGsonHttpMessageConverter;
 import be.ehb.dt_app.model.Event;
 import be.ehb.dt_app.model.EventList;
 import be.ehb.dt_app.model.Image;
@@ -41,16 +48,22 @@ public class MainActivity extends Activity {
     private static final String SERVER = "http://vdabsidin.appspot.com/rest/{required_dataset}";
     //GRAPHICAL ELEMENTS AND DATA LISTS FOR ADAPTERS DECLARATION
 
-    View progressOverlay, lay;
-    Spinner docentSP, eventSP;
-    SharedPreferences preferences;
+    private View progressOverlay;
+    private Spinner docentSP, eventSP;
+    private SharedPreferences preferences;
     private RestTemplate restTemplate;
-    private ArrayAdapter<Event> eventAdapter;
-    private ArrayAdapter<Teacher> teacherAdapter;
-    private ArrayAdapter<School> schoolAdapter;
-    private ArrayAdapter<Subscription> subscriptionAdapter;
+    //    private ArrayAdapter<Event> eventAdapter;
+//    private ArrayAdapter<Teacher> teacherAdapter;
+//    private ArrayAdapter<School> schoolAdapter;
+//    private ArrayAdapter<Subscription> subscriptionAdapter;
+    private ArrayList<School> schoolList;
+    private ArrayList<Event> eventList;
+    private ArrayList<Subscription> subscriptionsList;
+    private ArrayList<Teacher> teacherList;
+
     //DEBUG APPLICATION
     private boolean debugging = Debug.isDebuggerConnected();
+    private Button loginBTN;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,24 +74,34 @@ public class MainActivity extends Activity {
 
         setUpDesign();
 
-        lay = findViewById(R.id.lgn_main_layout);
+
 
 
         if (Utils.isNetworkAvailable(this)) {
 
             restTemplate = new RestTemplate();
-            new HttpRequestEventsTask().execute("teachers", "events", "schools");
 
+            List<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
+            messageConverters.add(new CustomGsonHttpMessageConverter());
+            restTemplate.setMessageConverters(messageConverters);
+            new HttpRequestEventsTask().execute("teachers", "events", "schools", "subscriptions");
+        } else {
+            Toast.makeText(getApplicationContext(), "Er kon geen internet verbinding gemaakt worden. Data kan niet geupdate zijn.", Toast.LENGTH_SHORT);
         }
 
     }
 
     public void loginClicked(View v) {
+
+        Teacher docent = (Teacher) docentSP.getSelectedItem();
+        Event event = (Event) eventSP.getSelectedItem();
+
+        Gson gson = new Gson();
+
+        preferences.edit().putString("Teacher", gson.toJson(docent)).apply();
+        preferences.edit().putString("Event", gson.toJson(event)).apply();
+
         Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
-
-        preferences.edit().putString("Teacher", docentSP.getSelectedItem().toString()).commit();
-
-        preferences.edit().putString("Event", eventSP.getSelectedItem().toString()).commit();
         startActivity(i);
 
     }
@@ -89,6 +112,7 @@ public class MainActivity extends Activity {
         //assign spinners for latter assignment of teachers and events lists
         docentSP = (Spinner) findViewById(R.id.sp_docent);
         eventSP = (Spinner) findViewById(R.id.sp_event);
+        loginBTN = (Button) findViewById(R.id.btn_login);
 
     }
 
@@ -122,22 +146,31 @@ public class MainActivity extends Activity {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    private class HttpRequestEventsTask extends AsyncTask<String, Void, HashMap<String, ArrayAdapter>> {
+    private class HttpRequestEventsTask extends AsyncTask<String, Void, Void> {
 
+
+        private Integer serverversion;
+        private int ourversion;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-
+            //lock screen with loading wheel, spinners and login button to avoid user interaction
             Utils.animateView(progressOverlay, View.VISIBLE, 0.4f, 200);
-            Toast.makeText(getApplicationContext(), "Please wait while loading data", Toast.LENGTH_LONG);
+
             docentSP.setEnabled(false);
             eventSP.setEnabled(false);
+            loginBTN.setEnabled(false);
+
+            //show toast for loading data
+            Toast
+                    .makeText(getApplicationContext(), "Please wait while loading data", Toast.LENGTH_SHORT)
+                    .show();
         }
 
 
         @Override
-        protected HashMap<String, ArrayAdapter> doInBackground(String... params) {
+        protected Void doInBackground(String... params) {
             //if running in debug mode waitForDebugger to debug thread
             if (debugging)
                 android.os.Debug.waitForDebugger();
@@ -149,83 +182,78 @@ public class MainActivity extends Activity {
 
                 switch (requestedData) {
                     case "events":
-                        EventList eventList;
-                        eventList = restTemplate.getForObject(SERVER, EventList.class, requestedData);
-                        eventAdapter = new ArrayAdapter<>(getApplicationContext(),
-                                android.R.layout.simple_spinner_item,
-                                eventList.getEvents());
-                        adaptersList.put(requestedData, eventAdapter);
-                        for (Event item : eventList.getEvents()) {
-                            if (Event.findById(Event.class, item.getId()) == null)
-                                item.save();
-                        }
+                        //get data from webservice
+                        eventList = restTemplate.getForObject(SERVER, EventList.class, requestedData).getEvents();
                         break;
                     case "teachers":
-                        TeacherList teacherList;
-                        teacherList = restTemplate.getForObject(SERVER, TeacherList.class, requestedData);
-                        teacherAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, teacherList.getTeachers());
-                        adaptersList.put(requestedData, teacherAdapter);
-                        for (Teacher item : teacherList.getTeachers()) {
-                            if (Teacher.findById(Teacher.class, item.getId()) == null)
-                                item.save();
-                        }
+                        //get data from webservice
+                        teacherList = restTemplate.getForObject(SERVER, TeacherList.class, requestedData).getTeachers();
                         break;
                     case "schools":
-                        SchoolList schoolList;
-                        schoolList = restTemplate.getForObject(SERVER, SchoolList.class, requestedData);
-                        schoolAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, schoolList.getSchools());
-                        adaptersList.put(requestedData, schoolAdapter);
-                        for (School item : schoolList.getSchools()) {
-                            if (School.findById(School.class, item.getId()) == null)
-                                item.save();
-                        }
+                        //get data from webservice
+                        schoolList = restTemplate.getForObject(SERVER, SchoolList.class, requestedData).getSchools();
                         break;
                     case "subscriptions":
-                        SubscriptionsList subscriptionsList;
-                        subscriptionsList = restTemplate.getForObject(SERVER, SubscriptionsList.class, requestedData);
-                        subscriptionAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_item, subscriptionsList.getSubscriptions());
-                        adaptersList.put(requestedData, subscriptionAdapter);
-                        for (Subscription item : subscriptionsList.getSubscriptions()) {
-                            if (Subscription.findById(Subscription.class, item.getId()) == null)
-                                item.save();
-                        }
+                        //get data from webservice
+                        subscriptionsList = restTemplate.getForObject(SERVER, SubscriptionsList.class, requestedData).getSubscriptions();
                         break;
-
                     default:
-
                         break;
                 }
 
             }
 
-            int ourversion = preferences.getInt("Images Version Number", 1);
-            int serverversion = restTemplate.getForObject(SERVER, Integer.class, "imagesversion");
-            if (ourversion < serverversion) {
-                new ImageAsyncDownload().execute();
-                preferences.edit().putInt("Image Version Number", serverversion);
-            }
+            //get own image version from SharedPreferences
+            ourversion = preferences.getInt("Images Version Number", 1);
+            //get Image version from the server to state if images need to be downloaded
+            serverversion = restTemplate.getForObject(SERVER, Integer.class, "imagesversion");
 
-            return adaptersList;
+            return null;
         }
 
         @Override
-        protected void onPostExecute(HashMap<String, ArrayAdapter> arrayAdapters) {
-            super.onPostExecute(arrayAdapters);
+        protected void onPostExecute(Void v) {
+            super.onPostExecute(v);
             String toastMessage = "";
-            if (arrayAdapters.isEmpty()) {
-                toastMessage = "There has been a problem downloading data. Please check your internet connection";
-            } else {
-                eventSP.setAdapter(arrayAdapters.get("events"));
+            //setup adapters for interface
+            ArrayAdapter<Event> eventAdapter = new ArrayAdapter<>(
+                    getApplicationContext(),
+                    R.layout.ehb_spinner_list_item,
+                    R.id.sub_text_seen,
+                    eventList
+            );
+
+            eventSP.setAdapter(eventAdapter);
+            ArrayAdapter<Teacher> teacherAdapter = new ArrayAdapter<>(
+                    getApplicationContext(),
+                    R.layout.ehb_spinner_list_item,
+                    R.id.sub_text_seen,
+                    teacherList
+            );
+
+            eventSP.setAdapter(eventAdapter);
                 eventSP.setEnabled(true);
 
-                docentSP.setAdapter(arrayAdapters.get("teachers"));
+            docentSP.setAdapter(teacherAdapter);
                 docentSP.setEnabled(true);
+            if (!(eventList.isEmpty() || teacherList.isEmpty()))
                 toastMessage = "Please select a teacher and event to proceed";
+            else
+                toastMessage = "Er is een fout optreden bij het ophalen van de gegevens. Neem contact op met de ICT dienst.";
+
+            if (ourversion < serverversion) {
+                //if Image version lower than the one on the server, download images
+                //new ImageAsyncDownload().execute();
+//                preferences.edit().putInt("Image Version Number", serverversion).apply();
             }
 
             Utils.animateView(progressOverlay, View.GONE, 0.4f, 200);
 
-            Toast.makeText(getApplicationContext(), toastMessage, Toast.LENGTH_LONG);
+            Toast
+                    .makeText(getApplicationContext(), toastMessage, Toast.LENGTH_SHORT)
+                    .show();
+
+            loginBTN.setEnabled(true);
 
         }
     }
@@ -241,7 +269,8 @@ public class MainActivity extends Activity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-//            lay.setBackground(Drawable.createFromPath(s));
+            preferences.edit().putString("Images path", s);
+
         }
 
         @Override

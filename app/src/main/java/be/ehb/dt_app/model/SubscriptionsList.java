@@ -1,27 +1,27 @@
 package be.ehb.dt_app.model;
 
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Created by Bart on 2/06/2015.
  */
 public class SubscriptionsList  {
-    private List<Subscription> subscriptions;
+    private ArrayList<Subscription> subscriptions;
 
     public SubscriptionsList(){
 
     }
 
-    public SubscriptionsList(List<Subscription> subscriptions) {
+    public SubscriptionsList(ArrayList<Subscription> subscriptions) {
         this.subscriptions = subscriptions;
     }
 
-    public List<Subscription> getSubscriptions() {
+    public ArrayList<Subscription> getSubscriptions() {
         return subscriptions;
     }
 
-    public void setSubscriptions(List<Subscription> subscriptions) {
+    public void setSubscriptions(ArrayList<Subscription> subscriptions) {
         this.subscriptions = subscriptions;
     }
 

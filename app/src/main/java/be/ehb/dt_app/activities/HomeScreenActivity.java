@@ -2,6 +2,7 @@ package be.ehb.dt_app.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -10,7 +11,10 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import be.ehb.dt_app.R;
+import be.ehb.dt_app.model.Teacher;
 
 
 public class HomeScreenActivity extends ActionBarActivity {
@@ -20,13 +24,19 @@ public class HomeScreenActivity extends ActionBarActivity {
     private View lay;
     private ImageButton registrationBTN, datalistBTN;
 
+    private SharedPreferences preferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_screen);
         setupDesign();
         if (once_only) {
-            Toast.makeText(getApplicationContext(), "Welkom " + getSharedPreferences("EHB App SharedPreferences", Context.MODE_PRIVATE).getString("Teacher", "(teacher not set)"), Toast.LENGTH_LONG).show();
+            preferences = getSharedPreferences("EHB App SharedPreferences", Context.MODE_PRIVATE);
+            String jsonTeacher = preferences.getString("Teacher", "(iets misgelopen. Neem contact met de ICT dienst.)");
+            Gson gson = new Gson();
+            Teacher docent = gson.fromJson(jsonTeacher, Teacher.class);
+            Toast.makeText(getApplicationContext(), "Welkom " + docent.getName(), Toast.LENGTH_SHORT).show();
             once_only = false;
         }
 
