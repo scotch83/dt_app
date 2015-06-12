@@ -82,7 +82,7 @@ public class MainActivity extends Activity {
             List<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
             messageConverters.add(new CustomGsonHttpMessageConverter());
             restTemplate.setMessageConverters(messageConverters);
-            new HttpRequestEventsTask().execute("teachers", "events", "schools", "subscriptions");
+            new HttpRequestEventsTask().execute("teachers", "events"/*, "schools", "subscriptions"*/);
         } else {
 
             Toast.makeText(getApplicationContext(), "Er kon geen internet verbinding gemaakt worden. Data kan niet geupdate zijn.", Toast.LENGTH_SHORT);
@@ -185,8 +185,6 @@ public class MainActivity extends Activity {
                         //get data from webservice
                         eventList = restTemplate.getForObject(SERVER, EventList.class, requestedData).getEvents();
                         for (Event event : eventList) {
-
-
                             if (Event.findById(Event.class, event.getId()) == null) {
                                 event.save();
                             }
