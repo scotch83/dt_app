@@ -4,8 +4,6 @@ import com.orm.SugarRecord;
 
 public class Teacher extends SugarRecord<Teacher> {
 
-    //@JsonIgnore
-    private Long _id;
 
     private String name;
     private short acadyear;
@@ -17,14 +15,6 @@ public class Teacher extends SugarRecord<Teacher> {
     public Teacher(String name, short acadyear) {
         this.name = name;
         this.acadyear = acadyear;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {

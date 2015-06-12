@@ -4,8 +4,6 @@ import com.orm.SugarRecord;
 
 public class Event extends SugarRecord<Event> {
 
-
-    private Long _id;
     private String name;
     private short acadyear;
 
@@ -18,13 +16,6 @@ public class Event extends SugarRecord<Event> {
         this.acadyear = acadyear;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public short getAcadyear() {
         return acadyear;

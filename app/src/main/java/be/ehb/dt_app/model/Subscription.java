@@ -1,6 +1,7 @@
 package be.ehb.dt_app.model;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.orm.SugarRecord;
 
 import java.util.Date;
@@ -10,8 +11,6 @@ public class Subscription extends SugarRecord<Subscription> {
 
 
 
-    //@JsonIgnore
-    private Long _id;
     private String firstName;
     private String lastName;
     private String email;
@@ -21,10 +20,30 @@ public class Subscription extends SugarRecord<Subscription> {
     private String city;
     private HashMap<String, String> interests;
     private Date timestamp;
+    private boolean isNew;
     private Teacher teacher;
     private Event event;
-    private boolean isNew;
     private School school;
+
+    public Subscription() {
+    }
+
+    public Subscription(Long id, String firstName, String lastName, String email, String street, String streetNumber, String zip, String city, HashMap<String, String> interests, Date timestamp, Teacher teacher, Event event, boolean isNew, School school) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.street = street;
+        this.streetNumber = streetNumber;
+        this.zip = zip;
+        this.city = city;
+        this.interests = interests;
+        this.timestamp = timestamp;
+        this.teacher = teacher;
+        this.event = event;
+        this.isNew = isNew;
+        this.school = school;
+    }
 
     public Subscription(String firstName, String lastName, String email, String street, String streetNumber, String zip, String city, HashMap<String, String> interests, Date timestamp, Teacher teacher, Event event, boolean isNew, School school) {
 
@@ -60,13 +79,6 @@ public class Subscription extends SugarRecord<Subscription> {
     }
 
 
-    public Long getId() {
-        return _id;
-    }
-
-    public void setId(Long id) {
-        this._id = id;
-    }
 
     public String getFirstName() {
         return firstName;
@@ -140,6 +152,16 @@ public class Subscription extends SugarRecord<Subscription> {
         this.timestamp = timestamp;
     }
 
+
+    public boolean isNew() {
+        return isNew;
+    }
+
+    @JsonProperty("new")
+    public void setIsNew(boolean isNew) {
+        this.isNew = isNew;
+    }
+
     public Teacher getTeacher() {
         return teacher;
     }
@@ -156,14 +178,6 @@ public class Subscription extends SugarRecord<Subscription> {
         this.event = event;
     }
 
-    public boolean isNew() {
-        return isNew;
-    }
-
-    public void setIsNew(boolean isNew) {
-        this.isNew = isNew;
-    }
-
     public School getSchool() {
         return school;
     }
@@ -175,7 +189,7 @@ public class Subscription extends SugarRecord<Subscription> {
     @Override
     public String toString() {
         return "Subscription{" +
-                "id=" + _id +
+                "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +

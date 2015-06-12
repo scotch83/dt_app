@@ -28,6 +28,7 @@
             android:layout_gravity="center"
             android:layout_row="0"
             android:background="#00000000"
+            android:clickable="true"
             android:onClick="registrationClicked"
             android:scaleType="centerInside"
             android:src="@drawable/iconstudenten" />
@@ -45,7 +46,6 @@
             android:background="#00000000"
             android:scaleType="fitCenter"
             android:src="@drawable/iconpdf" />
-
         <ImageButton
             android:id="@+id/ib_beheer"
             android:layout_width="150dp"

@@ -1,22 +1,22 @@
 package be.ehb.dt_app.model;
 
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Created by Mattia on 01/06/15.
  */
 public class EventList {
-    private List<Event> events;
+    private ArrayList<Event> events;
 
     public EventList() {
     }
 
-    public List<Event> getEvents() {
+    public ArrayList<Event> getEvents() {
         return events;
     }
 
-    public void setEvents(List<Event> events) {
+    public void setEvents(ArrayList<Event> events) {
         this.events = events;
     }
 

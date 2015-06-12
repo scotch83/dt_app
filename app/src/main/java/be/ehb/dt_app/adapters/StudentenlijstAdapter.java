@@ -72,7 +72,23 @@ public class StudentenlijstAdapter extends BaseAdapter {
 
             holder.studentnaamTV.setText(tempValues.getFirstName() + " " + tempValues.getLastName());
             //holder.huidigeschoolTV.setText((CharSequence) tempValues.getSchool());
-            //holder.interessesTV.setText((CharSequence) tempValues.getInterests());
+            String interestsConc = "";
+//            HashMap<String, String> interests = tempValues.getInterests();
+//            Iterator it = interests.entrySet().iterator();
+//            int i = 0;
+//            while (it.hasNext()) {
+//                Map.Entry pair = (Map.Entry) it.next();
+//                if (i > 0 && pair.getValue() == "true")
+//                    interestsConc += "\n";
+//                if (pair.getValue() == "true") {
+//                    interestsConc += pair.getKey();
+//                }
+//                i++;
+//
+//            }
+            holder.interessesTV.setText(interestsConc);
+
+
         }
 
         return v;
