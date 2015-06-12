@@ -3,6 +3,7 @@
     android:id="@+id/rl_registratie"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="top"
     tools:context="be.ehb.dt_app.activities.RegistrationActivity">
 
     <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
@@ -16,6 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
+        android:baselineAligned="false"
         android:orientation="horizontal"
         android:padding="20dp">
 
@@ -24,7 +26,7 @@
             android:layout_width="15dp"
             android:layout_height="wrap_content"
             android:layout_marginRight="20dp"
-            android:baselineAlignBottom="false"
+            android:baselineAlignBottom="true"
             android:scaleType="centerInside"
             android:src="@drawable/dotsselected" />
 
@@ -32,6 +34,7 @@
             android:id="@+id/iv_page2"
             android:layout_width="15dp"
             android:layout_height="wrap_content"
+            android:baselineAlignBottom="true"
             android:src="@drawable/dotsunselected" />
     </LinearLayout>
 

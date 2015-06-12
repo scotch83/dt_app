@@ -51,21 +51,4 @@ public class RegistrationFragment extends Fragment {
     }
 
 
-    /*public void onFocusChange(final View v, boolean hasFocus) {
-        // TODO Auto-generated method stub
-
-        final ScrollView mScrollView = (ScrollView) v.findViewById(R.id.sv_registratie1);
-
-        if (hasFocus) {
-
-            new Handler().post(new Runnable() {
-                @Override
-                public void run() {
-                    mScrollView.smoothScrollTo(0, emailTV.getTop());
-
-                }
-            });
-        }
-    }*/
-
 }

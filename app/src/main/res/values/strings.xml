@@ -22,6 +22,7 @@
     <string name="title_activity_data_list">DataListActivity</string>
 
     <string name="hello_world">Hello world!</string>
+    <string name="title_activity_pdf">PdfActivity</string>
 
 
 </resources>

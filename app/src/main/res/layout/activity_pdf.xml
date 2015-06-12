@@ -1,5 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/rl_studentenlijst"
+    android:id="@+id/rl_pdf"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:focusable="true"
@@ -7,13 +7,13 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/ll_studentenlijst_basis"
+        android:id="@+id/ll_pdf_basis"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/ll_studentenlijst_top"
+            android:id="@+id/ll_pdf_top"
             android:layout_width="fill_parent"
             android:layout_height="80dp"
             android:layout_alignParentLeft="true"
@@ -32,7 +32,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/ll_studentenlijst_bottom"
+            android:id="@+id/ll_pdf_bottom"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_centerHorizontal="true"
@@ -41,42 +41,30 @@
             android:weightSum="1">
 
             <LinearLayout
-                android:id="@+id/ll_registratie1_persoonsgegevens"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="90dp"
-                android:layout_weight="0.5"
-                android:gravity="left"
-                android:orientation="vertical"
-                android:paddingLeft="150dp"
-                android:paddingRight="50dp"
-                android:paddingTop="50dp">
-
-
-                <Spinner
-                    android:id="@+id/spinner"
-                    style="@style/ColoredSpinnerCustom"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/ll_registratie1_adresgegevens"
+                android:id="@+id/ll_pdf_lijst"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="0.5"
                 android:gravity="center|bottom|left"
-                android:orientation="vertical"
+                android:orientation="horizontal"
                 android:paddingBottom="50dp"
-                android:paddingLeft="50dp"
-                android:paddingRight="150dp">
+                android:paddingLeft="150dp"
+                android:paddingRight="50dp">
 
+
+                <SearchView
+                    android:id="@+id/sv_pdflijst"
+                    android:layout_width="350dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top"
+                    android:layout_marginTop="40dp"
+                    android:gravity="left" />
 
                 <ListView
-                    android:id="@+id/lv_studentenlijst"
-                    android:layout_width="fill_parent"
+                    android:id="@+id/lv_pdflijst"
+                    android:layout_width="400dp"
                     android:layout_height="fill_parent"
+                    android:layout_gravity="center_horizontal"
                     android:divider="#FFF"
                     android:dividerHeight="0.5px"
                     android:paddingTop="40dp" />

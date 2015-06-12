@@ -12,9 +12,29 @@
         android:fillViewport="true">
 
 
-        <FrameLayout
+        <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/ll_registratie2_top"
+                android:layout_width="fill_parent"
+                android:layout_height="80dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/iv_ehbletter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="65dp"
+                    android:layout_marginTop="10dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ehbletter" />
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/ll_registratie2_bottom"
@@ -22,7 +42,6 @@
                 android:layout_height="fill_parent"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="100dp"
                 android:background="#b4000000"
                 android:orientation="horizontal">
 
@@ -34,7 +53,7 @@
                     android:orientation="vertical"
                     android:paddingLeft="150dp"
                     android:paddingRight="50dp"
-                    android:paddingTop="40dp">
+                    android:paddingTop="50dp">
 
                     <TextView
                         android:id="@+id/tv_stad_secundaireschool"
@@ -72,10 +91,11 @@
                     android:orientation="vertical"
                     android:paddingLeft="50dp"
                     android:paddingRight="150dp"
-                    android:paddingTop="40dp">
+                    android:paddingTop="50dp"
+                    android:weightSum="1">
 
 
-                <TextView
+                    <TextView
                         android:id="@+id/tv_interesse_opleiding"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -115,7 +135,7 @@
 
                     <RadioGroup
                         android:layout_width="fill_parent"
-                        android:layout_height="fill_parent">
+                        android:layout_height="wrap_content">
 
                         <RadioButton
                             android:id="@+id/rb_ja"
@@ -136,27 +156,30 @@
                             android:text="Nee"
                             android:textSize="20sp" />
                     </RadioGroup>
+
+                    <LinearLayout
+                        android:id="@+id/ll_btn_voegtoe"
+                        android:layout_width="match_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_gravity="right"
+                        android:gravity="right"
+                        android:orientation="horizontal"
+                        android:paddingBottom="20dp"
+                        android:paddingRight="20dp">
+
+                        <ImageButton
+                            android:id="@+id/ib_voegstudenttoe"
+                            android:layout_width="80dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:background="#00000000"
+                            android:scaleType="centerInside"
+                            android:src="@drawable/voegstudenttoe_plus" />
+                    </LinearLayout>
+
                 </LinearLayout>
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/ll_registratie2_top"
-                android:layout_width="fill_parent"
-                android:layout_height="100dp"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/iv_ehbletter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="70dp"
-                    android:layout_marginTop="20dp"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/ehbletter" />
-            </LinearLayout>
-        </FrameLayout>
+        </LinearLayout>
     </ScrollView>
 </RelativeLayout>

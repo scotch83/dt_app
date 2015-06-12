@@ -18,7 +18,7 @@ public class HomeScreenActivity extends ActionBarActivity {
 
     private boolean once_only = true;
     private View lay;
-    private ImageButton registrationBTN, datalistBTN;
+    private ImageButton registrationBTN, datalistBTN, pdfBTN;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +35,15 @@ public class HomeScreenActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getApplicationContext(), DataListActivity.class);
+                startActivity(i);
+            }
+        });
+
+        pdfBTN = (ImageButton) findViewById(R.id.ib_pdf);
+        pdfBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(), PdfActivity.class);
                 startActivity(i);
             }
         });
