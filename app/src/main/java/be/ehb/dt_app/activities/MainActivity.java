@@ -75,8 +75,6 @@ public class MainActivity extends Activity {
         setUpDesign();
 
 
-
-
         if (Utils.isNetworkAvailable(this)) {
 
             restTemplate = new RestTemplate();
@@ -86,6 +84,7 @@ public class MainActivity extends Activity {
             restTemplate.setMessageConverters(messageConverters);
             new HttpRequestEventsTask().execute("teachers", "events", "schools", "subscriptions");
         } else {
+
             Toast.makeText(getApplicationContext(), "Er kon geen internet verbinding gemaakt worden. Data kan niet geupdate zijn.", Toast.LENGTH_SHORT);
         }
 
@@ -113,6 +112,10 @@ public class MainActivity extends Activity {
         docentSP = (Spinner) findViewById(R.id.sp_docent);
         eventSP = (Spinner) findViewById(R.id.sp_event);
         loginBTN = (Button) findViewById(R.id.btn_login);
+        //lock all UI elements to avoid user interaction until data has not been load
+        docentSP.setEnabled(false);
+        eventSP.setEnabled(false);
+        loginBTN.setEnabled(false);
 
     }
 
@@ -155,12 +158,9 @@ public class MainActivity extends Activity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            //lock screen with loading wheel, spinners and login button to avoid user interaction
+            //show loading wheel
             Utils.animateView(progressOverlay, View.VISIBLE, 0.4f, 200);
 
-            docentSP.setEnabled(false);
-            eventSP.setEnabled(false);
-            loginBTN.setEnabled(false);
 
             //show toast for loading data
             Toast
@@ -184,18 +184,36 @@ public class MainActivity extends Activity {
                     case "events":
                         //get data from webservice
                         eventList = restTemplate.getForObject(SERVER, EventList.class, requestedData).getEvents();
+                        for (Event event : eventList) {
+
+
+                            if (Event.findById(Event.class, event.getId()) == null) {
+                                event.save();
+                            }
+                        }
                         break;
                     case "teachers":
                         //get data from webservice
                         teacherList = restTemplate.getForObject(SERVER, TeacherList.class, requestedData).getTeachers();
+                        for (Teacher teacher : teacherList) {
+                            if (Teacher.findById(Teacher.class, teacher.getId()) == null)
+                                teacher.save();
+                        }
                         break;
                     case "schools":
                         //get data from webservice
                         schoolList = restTemplate.getForObject(SERVER, SchoolList.class, requestedData).getSchools();
+                        for (School school : schoolList) {
+                            if (School.findById(School.class, school.getId()) == null)
+                                school.save();
+                        }
                         break;
                     case "subscriptions":
                         //get data from webservice
                         subscriptionsList = restTemplate.getForObject(SERVER, SubscriptionsList.class, requestedData).getSubscriptions();
+                        for (Subscription subscription : subscriptionsList)
+                            if (Subscription.findById(Subscription.class, subscription.getId()) == null)
+                                subscription.save();
                         break;
                     default:
                         break;
@@ -232,10 +250,17 @@ public class MainActivity extends Activity {
             );
 
             eventSP.setAdapter(eventAdapter);
-                eventSP.setEnabled(true);
 
             docentSP.setAdapter(teacherAdapter);
-                docentSP.setEnabled(true);
+
+            for (Event event : eventList) {
+
+
+                if (Event.findById(Event.class, event.getId()) == null) {
+                    event.save();
+                }
+            }
+
             if (!(eventList.isEmpty() || teacherList.isEmpty()))
                 toastMessage = "Please select a teacher and event to proceed";
             else
@@ -254,6 +279,8 @@ public class MainActivity extends Activity {
                     .show();
 
             loginBTN.setEnabled(true);
+            eventSP.setEnabled(true);
+            docentSP.setEnabled(true);
 
         }
     }
