@@ -25,7 +25,9 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import be.ehb.dt_app.R;
 import be.ehb.dt_app.controller.Utils;
@@ -44,18 +46,14 @@ import be.ehb.dt_app.model.TeacherList;
 
 public class MainActivity extends Activity {
 
-    //DATA SOURCES URL CONFIGURATION and RestTemplate INITIALIZATION
+
     private static final String SERVER = "http://vdabsidin.appspot.com/rest/{required_dataset}";
-    //GRAPHICAL ELEMENTS AND DATA LISTS FOR ADAPTERS DECLARATION
 
     private View progressOverlay;
     private Spinner docentSP, eventSP;
+    private Button loginBTN;
     private SharedPreferences preferences;
     private RestTemplate restTemplate;
-    //    private ArrayAdapter<Event> eventAdapter;
-//    private ArrayAdapter<Teacher> teacherAdapter;
-//    private ArrayAdapter<School> schoolAdapter;
-//    private ArrayAdapter<Subscription> subscriptionAdapter;
     private ArrayList<School> schoolList;
     private ArrayList<Event> eventList;
     private ArrayList<Subscription> subscriptionsList;
@@ -63,18 +61,19 @@ public class MainActivity extends Activity {
 
     //DEBUG APPLICATION
     private boolean debugging = Debug.isDebuggerConnected();
-    private Button loginBTN;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //retrieve SharedPreferences in global var
         preferences = getSharedPreferences("EHB App SharedPreferences", Context.MODE_PRIVATE);
-
-
+        //setup needed design elements
         setUpDesign();
-
-
+        //try to initializate dataLists with existing data in DB
+        eventList = (ArrayList<Event>) Event.listAll(Event.class);
+        teacherList = (ArrayList<Teacher>) Teacher.listAll(Teacher.class);
+        //if network is available, load data from server
         if (Utils.isNetworkAvailable(this)) {
 
             restTemplate = new RestTemplate();
@@ -82,11 +81,46 @@ public class MainActivity extends Activity {
             List<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
             messageConverters.add(new CustomGsonHttpMessageConverter());
             restTemplate.setMessageConverters(messageConverters);
-            new HttpRequestEventsTask().execute("teachers", "events"/*, "schools", "subscriptions"*/);
+            new HttpRequestEventsTask().execute("teachers", "events", "schools", "subscriptions");
         } else {
-
             Toast.makeText(getApplicationContext(), "Er kon geen internet verbinding gemaakt worden. Data kan niet geupdate zijn.", Toast.LENGTH_SHORT);
         }
+    }
+
+
+    public void setUpDesign() {
+
+        progressOverlay = findViewById(R.id.progress_overlay);
+        //assign spinners for latter assignment of teachers and events lists
+        docentSP = (Spinner) findViewById(R.id.sp_docent);
+        eventSP = (Spinner) findViewById(R.id.sp_event);
+        loginBTN = (Button) findViewById(R.id.btn_login);
+        //lock all UI elements to avoid user interaction until data has not been load
+        docentSP.setEnabled(false);
+        eventSP.setEnabled(false);
+        loginBTN.setEnabled(false);
+
+    }
+
+    private void setupLoginAdapters() {
+        //setup adapters for interface
+        ArrayAdapter<Event> eventAdapter = new ArrayAdapter<>(
+                getApplicationContext(),
+                R.layout.ehb_spinner_list_item,
+                R.id.sub_text_seen,
+                eventList
+        );
+
+        ArrayAdapter<Teacher> teacherAdapter = new ArrayAdapter<>(
+                getApplicationContext(),
+                R.layout.ehb_spinner_list_item,
+                R.id.sub_text_seen,
+                teacherList
+        );
+
+
+        eventSP.setAdapter(eventAdapter);
+        docentSP.setAdapter(teacherAdapter);
 
     }
 
@@ -105,19 +139,6 @@ public class MainActivity extends Activity {
 
     }
 
-    public void setUpDesign() {
-
-        progressOverlay = findViewById(R.id.progress_overlay);
-        //assign spinners for latter assignment of teachers and events lists
-        docentSP = (Spinner) findViewById(R.id.sp_docent);
-        eventSP = (Spinner) findViewById(R.id.sp_event);
-        loginBTN = (Button) findViewById(R.id.btn_login);
-        //lock all UI elements to avoid user interaction until data has not been load
-        docentSP.setEnabled(false);
-        eventSP.setEnabled(false);
-        loginBTN.setEnabled(false);
-
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -149,7 +170,7 @@ public class MainActivity extends Activity {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    private class HttpRequestEventsTask extends AsyncTask<String, Void, Void> {
+    private class HttpRequestEventsTask extends AsyncTask<String, Void, HashMap<String, ArrayList>> {
 
 
         private Integer serverversion;
@@ -160,8 +181,6 @@ public class MainActivity extends Activity {
             super.onPreExecute();
             //show loading wheel
             Utils.animateView(progressOverlay, View.VISIBLE, 0.4f, 200);
-
-
             //show toast for loading data
             Toast
                     .makeText(getApplicationContext(), "Please wait while loading data", Toast.LENGTH_SHORT)
@@ -170,13 +189,13 @@ public class MainActivity extends Activity {
 
 
         @Override
-        protected Void doInBackground(String... params) {
+        protected HashMap<String, ArrayList> doInBackground(String... params) {
             //if running in debug mode waitForDebugger to debug thread
             if (debugging)
                 android.os.Debug.waitForDebugger();
 
 
-            HashMap<String, ArrayAdapter> adaptersList = new HashMap<>();
+            HashMap<String, ArrayList> dataLists = new HashMap<>();
 
             for (String requestedData : params) {
 
@@ -184,34 +203,22 @@ public class MainActivity extends Activity {
                     case "events":
                         //get data from webservice
                         eventList = restTemplate.getForObject(SERVER, EventList.class, requestedData).getEvents();
-                        for (Event event : eventList) {
-                            if (Event.findById(Event.class, event.getId()) == null) {
-                                event.save();
-                            }
-                        }
+                        dataLists.put(requestedData, eventList);
                         break;
                     case "teachers":
                         //get data from webservice
                         teacherList = restTemplate.getForObject(SERVER, TeacherList.class, requestedData).getTeachers();
-                        for (Teacher teacher : teacherList) {
-                            if (Teacher.findById(Teacher.class, teacher.getId()) == null)
-                                teacher.save();
-                        }
+                        dataLists.put(requestedData, teacherList);
                         break;
                     case "schools":
                         //get data from webservice
                         schoolList = restTemplate.getForObject(SERVER, SchoolList.class, requestedData).getSchools();
-                        for (School school : schoolList) {
-                            if (School.findById(School.class, school.getId()) == null)
-                                school.save();
-                        }
+                        dataLists.put(requestedData, schoolList);
                         break;
                     case "subscriptions":
                         //get data from webservice
                         subscriptionsList = restTemplate.getForObject(SERVER, SubscriptionsList.class, requestedData).getSubscriptions();
-                        for (Subscription subscription : subscriptionsList)
-                            if (Subscription.findById(Subscription.class, subscription.getId()) == null)
-                                subscription.save();
+                        dataLists.put(requestedData, subscriptionsList);
                         break;
                     default:
                         break;
@@ -224,62 +231,75 @@ public class MainActivity extends Activity {
             //get Image version from the server to state if images need to be downloaded
             serverversion = restTemplate.getForObject(SERVER, Integer.class, "imagesversion");
 
-            return null;
+            return dataLists;
         }
 
         @Override
-        protected void onPostExecute(Void v) {
-            super.onPostExecute(v);
+        protected void onPostExecute(HashMap<String, ArrayList> dataLists) {
+            super.onPostExecute(dataLists);
+
+            setupLoginAdapters();
+
             String toastMessage = "";
-            //setup adapters for interface
-            ArrayAdapter<Event> eventAdapter = new ArrayAdapter<>(
-                    getApplicationContext(),
-                    R.layout.ehb_spinner_list_item,
-                    R.id.sub_text_seen,
-                    eventList
-            );
-
-            eventSP.setAdapter(eventAdapter);
-            ArrayAdapter<Teacher> teacherAdapter = new ArrayAdapter<>(
-                    getApplicationContext(),
-                    R.layout.ehb_spinner_list_item,
-                    R.id.sub_text_seen,
-                    teacherList
-            );
-
-            eventSP.setAdapter(eventAdapter);
-
-            docentSP.setAdapter(teacherAdapter);
-
-            for (Event event : eventList) {
 
 
-                if (Event.findById(Event.class, event.getId()) == null) {
-                    event.save();
-                }
-            }
-
-            if (!(eventList.isEmpty() || teacherList.isEmpty()))
-                toastMessage = "Please select a teacher and event to proceed";
-            else
-                toastMessage = "Er is een fout optreden bij het ophalen van de gegevens. Neem contact op met de ICT dienst.";
-
-            if (ourversion < serverversion) {
-                //if Image version lower than the one on the server, download images
-                //new ImageAsyncDownload().execute();
-//                preferences.edit().putInt("Image Version Number", serverversion).apply();
-            }
-
-            Utils.animateView(progressOverlay, View.GONE, 0.4f, 200);
+            if (!(eventList.isEmpty() || teacherList.isEmpty())) {
+                toastMessage = "Please select a teacher and event to login";
+            } else
+                toastMessage = "Er is een fout opgetreden bij het ophalen van de gegevens. Neem contact op met de ICT dienst.";
 
             Toast
                     .makeText(getApplicationContext(), toastMessage, Toast.LENGTH_SHORT)
                     .show();
 
+            Utils.animateView(progressOverlay, View.GONE, 0.4f, 200);
+
+
+            if (ourversion < serverversion) {
+                //if Image version lower than the one on the server, download images
+                new ImageAsyncDownload().execute();
+                preferences.edit().putInt("Image Version Number", serverversion).apply();
+            }
+
+            persistDownloadedData(dataLists);
+
+
             loginBTN.setEnabled(true);
             eventSP.setEnabled(true);
             docentSP.setEnabled(true);
 
+        }
+
+        private void persistDownloadedData(HashMap<String, ArrayList> dataLists) {
+
+            Iterator it = dataLists.entrySet().iterator();
+
+            while (it.hasNext()) {
+                Map.Entry pair = (Map.Entry) it.next();
+                switch (pair.getKey().toString()) {
+                    case "events":
+                        for (Event event : (ArrayList<Event>) pair.getValue())
+                            if (Event.findById(Event.class, event.getId()) == null)
+                                event.save();
+                        break;
+                    case "teachers":
+                        for (Teacher teacher : (ArrayList<Teacher>) pair.getValue())
+                            if (Teacher.findById(Teacher.class, teacher.getId()) == null)
+                                teacher.save();
+                        break;
+                    case "schools":
+                        for (School school : (ArrayList<School>) pair.getValue())
+                            if (School.findById(School.class, school.getId()) == null)
+                                school.save();
+                        break;
+                    case "subscriptions":
+                        for (Subscription subscription : (ArrayList<Subscription>) pair.getValue())
+                            if (Subscription.findById(Subscription.class, subscription.getId()) == null)
+                                subscription.save();
+                        break;
+                }
+                it.next();
+            }
         }
     }
 

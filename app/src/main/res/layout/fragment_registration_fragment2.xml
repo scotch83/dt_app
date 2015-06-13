@@ -133,14 +133,6 @@
                         android:textColor="#e6ffffff"
                         android:textStyle="bold" />
 
-                    <Button
-                        android:id="@+id/send_form_btn"
-                        style="?android:attr/buttonStyleSmall"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="right"
-                        android:onClick="sendSubscriptionClicked"
-                        android:text="Send" />
 
                     <RadioGroup
                         android:layout_width="fill_parent"
