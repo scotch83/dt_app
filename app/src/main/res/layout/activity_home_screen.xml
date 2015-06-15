@@ -6,72 +6,92 @@
     tools:context="be.ehb.dt_app.activities.HomeScreenActivity">
 
     <LinearLayout
-        android:id="@+id/linearLayout"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="270dp"
-        android:background="#b4ffffff"
-        android:gravity="center"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:weightSum="1">
 
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="0.5"
+            android:orientation="vertical"></LinearLayout>
 
-        <ImageButton
-            android:id="@+id/ib_studenten_registratie"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:layout_column="0"
-            android:layout_columnSpan="1"
-            android:layout_columnWeight="0.5"
-            android:layout_gravity="center"
-            android:layout_row="0"
-            android:background="#00000000"
-            android:clickable="true"
-            android:onClick="registrationClicked"
-            android:scaleType="centerInside"
-            android:src="@drawable/iconstudenten" />
-
-        <ImageButton
-            android:id="@+id/ib_pdf"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:layout_column="1"
-            android:layout_columnSpan="1"
-            android:layout_gravity="center"
-            android:layout_marginLeft="80dp"
-            android:layout_marginRight="80dp"
-            android:layout_row="0"
-            android:background="#00000000"
-            android:scaleType="fitCenter"
-            android:src="@drawable/iconpdf" />
-        <ImageButton
-            android:id="@+id/ib_beheer"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:layout_column="2"
-            android:layout_columnSpan="1"
-            android:layout_gravity="center"
-            android:layout_marginRight="80dp"
-            android:layout_row="0"
-            android:background="@android:color/transparent"
-            android:scaleType="fitCenter"
-            android:src="@drawable/iconbeheer" />
-
-        <ImageButton
-            android:id="@+id/ib_todaylijst"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:layout_columnSpan="1"
-            android:layout_gravity="center"
-            android:layout_row="0"
-            android:background="@android:color/transparent"
-            android:nestedScrollingEnabled="false"
-            android:scaleType="fitCenter"
-            android:src="@drawable/icontodaylijst" />
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_weight="0.5"
+            android:background="#b4ffffff"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingLeft="50dp"
+            android:paddingRight="50dp"
+            android:weightSum="1">
 
 
+            <ImageButton
+                android:id="@+id/ib_studenten_registratie"
+                android:layout_width="50dp"
+                android:layout_height="150dp"
+                android:layout_column="0"
+                android:layout_columnSpan="1"
+                android:layout_columnWeight="0.5"
+                android:layout_gravity="center"
+                android:layout_row="0"
+                android:layout_weight="0.25"
+                android:background="#00000000"
+                android:clickable="true"
+                android:onClick="registrationClicked"
+                android:scaleType="centerInside"
+                android:src="@drawable/iconstudenten" />
+
+            <ImageButton
+                android:id="@+id/ib_pdf"
+                android:layout_width="50dp"
+                android:layout_height="150dp"
+                android:layout_column="1"
+                android:layout_columnSpan="1"
+                android:layout_gravity="center"
+                android:layout_marginLeft="80dp"
+                android:layout_marginRight="80dp"
+                android:layout_row="0"
+                android:layout_weight="0.25"
+                android:background="#00000000"
+                android:scaleType="fitCenter"
+                android:src="@drawable/iconpdf" />
+
+            <ImageButton
+                android:id="@+id/ib_beheer"
+                android:layout_width="50dp"
+                android:layout_height="150dp"
+                android:layout_column="2"
+                android:layout_columnSpan="1"
+                android:layout_gravity="center"
+                android:layout_marginRight="80dp"
+                android:layout_row="0"
+                android:layout_weight="0.25"
+                android:background="@android:color/transparent"
+                android:scaleType="fitCenter"
+                android:src="@drawable/iconbeheer" />
+
+            <ImageButton
+                android:id="@+id/ib_todaylijst"
+                android:layout_width="50dp"
+                android:layout_height="150dp"
+                android:layout_columnSpan="1"
+                android:layout_gravity="center"
+                android:layout_row="0"
+                android:layout_weight="0.25"
+                android:background="@android:color/transparent"
+                android:nestedScrollingEnabled="false"
+                android:scaleType="fitCenter"
+                android:src="@drawable/icontodaylijst" />
+
+
+        </LinearLayout>
     </LinearLayout>
 
 </RelativeLayout>

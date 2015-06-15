@@ -41,6 +41,8 @@ public class RegistrationActivity extends ActionBarActivity {
         initializeDesign();
 
         initializePager();
+
+
     }
 
     private void initializeDesign() {

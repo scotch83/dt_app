@@ -5,7 +5,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -16,12 +18,17 @@ public class RegistrationFragment extends Fragment {
 
     EditText emailET;
     TextView emailTV;
+    LinearLayout llBottom;
     ScrollView mScrollView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         //setUpDesign(getActivity());
+
+
     }
 
     /*private void setUpDesign(Activity activity) {
@@ -45,7 +52,23 @@ public class RegistrationFragment extends Fragment {
 
         emailET = (EditText) v.findViewById(R.id.et_email);
         emailTV = (TextView) v.findViewById(R.id.tv_email);
+        llBottom = (LinearLayout) v.findViewById(R.id.ll_registratie1_bottom);
         mScrollView = (ScrollView) v.findViewById(R.id.sv_registratie1);
+
+        emailET.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+
+                if (v.getId() == emailET.getId()) {
+                    if (hasFocus) {
+                        int[] loc = new int[2];
+                        v.getLocationOnScreen(loc);
+                        mScrollView.smoothScrollTo(loc[0], llBottom.getTop());
+                    }
+                }
+
+            }
+        });
 
         return v;
     }

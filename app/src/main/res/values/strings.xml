@@ -23,6 +23,7 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_pdf">PdfActivity</string>
+    <string name="title_activity_beheer">BeheerActivity</string>
 
 
 </resources>

@@ -46,13 +46,14 @@ public class PdflijstAdapter extends BaseAdapter implements Filterable {
                     orig = pdfLijst;
                 if (constraint != null) {
                     if (orig != null && orig.size() > 0) {
-                        for (final Pdf g : orig) {
-                            if (g.getNaam().toLowerCase()
+                        for (final Pdf item : orig) {
+                            if (item.getNaam().toLowerCase()
                                     .contains(constraint.toString()))
-                                results.add(g);
+                                results.add(item);
                         }
                     }
                     oReturn.values = results;
+                    oReturn.count = results.size();
                 }
                 return oReturn;
             }
@@ -102,7 +103,7 @@ public class PdflijstAdapter extends BaseAdapter implements Filterable {
         } else
             holder = (ViewHolder) v.getTag();
         if (pdfLijst.size() <= 0) {
-            holder.pdfnaamTV.setText("Geen studenten toegevoegd.");
+            holder.pdfnaamTV.setText("Geen pdf's toegevoegd.");
         } else {
             tempValues = null;
             tempValues = pdfLijst.get(position);

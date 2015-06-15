@@ -6,6 +6,7 @@
     android:focusableInTouchMode="true"
     android:orientation="vertical">
 
+
     <LinearLayout
         android:id="@+id/ll_pdf_basis"
         android:layout_width="fill_parent"
@@ -34,11 +35,12 @@
         <LinearLayout
             android:id="@+id/ll_pdf_bottom"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="687dp"
             android:layout_centerHorizontal="true"
             android:background="#b4000000"
             android:orientation="horizontal"
             android:weightSum="1">
+
 
             <LinearLayout
                 android:id="@+id/ll_pdf_lijst"
@@ -58,18 +60,21 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="top"
                     android:layout_marginTop="40dp"
+                    android:background="#64ffffff"
                     android:gravity="left" />
 
                 <ListView
                     android:id="@+id/lv_pdflijst"
                     android:layout_width="400dp"
-                    android:layout_height="fill_parent"
+                    android:layout_height="684dp"
                     android:layout_gravity="center_horizontal"
                     android:divider="#FFF"
                     android:dividerHeight="0.5px"
                     android:paddingTop="40dp" />
             </LinearLayout>
+
         </LinearLayout>
     </LinearLayout>
+
 
 </RelativeLayout>

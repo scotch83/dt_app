@@ -1,6 +1,5 @@
 package be.ehb.dt_app.activities;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
@@ -37,6 +36,15 @@ public class PdfActivity extends ActionBarActivity implements SearchView.OnQuery
         pdfArrayList.add(new Pdf("Presentatie", "6 juni 2013"));
         pdfArrayList.add(new Pdf("Multec", "21 januari 2014"));
         pdfArrayList.add(new Pdf("Dig-ex", "2 maart 2015"));
+        pdfArrayList.add(new Pdf("Curriculum Dig-x", "21 januari 2014"));
+        pdfArrayList.add(new Pdf("Informatie EhB", "2 maart 2015"));
+        pdfArrayList.add(new Pdf("Overzicht curriculum2", "20 maart 2014"));
+        pdfArrayList.add(new Pdf("Brochures2", "5 april 2014"));
+        pdfArrayList.add(new Pdf("Presentatie2", "6 juni 2013"));
+        pdfArrayList.add(new Pdf("Multec2", "21 januari 2014"));
+        pdfArrayList.add(new Pdf("Dig-ex2", "2 maart 2015"));
+        pdfArrayList.add(new Pdf("Curriculum Dig-x2", "21 januari 2014"));
+        pdfArrayList.add(new Pdf("Informatie EhB3", "2 maart 2015"));
 
         pdflijstAdapter = new PdflijstAdapter(this, pdfArrayList);
         mPdfLV.setAdapter(pdflijstAdapter);
@@ -77,8 +85,9 @@ public class PdfActivity extends ActionBarActivity implements SearchView.OnQuery
         mPdfSV.setIconifiedByDefault(false);
         mPdfSV.setOnQueryTextListener(this);
         mPdfSV.setSubmitButtonEnabled(true);
-        mPdfSV.setBackgroundColor(Color.WHITE);
+
         mPdfSV.setQueryHint("Zoek je pdf hier");
+
     }
 
     @Override
@@ -88,6 +97,7 @@ public class PdfActivity extends ActionBarActivity implements SearchView.OnQuery
 
         } else {
             pdflijstAdapter.getFilter().filter(newText);
+            mPdfLV.setFilterText(newText.toString());
 
         }
 
