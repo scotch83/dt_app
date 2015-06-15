@@ -7,6 +7,7 @@ public class Teacher extends SugarRecord<Teacher> {
 
     private String name;
     private short acadyear;
+    private Long serverId;
 
     public Teacher() {
 
@@ -15,6 +16,15 @@ public class Teacher extends SugarRecord<Teacher> {
     public Teacher(String name, short acadyear) {
         this.name = name;
         this.acadyear = acadyear;
+    }
+
+
+    public Long getServerId() {
+        return serverId;
+    }
+
+    public void setServerId(Long serverId) {
+        this.serverId = serverId;
     }
 
     public String getName() {

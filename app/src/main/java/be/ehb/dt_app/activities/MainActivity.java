@@ -81,7 +81,7 @@ public class MainActivity extends Activity {
             List<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
             messageConverters.add(new CustomGsonHttpMessageConverter());
             restTemplate.setMessageConverters(messageConverters);
-            new HttpRequestEventsTask().execute("teachers", "events", "schools", "subscriptions");
+            new HttpRequestEventsTask().execute("events", "teachers", "schools", "subscriptions");
         } else {
             Toast.makeText(getApplicationContext(), "Er kon geen internet verbinding gemaakt worden. Data kan niet geupdate zijn.", Toast.LENGTH_SHORT);
         }
@@ -279,26 +279,37 @@ public class MainActivity extends Activity {
                 switch (pair.getKey().toString()) {
                     case "events":
                         for (Event event : (ArrayList<Event>) pair.getValue())
-                            if (Event.findById(Event.class, event.getId()) == null)
+                            if (Event.findById(Event.class, event.getId()) == null) {
+                                event.setServerId(event.getId());
+                                event.setId(null);
                                 event.save();
+                            }
                         break;
                     case "teachers":
                         for (Teacher teacher : (ArrayList<Teacher>) pair.getValue())
-                            if (Teacher.findById(Teacher.class, teacher.getId()) == null)
+                            if (Teacher.findById(Teacher.class, teacher.getId()) == null) {
+                                teacher.setServerId(teacher.getId());
+                                teacher.setId(null);
                                 teacher.save();
+                            }
                         break;
                     case "schools":
                         for (School school : (ArrayList<School>) pair.getValue())
-                            if (School.findById(School.class, school.getId()) == null)
+                            if (School.findById(School.class, school.getId()) == null) {
+                                school.setServerId(school.getId());
+                                school.setId(null);
                                 school.save();
+                            }
                         break;
                     case "subscriptions":
                         for (Subscription subscription : (ArrayList<Subscription>) pair.getValue())
-                            if (Subscription.findById(Subscription.class, subscription.getId()) == null)
+                            if (Subscription.findById(Subscription.class, subscription.getId()) == null) {
+                                subscription.setServerId(subscription.getId());
+                                subscription.setId(null);
                                 subscription.save();
+                            }
                         break;
                 }
-                it.next();
             }
         }
     }

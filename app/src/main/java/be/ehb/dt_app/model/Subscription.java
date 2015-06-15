@@ -24,6 +24,7 @@ public class Subscription extends SugarRecord<Subscription> {
     private Teacher teacher;
     private Event event;
     private School school;
+    private Long serverId;
 
     public Subscription() {
     }
@@ -76,6 +77,15 @@ public class Subscription extends SugarRecord<Subscription> {
         this.streetNumber = streetNumber;
         this.zip = zip;
         this.city = city;
+    }
+
+
+    public Long getServerId() {
+        return serverId;
+    }
+
+    public void setServerId(Long serverId) {
+        this.serverId = serverId;
     }
 
 

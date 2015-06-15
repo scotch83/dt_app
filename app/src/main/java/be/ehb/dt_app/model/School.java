@@ -5,6 +5,7 @@ import com.orm.SugarRecord;
 public class School extends SugarRecord<School> {
 
 
+    private Long serverId;
     private String name;
     private String gemeente;
     private short postcode;
@@ -21,6 +22,13 @@ public class School extends SugarRecord<School> {
     }
 
 
+    public Long getServerId() {
+        return serverId;
+    }
+
+    public void setServerId(Long serverId) {
+        this.serverId = serverId;
+    }
 
     public String getName() {
         return name;
