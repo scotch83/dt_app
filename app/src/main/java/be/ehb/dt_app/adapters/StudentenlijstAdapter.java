@@ -136,8 +136,16 @@ public class StudentenlijstAdapter extends BaseAdapter implements Filterable {
 
 
             }
-            for (String interest : intList)
-                interestsConc += "- " + interest.toUpperCase() + "\n";
+
+            for (int i = 0; i < intList.size(); i++) {
+                if (i > 0)
+                    interestsConc += ", ";
+                if (i < intList.size())
+                    interestsConc += intList.get(i).toUpperCase();
+
+            }
+            if (!intList.isEmpty())
+                interestsConc += ".";
             holder.interessesTV.setText(interestsConc);
 
 

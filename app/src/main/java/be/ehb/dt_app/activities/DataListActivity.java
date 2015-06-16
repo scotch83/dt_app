@@ -13,7 +13,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -39,6 +41,8 @@ public class DataListActivity extends ActionBarActivity implements SearchView.On
     private ArrayList<Subscription> studentenlijstArray = new ArrayList<>();
     private StudentenlijstAdapter slAdapter;
     private SearchView mStudententSV;
+    private LinearLayout studentenlijstLL;
+    private ScrollView scrollView;
 
 
     @Override
@@ -48,9 +52,25 @@ public class DataListActivity extends ActionBarActivity implements SearchView.On
 
         setupDesign();
 
+        studentenlijstLL = (LinearLayout) findViewById(R.id.ll_studentenlijst_lijst);
         preferences = getSharedPreferences("EHB App SharedPreferences", Context.MODE_PRIVATE);
 
         new HttpDataRequestTask().execute();
+
+        mStudententSV.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+
+                if (v.getId() == mStudententSV.getId()) {
+                    if (hasFocus) {
+                        int[] loc = new int[2];
+                        v.getLocationOnScreen(loc);
+                        studentenlijstLL.scrollBy(0, 80);
+                    }
+                }
+
+            }
+        });
 
 
     }
@@ -213,8 +233,6 @@ public class DataListActivity extends ActionBarActivity implements SearchView.On
                 }
         }
     }
-
-
 
 
 }

@@ -147,6 +147,7 @@ public class RegistrationActivity extends ActionBarActivity {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
+
             }
 
             @Override
