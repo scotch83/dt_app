@@ -6,9 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import be.ehb.dt_app.R;
 import be.ehb.dt_app.model.Subscription;
@@ -16,12 +21,13 @@ import be.ehb.dt_app.model.Subscription;
 /**
  * Created by mobapp003 on 11/06/15.
  */
-public class StudentenlijstAdapter extends BaseAdapter {
+public class StudentenlijstAdapter extends BaseAdapter implements Filterable {
 
-    private static LayoutInflater inflater = null;
-    Subscription tempValues = null;
+    private LayoutInflater inflater = null;
+    private Subscription tempValues = null;
     private Activity activity;
     private ArrayList<Subscription> studentenLijst;
+    private ArrayList<Subscription> orig;
 
 
     public StudentenlijstAdapter(Activity activity, ArrayList<Subscription> studentenLijst) {
@@ -31,6 +37,38 @@ public class StudentenlijstAdapter extends BaseAdapter {
 
         inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
+    }
+
+    public Filter getFilter() {
+        return new Filter() {
+
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                final FilterResults oReturn = new FilterResults();
+                final ArrayList<Subscription> results = new ArrayList<>();
+                if (orig == null)
+                    orig = studentenLijst;
+                if (constraint != null) {
+                    if (orig != null && orig.size() > 0) {
+                        for (final Subscription item : orig) {
+                            if (item.getFirstName().toLowerCase()
+                                    .contains(constraint.toString()))
+                                results.add(item);
+                        }
+                    }
+                    oReturn.values = results;
+                    oReturn.count = results.size();
+                }
+                return oReturn;
+            }
+
+            @SuppressWarnings("unchecked")
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                studentenLijst = (ArrayList<Subscription>) results.values;
+                notifyDataSetChanged();
+            }
+        };
     }
 
     @Override
@@ -59,7 +97,7 @@ public class StudentenlijstAdapter extends BaseAdapter {
             holder = new ViewHolder();
             holder.studentnaamTV = (TextView) v.findViewById(R.id.tv_studentnaam);
             holder.huidigeschoolTV = (TextView) v.findViewById(R.id.tv_huidigeschool);
-            holder.interessesTV = (TextView) v.findViewById(R.id.tv_interesse_opleiding);
+            holder.interessesTV = (TextView) v.findViewById(R.id.tv_interesses);
 
             v.setTag(holder);
         } else
@@ -71,21 +109,23 @@ public class StudentenlijstAdapter extends BaseAdapter {
             tempValues = studentenLijst.get(position);
 
             holder.studentnaamTV.setText(tempValues.getFirstName() + " " + tempValues.getLastName());
-            //holder.huidigeschoolTV.setText((CharSequence) tempValues.getSchool());
+            holder.huidigeschoolTV.setText(tempValues.getSchool().getName());
             String interestsConc = "";
-//            HashMap<String, String> interests = tempValues.getInterests();
-//            Iterator it = interests.entrySet().iterator();
-//            int i = 0;
-//            while (it.hasNext()) {
-//                Map.Entry pair = (Map.Entry) it.next();
-//                if (i > 0 && pair.getValue() == "true")
-//                    interestsConc += "\n";
-//                if (pair.getValue() == "true") {
-//                    interestsConc += pair.getKey();
-//                }
-//                i++;
-//
-//            }
+            HashMap<String, String> interests = tempValues.getInterests();
+            Iterator it = interests.entrySet().iterator();
+
+            ArrayList<String> intList = new ArrayList<>();
+            while (it.hasNext()) {
+                Map.Entry pair = (Map.Entry) it.next();
+
+                if (pair.getValue().equals("true")) {
+                    intList.add(String.valueOf(pair.getKey()));
+                }
+
+
+            }
+            for (String interest : intList)
+                interestsConc += "- " + interest.toUpperCase() + "\n";
             holder.interessesTV.setText(interestsConc);
 
 

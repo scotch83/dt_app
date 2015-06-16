@@ -6,6 +6,8 @@
     android:focusableInTouchMode="true"
     android:orientation="vertical">
 
+    <include layout="@layout/overlay_loading_data" />
+
     <LinearLayout
         android:id="@+id/ll_studentenlijst_basis"
         android:layout_width="fill_parent"
@@ -53,11 +55,14 @@
                 android:paddingTop="50dp">
 
 
-                <Spinner
-                    android:id="@+id/spinner"
-                    style="@style/ColoredSpinnerCustom"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                <SearchView
+                    android:id="@+id/sv_studentenlijst"
+                    android:layout_width="350dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top"
+                    android:layout_marginTop="40dp"
+                    android:background="#64ffffff"
+                    android:gravity="left" />
 
             </LinearLayout>
 

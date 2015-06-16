@@ -1,5 +1,6 @@
 package be.ehb.dt_app.activities;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -9,20 +10,22 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import be.ehb.dt_app.R;
 import be.ehb.dt_app.controller.ZoomOutPageTransformer;
 import be.ehb.dt_app.fragments.HeatmapFragment;
 import be.ehb.dt_app.fragments.StudentenlijstFragment;
 
-public class DataListActivity extends ActionBarActivity {
+public class DataListActivity extends ActionBarActivity implements ViewPager.OnPageChangeListener {
 
     protected Fragment form1, form2;
     private ViewPager mPagerRegistratie;
     private PagerAdapter mPagerAdapter;
     private ImageView img_page1, img_page2;
+    private View progressOverlay;
+    private SharedPreferences preferences;
 
 
     @Override
@@ -30,50 +33,25 @@ public class DataListActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_data_list);
 
+
+        setupDesign();
+
+    }
+
+    private void setupDesign() {
         form1 = new StudentenlijstFragment();
         form2 = new HeatmapFragment();
 
         img_page1 = (ImageView) findViewById(R.id.iv_page1_data);
         img_page2 = (ImageView) findViewById(R.id.iv_page2_data);
 
+
         mPagerRegistratie = (ViewPager) findViewById(R.id.pager_datalist);
         mPagerAdapter = new DatalistPagerAdapter(getSupportFragmentManager(), form1, form2);
         mPagerRegistratie.setAdapter(mPagerAdapter);
         mPagerRegistratie.setPageTransformer(true, new ZoomOutPageTransformer());
 
-        mPagerRegistratie.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                switch (position) {
-                    case 0:
-                        img_page1.setImageResource(R.drawable.dotsselected);
-                        img_page2.setImageResource(R.drawable.dotsunselected);
-
-                        break;
-
-                    case 1:
-                        img_page1.setImageResource(R.drawable.dotsunselected);
-                        img_page2.setImageResource(R.drawable.dotsselected);
-
-                        break;
-                    default:
-                        break;
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
-
-        Toast.makeText(this, "Testing branches again!", Toast.LENGTH_LONG).show();
-
+        mPagerRegistratie.setOnPageChangeListener(this);
 
     }
 
@@ -99,6 +77,41 @@ public class DataListActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        switch (position) {
+            case 0:
+                img_page1.setImageResource(R.drawable.dotsselected);
+                img_page2.setImageResource(R.drawable.dotsunselected);
+
+                break;
+
+            case 1:
+                img_page1.setImageResource(R.drawable.dotsunselected);
+                img_page2.setImageResource(R.drawable.dotsselected);
+
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////                                                                                ////////////////
+    ////////////////                        DATALIST PAGER                                          ////////////////
+    ////////////////                                                                                ////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private class DatalistPagerAdapter extends FragmentStatePagerAdapter {
 
@@ -128,4 +141,6 @@ public class DataListActivity extends ActionBarActivity {
             return 2;
         }
     }
+
+
 }

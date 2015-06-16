@@ -1,5 +1,7 @@
 package be.ehb.dt_app.activities;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -7,19 +9,26 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 
-import java.util.ArrayList;
+import com.google.gson.Gson;
+
+import java.util.HashMap;
 
 import be.ehb.dt_app.R;
 import be.ehb.dt_app.controller.ZoomOutPageTransformer;
 import be.ehb.dt_app.fragments.RegistrationFragment;
 import be.ehb.dt_app.fragments.RegistrationFragment2;
+import be.ehb.dt_app.model.Event;
+import be.ehb.dt_app.model.School;
 import be.ehb.dt_app.model.Subscription;
+import be.ehb.dt_app.model.Teacher;
 
 public class RegistrationActivity extends ActionBarActivity {
 
@@ -27,6 +36,7 @@ public class RegistrationActivity extends ActionBarActivity {
     private ViewPager mPagerRegistratie;
     private PagerAdapter mPagerAdapter;
     private ImageView img_page1, img_page2;
+    private SharedPreferences preferences;
 
 
 
@@ -34,6 +44,8 @@ public class RegistrationActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
+
+        preferences = getSharedPreferences("EHB App SharedPreferences", Context.MODE_PRIVATE);
 
         form1 = new RegistrationFragment();
         form2 = new RegistrationFragment2();
@@ -48,35 +60,54 @@ public class RegistrationActivity extends ActionBarActivity {
     private void initializeDesign() {
         img_page1 = (ImageView) findViewById(R.id.iv_page1);
         img_page2 = (ImageView) findViewById(R.id.iv_page2);
+    }
 
-        ArrayList<String> dataToSend = new ArrayList<>();
-
+    public void sendData(View v) {
         Subscription newSubscription = new Subscription();
 
         EditText temp;
+        //fields from first form
+        temp = (EditText) findViewById(R.id.et_voornaam);
+        newSubscription.setFirstName(temp.getText().toString());
 
+        temp = (EditText) findViewById(R.id.et_achternaam);
+        newSubscription.setLastName(temp.getText().toString());
 
-//        temp = (EditText) findViewById(R.id.et_voornaam);
-//        newSubscription.setFirstName(temp.getText().toString());
-//
-//        temp= (EditText) findViewById(R.id.et_achternaam);
-//        newSubscription.setLastName(temp.getText().toString());
-//
-//        temp = (EditText) findViewById(R.id.et_email);
-//        newSubscription.setEmail(temp.getText().toString());
-//
-//        temp = (EditText) findViewById(R.id.et_straatnaam);
-//        newSubscription.setStreet(temp.getText().toString());
-//
-//        String straatnummer = "69";
-//        newSubscription.setStreetNumber(straatnummer);
-//
-//        temp = (EditText) findViewById(R.id.et_stad);
-//        newSubscription.setCity(temp.getText().toString());
-//
-//        temp = (EditText) findViewById(R.id.et_postcode);
-//        newSubscription.setZip(temp.getText().toString());
+        temp = (EditText) findViewById(R.id.et_email);
+        newSubscription.setEmail(temp.getText().toString());
 
+        temp = (EditText) findViewById(R.id.et_straatnaam);
+        newSubscription.setStreet(temp.getText().toString());
+
+        temp = (EditText) findViewById(R.id.et_straatnummer);
+        newSubscription.setStreetNumber(temp.getText().toString());
+
+        temp = (EditText) findViewById(R.id.et_stad);
+        newSubscription.setCity(temp.getText().toString());
+
+        temp = (EditText) findViewById(R.id.et_postcode);
+        newSubscription.setZip(temp.getText().toString());
+
+        //fields from second form
+
+        //SCHOOL
+        Spinner tempSp = (Spinner) findViewById(R.id.sp_secundaire_school);
+        School school = new School("My school for test", "Gent", (short) 9000);
+        newSubscription.setSchool(school);
+
+        //INTERESTS
+        HashMap<String, String> interests = new HashMap<>();
+        interests.put("Dig-X", "true");
+        interests.put("Multec", "false");
+        interests.put("Werkstuden", "true");
+        newSubscription.setInterests(interests);
+
+        //Teacher and event
+        Gson gson = new Gson();
+        newSubscription.setTeacher(gson.fromJson(preferences.getString("Teacher", "None"), Teacher.class));
+        newSubscription.setEvent(gson.fromJson(preferences.getString("Event", "None"), Event.class));
+
+        Log.d("xxx", gson.toJson(newSubscription));
     }
 
     private void initializePager() {

@@ -8,10 +8,11 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.IOException;
 
 import be.ehb.dt_app.R;
 import be.ehb.dt_app.model.Teacher;
@@ -20,9 +21,8 @@ import be.ehb.dt_app.model.Teacher;
 public class HomeScreenActivity extends ActionBarActivity {
 
 
-    private boolean once_only = true;
+
     private View lay;
-    private ImageButton registrationBTN, datalistBTN, pdfBTN;
 
     private SharedPreferences preferences;
 
@@ -31,34 +31,33 @@ public class HomeScreenActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_screen);
         setupDesign();
-        if (once_only) {
-            preferences = getSharedPreferences("EHB App SharedPreferences", Context.MODE_PRIVATE);
+        preferences = getSharedPreferences("EHB App SharedPreferences", Context.MODE_PRIVATE);
+        if (preferences.getBoolean("greetings", true)) {
             String jsonTeacher = preferences.getString("Teacher", "(iets misgelopen. Neem contact met de ICT dienst.)");
-            Gson gson = new Gson();
-            Teacher docent = gson.fromJson(jsonTeacher, Teacher.class);
-            Toast.makeText(getApplicationContext(), "Welkom " + docent.getName(), Toast.LENGTH_SHORT).show();
-            once_only = false;
+
+            ObjectMapper jxson = new ObjectMapper();
+            try {
+                Teacher docent = jxson.readValue(jsonTeacher, Teacher.class);
+                Toast.makeText(getApplicationContext(), "Welkom " + docent.getName(), Toast.LENGTH_SHORT).show();
+                preferences.edit().putBoolean("greetings", false);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         }
 
-        datalistBTN = (ImageButton) findViewById(R.id.ib_todaylijst);
-        datalistBTN.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), DataListActivity.class);
-                startActivity(i);
-            }
-        });
 
-        pdfBTN = (ImageButton) findViewById(R.id.ib_pdf);
-        pdfBTN.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), PdfActivity.class);
-                startActivity(i);
-            }
-        });
     }
 
+    public void goToSubscriptionsList(View v) {
+        Intent i = new Intent(getApplicationContext(), DataListActivity.class);
+        startActivity(i);
+    }
+
+    public void goToPDFList(View v) {
+        Intent i = new Intent(getApplicationContext(), PdfActivity.class);
+        startActivity(i);
+    }
     private void setupDesign() {
 
         lay = findViewById(R.id.rl_homescreen);
