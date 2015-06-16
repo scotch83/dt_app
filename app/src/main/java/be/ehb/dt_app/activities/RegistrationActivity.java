@@ -2,6 +2,7 @@ package be.ehb.dt_app.activities;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -15,11 +16,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import be.ehb.dt_app.R;
@@ -37,6 +41,8 @@ public class RegistrationActivity extends ActionBarActivity {
     private ViewPager mPagerRegistratie;
     private PagerAdapter mPagerAdapter;
     private ImageView img_page1, img_page2;
+    private TextView page1TV, page2TV;
+    private LinearLayout vpindicatorLL;
     private SharedPreferences preferences;
 
 
@@ -61,9 +67,15 @@ public class RegistrationActivity extends ActionBarActivity {
     private void initializeDesign() {
         img_page1 = (ImageView) findViewById(R.id.iv_page1);
         img_page2 = (ImageView) findViewById(R.id.iv_page2);
+        page1TV = (TextView) findViewById(R.id.tv_pagina1);
+        page2TV = (TextView) findViewById(R.id.tv_pagina2);
     }
 
     public void sendData(View v) {
+
+
+        ArrayList<String> dataToSend = new ArrayList<>();
+
         Subscription newSubscription = new Subscription();
 
         EditText temp;
@@ -126,8 +138,8 @@ public class RegistrationActivity extends ActionBarActivity {
     private void initializePager() {
 
         mPagerRegistratie = (ViewPager) findViewById(R.id.pager_registratie);
-
         mPagerAdapter = new RegistratiePagerAdapter(getSupportFragmentManager(), form1, form2);
+        vpindicatorLL = (LinearLayout) findViewById(R.id.ll_viewpagerindicator);
 
         mPagerRegistratie.setAdapter(mPagerAdapter);
         mPagerRegistratie.setPageTransformer(true, new ZoomOutPageTransformer());
@@ -142,6 +154,8 @@ public class RegistrationActivity extends ActionBarActivity {
                 switch (position) {
                     case 0:
                         img_page1.setImageResource(R.drawable.dotsselected);
+                        page1TV.setTextColor(Color.RED);
+                        page2TV.setTextColor(Color.BLACK);
                         img_page2.setImageResource(R.drawable.dotsunselected);
 
                         break;
@@ -149,6 +163,8 @@ public class RegistrationActivity extends ActionBarActivity {
                     case 1:
                         img_page1.setImageResource(R.drawable.dotsunselected);
                         img_page2.setImageResource(R.drawable.dotsselected);
+                        page2TV.setTextColor(Color.RED);
+                        page1TV.setTextColor(Color.BLACK);
 
                         break;
                     default:

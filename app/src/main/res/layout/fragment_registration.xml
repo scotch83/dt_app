@@ -30,7 +30,8 @@
                 android:layout_alignParentTop="true"
                 android:orientation="horizontal">
 
-                <ImageView
+
+            <ImageView
                     android:id="@+id/iv_ehbletter"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
