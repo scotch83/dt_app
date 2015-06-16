@@ -1,13 +1,13 @@
 package be.ehb.dt_app.activities;
 
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import be.ehb.dt_app.R;
 
-public class BeheerActivity extends ActionBarActivity {
+public class BeheerActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

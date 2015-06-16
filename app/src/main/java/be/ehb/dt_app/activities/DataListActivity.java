@@ -124,6 +124,7 @@ public class DataListActivity extends ActionBarActivity implements ViewPager.OnP
 
         }
 
+
         @Override
         public Fragment getItem(int position) {
 

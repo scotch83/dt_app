@@ -1,10 +1,10 @@
 package be.ehb.dt_app.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,7 +18,7 @@ import be.ehb.dt_app.R;
 import be.ehb.dt_app.model.Teacher;
 
 
-public class HomeScreenActivity extends ActionBarActivity {
+public class HomeScreenActivity extends Activity {
 
 
 

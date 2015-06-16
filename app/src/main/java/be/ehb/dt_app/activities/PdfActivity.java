@@ -1,7 +1,7 @@
 package be.ehb.dt_app.activities;
 
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,7 +14,7 @@ import be.ehb.dt_app.R;
 import be.ehb.dt_app.adapters.PdflijstAdapter;
 import be.ehb.dt_app.model.Pdf;
 
-public class PdfActivity extends ActionBarActivity implements SearchView.OnQueryTextListener {
+public class PdfActivity extends Activity implements SearchView.OnQueryTextListener {
 
     private SearchView mPdfSV;
     private ListView mPdfLV;

@@ -17,8 +17,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 import be.ehb.dt_app.R;
@@ -103,11 +104,23 @@ public class RegistrationActivity extends ActionBarActivity {
         newSubscription.setInterests(interests);
 
         //Teacher and event
-        Gson gson = new Gson();
-        newSubscription.setTeacher(gson.fromJson(preferences.getString("Teacher", "None"), Teacher.class));
-        newSubscription.setEvent(gson.fromJson(preferences.getString("Event", "None"), Event.class));
+        String jsonTeacher = preferences.getString("Teacher", "(iets misgelopen. Neem contact met de ICT dienst.)");
+        String jsonEvent = preferences.getString("Event", "(iets misgelopen. Neem contact met de ICT dienst.)");
+        ObjectMapper om = new ObjectMapper();
+        ObjectMapper jxson = new ObjectMapper();
+        try {
+            Teacher docent = jxson.readValue(jsonTeacher, Teacher.class);
+            Event event = jxson.readValue(jsonEvent, Event.class);
 
-        Log.d("xxx", gson.toJson(newSubscription));
+            newSubscription.setTeacher(docent);
+            newSubscription.setEvent(event);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        Log.d("xxx", newSubscription.toString());
     }
 
     private void initializePager() {
