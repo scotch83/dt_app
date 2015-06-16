@@ -1,7 +1,6 @@
 package be.ehb.dt_app.adapters;
 
 import android.app.Activity;
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,18 +19,18 @@ import be.ehb.dt_app.model.Pdf;
  */
 public class PdflijstAdapter extends BaseAdapter implements Filterable {
 
-    private static LayoutInflater inflater = null;
     Pdf tempValues = null;
-    private Activity activity;
+    private LayoutInflater inflater = null;
     private ArrayList<Pdf> pdfLijst;
     private ArrayList<Pdf> orig;
 
     public PdflijstAdapter(Activity activity, ArrayList<Pdf> pdfLijst) {
-        this.activity = activity;
+
         this.pdfLijst = pdfLijst;
 
 
-        inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        inflater = activity.getLayoutInflater();
+        ;
 
     }
 

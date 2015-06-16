@@ -1,7 +1,6 @@
 package be.ehb.dt_app.adapters;
 
 import android.app.Activity;
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,17 +24,17 @@ public class StudentenlijstAdapter extends BaseAdapter implements Filterable {
 
     private LayoutInflater inflater = null;
     private Subscription tempValues = null;
-    private Activity activity;
+
     private ArrayList<Subscription> studentenLijst;
     private ArrayList<Subscription> orig;
 
 
     public StudentenlijstAdapter(Activity activity, ArrayList<Subscription> studentenLijst) {
-        this.activity = activity;
+
         this.studentenLijst = studentenLijst;
 
 
-        inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        inflater = activity.getLayoutInflater();
 
     }
 
@@ -54,6 +53,15 @@ public class StudentenlijstAdapter extends BaseAdapter implements Filterable {
                             if (item.getFirstName().toLowerCase()
                                     .contains(constraint.toString()))
                                 results.add(item);
+                            else if (item.getEvent().getName().toLowerCase()
+                                    .contains(constraint.toString()))
+                                results.add(item);
+                            else if (item.getEmail().toLowerCase()
+                                    .contains(constraint.toString()))
+                                results.add(item);
+                            else if (item.getLastName().toLowerCase()
+                                    .contains(constraint.toString()))
+                                results.add(item);
                         }
                     }
                     oReturn.values = results;
@@ -69,6 +77,10 @@ public class StudentenlijstAdapter extends BaseAdapter implements Filterable {
                 notifyDataSetChanged();
             }
         };
+    }
+
+    public void notifyDataSetChanged() {
+        super.notifyDataSetChanged();
     }
 
     @Override
