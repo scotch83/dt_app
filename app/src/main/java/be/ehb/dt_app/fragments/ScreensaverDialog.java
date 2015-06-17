@@ -32,8 +32,6 @@ public class ScreensaverDialog extends Dialog {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_screensaver);
         screensaverIV = (ImageView) findViewById(R.id.iv_image);
-        //getWindow().setLayout(WindowManager.LayoutParams.FILL_PARENT,
-        //WindowManager.LayoutParams.FILL_PARENT);
 
         screensaverIV.setOnClickListener(new View.OnClickListener() {
             @Override

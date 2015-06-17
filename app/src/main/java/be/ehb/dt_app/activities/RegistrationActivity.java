@@ -1,6 +1,7 @@
 package be.ehb.dt_app.activities;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -30,11 +31,11 @@ import be.ehb.dt_app.R;
 import be.ehb.dt_app.controller.ZoomOutPageTransformer;
 import be.ehb.dt_app.fragments.RegistrationFragment;
 import be.ehb.dt_app.fragments.RegistrationFragment2;
+import be.ehb.dt_app.fragments.ScreensaverDialog;
 import be.ehb.dt_app.model.Event;
 import be.ehb.dt_app.model.School;
 import be.ehb.dt_app.model.Subscription;
 import be.ehb.dt_app.model.Teacher;
-import be.ehb.dt_app.fragments.ScreensaverDialog;
 
 public class RegistrationActivity extends ActionBarActivity {
 
@@ -263,6 +264,7 @@ public class RegistrationActivity extends ActionBarActivity {
 
         });
         thread.start();
+
     }
 
     public void sendSubscriptionClicked(View v) {
