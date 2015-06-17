@@ -73,12 +73,14 @@
                         android:layout_marginBottom="40dp"
                         android:inputType="textPersonName" />
 
-                    <Spinner
+
+                    <EditText
                         android:id="@+id/sp_secundaire_school"
                         style="@style/ColoredSpinnerCustom"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:spinnerMode="dialog" />
+                        android:layout_marginBottom="40dp"
+                        android:editable="false" />
 
 
                 </LinearLayout>

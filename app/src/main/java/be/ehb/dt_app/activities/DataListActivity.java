@@ -52,7 +52,7 @@ public class DataListActivity extends ActionBarActivity implements SearchView.On
 
         setupDesign();
 
-        studentenlijstLL = (LinearLayout) findViewById(R.id.ll_studentenlijst_lijst);
+        studentenlijstLL = (LinearLayout) findViewById(R.id.ll_registratie1_persoonsgegevens);
         preferences = getSharedPreferences("EHB App SharedPreferences", Context.MODE_PRIVATE);
 
         if (Utils.isNetworkAvailable(this))

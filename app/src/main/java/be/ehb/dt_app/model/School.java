@@ -24,6 +24,13 @@ public class School extends SugarRecord<School> {
         this.postcode = postcode;
     }
 
+    public School(long l, String s, String jette, int i) {
+
+        this.name = s;
+        this.gemeente = jette;
+        this.postcode = (short) i;
+
+    }
 
 
     public String getName() {
