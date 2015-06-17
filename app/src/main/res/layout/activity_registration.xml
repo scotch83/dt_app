@@ -3,7 +3,6 @@
     android:id="@+id/rl_registratie"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="top"
     tools:context="be.ehb.dt_app.activities.RegistrationActivity">
 
     <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
@@ -11,62 +10,65 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
-        android:isScrollContainer="true" />
+        android:isScrollContainer="false" />
 
     <LinearLayout
         android:id="@+id/ll_viewpagerindicator"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="false"
-        android:layout_alignParentTop="true"
+        android:layout_alignParentTop="false"
         android:layout_alignTop="@+id/pager_registratie"
-        android:layout_alignWithParentIfMissing="true"
+        android:layout_alignWithParentIfMissing="false"
         android:baselineAligned="false"
-        android:gravity="center"
+        android:gravity="center_horizontal"
         android:orientation="horizontal"
-        android:padding="20dp">
-
-        <TextView
-            android:id="@+id/tv_pagina2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="25dp"
-            android:layout_marginRight="25dp"
-            android:layout_toEndOf="@+id/ll_viewpagerindicator"
-            android:layout_toRightOf="@+id/ll_viewpagerindicator"
-            android:text="Pagina 2"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <ImageView
-            android:id="@+id/iv_page1"
-            android:layout_width="15dp"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="20dp"
-            android:background="#ffbababa"
-            android:baselineAlignBottom="true"
-            android:scaleType="centerInside"
-            android:src="@drawable/dotsselected" />
-
-        <ImageView
-            android:id="@+id/iv_page2"
-            android:layout_width="15dp"
-            android:layout_height="wrap_content"
-            android:background="#ffbababa"
-
-            android:baselineAlignBottom="true"
-            android:src="@drawable/dotsunselected" />
+        android:paddingRight="80dp"
+        android:paddingTop="30dp">
 
         <TextView
             android:id="@+id/tv_pagina1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_marginLeft="25dp"
+            android:layout_gravity="center"
             android:layout_marginRight="25dp"
+            android:layout_toEndOf="@+id/ll_viewpagerindicator"
+            android:layout_toRightOf="@+id/ll_viewpagerindicator"
+            android:linksClickable="true"
+            android:text="Persoonsgegevens"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <ImageView
+            android:id="@+id/iv_page1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginRight="20dp"
+            android:baselineAlignBottom="true"
+            android:scaleType="centerInside"
+            android:src="@drawable/dotselectedblack" />
+
+        <ImageView
+            android:id="@+id/iv_page2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_gravity="center"
+            android:baselineAlignBottom="true"
+            android:src="@drawable/dotunselectedblack" />
+
+        <TextView
+            android:id="@+id/tv_pagina2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="center"
+            android:layout_marginLeft="25dp"
             android:layout_toLeftOf="@+id/ll_viewpagerindicator"
             android:layout_toStartOf="@+id/ll_viewpagerindicator"
-            android:text="Pagina 1"
+            android:gravity="center"
+            android:text="Interesses"
             android:textAppearance="?android:attr/textAppearanceMedium" />
     </LinearLayout>
 </RelativeLayout>
