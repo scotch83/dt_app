@@ -67,12 +67,12 @@
                 android:orientation="horizontal"
                 android:paddingBottom="50dp"
                 android:paddingLeft="150dp"
-                android:paddingRight="50dp">
+                android:paddingRight="500dp">
 
 
                 <ListView
                     android:id="@+id/lv_pdflijst"
-                    android:layout_width="400dp"
+                    android:layout_width="fill_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_horizontal"
                     android:divider="#FFF"

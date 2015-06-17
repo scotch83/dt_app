@@ -41,9 +41,9 @@
 
                 <SearchView
                     android:id="@+id/sv_studentenlijst"
-                    android:layout_width="250dp"
+                    android:layout_width="350dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical|right"
+                    android:layout_gravity="right|center_vertical"
                     android:background="#64ffffff"
                     android:gravity="bottom" />
             </FrameLayout>
@@ -63,20 +63,69 @@
                 android:id="@+id/ll_studentenlijst_lijst"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:gravity="center"
-                android:orientation="vertical"
+                android:layout_gravity="left"
+                android:orientation="horizontal"
                 android:paddingBottom="20dp"
                 android:paddingLeft="150dp"
-                android:paddingRight="150dp">
+                android:paddingRight="200dp"
+                android:weightSum="1">
 
 
-                <ListView
-                    android:id="@+id/lv_studentenlijst"
+                <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="fill_parent"
-                    android:divider="#FFF"
-                    android:dividerHeight="0.5px"
-                    android:paddingTop="40dp" />
+                    android:layout_weight="0.33"
+                    android:orientation="vertical"
+                    android:paddingTop="30dp">
+
+                    <TextView
+                        android:id="@+id/textView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="STUDENTENLIJST"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@color/color_wit" />
+
+                    <ListView
+                        android:id="@+id/lv_studentenlijst"
+                        android:layout_width="fill_parent"
+                        android:layout_height="fill_parent"
+                        android:layout_marginBottom="15dp"
+                        android:layout_weight="0.3"
+                        android:divider="#FFF"
+                        android:dividerHeight="0.5px"
+                        android:paddingTop="10dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="0.6"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:paddingTop="30dp"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:id="@+id/textView3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp"
+                        android:singleLine="true"
+                        android:text="TOON HEATMAP"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@color/color_wit" />
+
+                    <ImageButton
+                        android:id="@+id/ib_heatmap_navigeer"
+                        android:layout_width="130dp"
+                        android:layout_height="130dp"
+                        android:alpha="0.7"
+                        android:background="#00ffffff"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/iconsheatmap" />
+                </LinearLayout>
+
             </LinearLayout>
 
         </LinearLayout>
