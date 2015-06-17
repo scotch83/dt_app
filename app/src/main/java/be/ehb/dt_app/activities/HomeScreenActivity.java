@@ -32,7 +32,7 @@ public class HomeScreenActivity extends Activity {
         setContentView(R.layout.activity_home_screen);
         setupDesign();
         preferences = getSharedPreferences("EHB App SharedPreferences", Context.MODE_PRIVATE);
-        if (preferences.getBoolean("greetings", true)) {
+        if (preferences.getBoolean("greetings", false)) {
             String jsonTeacher = preferences.getString("Teacher", "(iets misgelopen. Neem contact met de ICT dienst.)");
 
             ObjectMapper jxson = new ObjectMapper();

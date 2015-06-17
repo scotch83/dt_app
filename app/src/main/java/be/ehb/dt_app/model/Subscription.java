@@ -2,16 +2,18 @@ package be.ehb.dt_app.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.orm.SugarRecord;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
-public class Subscription extends SugarRecord<Subscription> {
 
+@JsonIgnoreProperties({"id"})
+public class Subscription {
 
-
+    private Long id;
     private String firstName;
     private String lastName;
     private String email;
@@ -25,72 +27,47 @@ public class Subscription extends SugarRecord<Subscription> {
     private Teacher teacher;
     private Event event;
     private School school;
-    @JsonIgnore
-    private Long serverId;
+
 
     public Subscription() {
     }
 
-    public Subscription(Long id, String firstName, String lastName, String email, String street, String streetNumber, String zip, String city, HashMap<String, String> interests, Date timestamp, Teacher teacher, Event event, boolean isNew, School school) {
+    public Subscription(LocalSubscription localSubscription) {
+
+        this.firstName = localSubscription.getFirstName();
+        this.lastName = localSubscription.getLastName();
+        this.email = localSubscription.getEmail();
+        this.street = localSubscription.getStreet();
+        this.streetNumber = localSubscription.getStreetNumber();
+        this.zip = localSubscription.getZip();
+        this.city = localSubscription.getCity();
+        this.setInterests(localSubscription.getInterests());
+        this.timestamp = localSubscription.getTimestamp();
+        this.isNew = localSubscription.isNew();
+        this.teacher = localSubscription.getTeacher();
+        this.event = localSubscription.getEvent();
+        this.school = localSubscription.getSchool();
+    }
+
+    public static ArrayList<Subscription> transformLSubscription(ArrayList<LocalSubscription> localSubscriptions)
+    {
+        ArrayList<Subscription> result = new ArrayList<>();
+
+        for(LocalSubscription lSub : localSubscriptions)
+        {
+            Subscription temp = new Subscription(lSub);
+            result.add(temp);
+        }
+        return result;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
         this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.street = street;
-        this.streetNumber = streetNumber;
-        this.zip = zip;
-        this.city = city;
-        this.interests = interests;
-        this.timestamp = timestamp;
-        this.teacher = teacher;
-        this.event = event;
-        this.isNew = isNew;
-        this.school = school;
     }
-
-    public Subscription(String firstName, String lastName, String email, String street, String streetNumber, String zip, String city, HashMap<String, String> interests, Date timestamp, Teacher teacher, Event event, boolean isNew, School school) {
-
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.street = street;
-        this.streetNumber = streetNumber;
-        this.zip = zip;
-        this.city = city;
-        this.interests = interests;
-        this.timestamp = timestamp;
-        this.teacher = teacher;
-        this.event = event;
-        this.isNew = isNew;
-        this.school = school;
-        this.interests = interests;
-        this.timestamp = new Date();
-        this.teacher = teacher;
-        this.event = event;
-        this.isNew = false;
-        this.school = school;
-    }
-
-    public Subscription(String firstName, String lastName, String email, String street, String streetNumber, String zip, String city) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.street = street;
-        this.streetNumber = streetNumber;
-        this.zip = zip;
-        this.city = city;
-    }
-
-
-    public Long getServerId() {
-        return serverId;
-    }
-
-    public void setServerId(Long serverId) {
-        this.serverId = serverId;
-    }
-
-
 
     public String getFirstName() {
         return firstName;
@@ -152,6 +129,18 @@ public class Subscription extends SugarRecord<Subscription> {
         return interests;
     }
 
+    @JsonIgnore
+    public void setInterests(Interests interests) {
+
+        HashMap<String,String> intMap = new HashMap<>();
+        intMap.put("digx",interests.getDigx());
+        intMap.put("multec",interests.getMultec());
+        intMap.put("werkstudent",interests.getWerkstudent());
+
+        this.interests = intMap;
+    }
+
+    @JsonProperty("interests")
     public void setInterests(HashMap<String, String> interests) {
         this.interests = interests;
     }
@@ -163,7 +152,6 @@ public class Subscription extends SugarRecord<Subscription> {
     public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
     }
-
 
     public boolean isNew() {
         return isNew;
@@ -196,25 +184,5 @@ public class Subscription extends SugarRecord<Subscription> {
 
     public void setSchool(School school) {
         this.school = school;
-    }
-
-    @Override
-    public String toString() {
-        return "Subscription{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", email='" + email + '\'' +
-                ", street='" + street + '\'' +
-                ", streetNumber='" + streetNumber + '\'' +
-                ", zip='" + zip + '\'' +
-                ", city='" + city + '\'' +
-                ", interests=" + interests +
-                ", timestamp=" + timestamp +
-                ", teacher=" + teacher +
-                ", event=" + event +
-                ", isNew=" + isNew +
-                ", school=" + school +
-                '}';
     }
 }

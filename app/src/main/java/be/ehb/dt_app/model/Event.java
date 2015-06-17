@@ -1,7 +1,9 @@
 package be.ehb.dt_app.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.orm.SugarRecord;
 
+@JsonIgnoreProperties({"id"})
 public class Event extends SugarRecord<Event> {
 
 
@@ -19,18 +21,6 @@ public class Event extends SugarRecord<Event> {
         this.acadyear = acadyear;
     }
 
-
-
-
-    @Override
-    public Long getId() {
-        return id;
-    }
-
-    @Override
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public short getAcadyear() {
         return acadyear;
@@ -52,13 +42,5 @@ public class Event extends SugarRecord<Event> {
     @Override
     public String toString() {
         return name;
-    }
-
-
-    public String strinRap() {
-        return "Event{" +
-                "name='" + name + '\'' +
-                ", acadyear=" + acadyear +
-                '}';
     }
 }

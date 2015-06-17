@@ -83,6 +83,7 @@ public class StudentenlijstAdapter extends BaseAdapter implements Filterable {
         super.notifyDataSetChanged();
     }
 
+
     @Override
     public int getCount() {
         return studentenLijst.size();
@@ -124,20 +125,22 @@ public class StudentenlijstAdapter extends BaseAdapter implements Filterable {
             holder.huidigeschoolTV.setText(tempValues.getSchool().getName());
             String interestsConc = "";
             HashMap<String, String> interests = tempValues.getInterests();
-            Iterator it = interests.entrySet().iterator();
+            if (interests != null) {
+                Iterator it = interests.entrySet().iterator();
 
-            ArrayList<String> intList = new ArrayList<>();
-            while (it.hasNext()) {
-                Map.Entry pair = (Map.Entry) it.next();
+                ArrayList<String> intList = new ArrayList<>();
+                while (it.hasNext()) {
+                    Map.Entry pair = (Map.Entry) it.next();
 
-                if (pair.getValue().equals("true")) {
-                    intList.add(String.valueOf(pair.getKey()));
+                    if (pair.getValue().equals("true")) {
+                        intList.add(String.valueOf(pair.getKey()));
+                    }
+
+
                 }
-
-
+                for (String interest : intList)
+                    interestsConc += "- " + interest.toUpperCase() + "\n";
             }
-            for (String interest : intList)
-                interestsConc += "- " + interest.toUpperCase() + "\n";
             holder.interessesTV.setText(interestsConc);
 
 

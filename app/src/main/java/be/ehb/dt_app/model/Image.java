@@ -1,11 +1,13 @@
 package be.ehb.dt_app.model;
 
 
-import com.orm.SugarRecord;
-
-public class Image extends SugarRecord<Image> {
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 
+@JsonIgnoreProperties({"id"})
+public class Image {
+
+    private Long id;
     private short priority;
     private byte[] image;
 
@@ -13,7 +15,13 @@ public class Image extends SugarRecord<Image> {
 
     }
 
+    public Long getId() {
+        return id;
+    }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public short getPriority() {
         return priority;

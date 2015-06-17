@@ -50,7 +50,12 @@ public class DataListActivity extends ActionBarActivity implements SearchView.On
 
         preferences = getSharedPreferences("EHB App SharedPreferences", Context.MODE_PRIVATE);
 
-        new HttpDataRequestTask().execute();
+        if (Utils.isNetworkAvailable(this))
+            new HttpDataRequestTask().execute();
+        else {
+            //studentenlijstArray = new ArrayList<>(Subscription.listAll(Subscription.class));
+            setupAdapters();
+        }
 
 
     }
@@ -88,7 +93,7 @@ public class DataListActivity extends ActionBarActivity implements SearchView.On
     }
 
 
-    private void setupLoginAdapters() {
+    private void setupAdapters() {
 
         slAdapter = new StudentenlijstAdapter(this, studentenlijstArray);
 
@@ -202,19 +207,15 @@ public class DataListActivity extends ActionBarActivity implements SearchView.On
             super.onPostExecute(v);
             Utils.animateView(progressOverlay, View.GONE, 0.4f, 200);
 
-            setupLoginAdapters();
+            setupAdapters();
             persistDownloadedData(studentenlijstArray);
         }
 
         private void persistDownloadedData(ArrayList<Subscription> dataLists) {
-            for (Subscription subscription : dataLists)
-                if (Subscription.findById(Subscription.class, subscription.getId()) == null) {
-                    subscription.save();
-                }
+//            for (Subscription subscription : dataLists)
+//                if (Subscription.findById(Subscription.class, subscription.getId()) == null) {
+//                    subscription.save();
+//                }
         }
     }
-
-
-
-
 }

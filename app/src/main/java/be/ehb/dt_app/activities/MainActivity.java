@@ -38,8 +38,14 @@ import be.ehb.dt_app.model.Event;
 import be.ehb.dt_app.model.EventList;
 import be.ehb.dt_app.model.Image;
 import be.ehb.dt_app.model.ImageList;
+import be.ehb.dt_app.model.LocalSubscription;
+import be.ehb.dt_app.model.School;
+import be.ehb.dt_app.model.SchoolList;
+import be.ehb.dt_app.model.Subscription;
+import be.ehb.dt_app.model.SubscriptionsList;
 import be.ehb.dt_app.model.Teacher;
 import be.ehb.dt_app.model.TeacherList;
+
 
 
 public class MainActivity extends Activity {
@@ -61,13 +67,9 @@ public class MainActivity extends Activity {
     private View progressOverlay;
     private Spinner docentSP, eventSP;
     private Button loginBTN;
+    private HashMap<String, ArrayList> dataLists = new HashMap<>();
 
     private SharedPreferences preferences;
-    private ArrayList<Event> eventList;
-    private ArrayList<Teacher> teacherList;
-
-    //DEBUG APPLICATION
-    private boolean debugging = Debug.isDebuggerConnected();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,21 +77,24 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         //retrieve SharedPreferences in global var
         preferences = getSharedPreferences("EHB App SharedPreferences", Context.MODE_PRIVATE);
-        preferences.edit().putBoolean("debugging", Debug.isDebuggerConnected());
-        preferences.edit().putString("server", "http://vdabsidin.appspot.com/rest/{required_dataset}");
-        preferences.getBoolean("greetings", true);
+
+        SharedPreferences.Editor prefEdit = preferences.edit();
+        prefEdit.putBoolean("debugging", Debug.isDebuggerConnected()).apply();
+        prefEdit.putString("server", "http://vdabsidin.appspot.com/rest/{required_dataset}").apply();
+        prefEdit.putBoolean("greetings", false).apply();
         //setup needed design elements
         setUpDesign();
-        //try to initializate dataLists with existing data in DB
-        eventList = (ArrayList<Event>) Event.listAll(Event.class);
-        teacherList = (ArrayList<Teacher>) Teacher.listAll(Teacher.class);
         //if network is available, load data from server
-        if (Utils.isNetworkAvailable(this)) {
+        if (Utils.isNetworkAvailable(this))
             new HttpDataRequestTask().execute();
-        } else {
-            Toast.makeText(getApplicationContext(), "Er kon geen internet verbinding gemaakt worden. Data kan niet geupdate zijn.", Toast.LENGTH_SHORT);
+        else {
+            initDataFromDB(dataLists);
+            setupLoginAdapters();
         }
+
+
     }
+
 
 
     public void setUpDesign() {
@@ -106,27 +111,7 @@ public class MainActivity extends Activity {
 
     }
 
-    private void setupLoginAdapters() {
-        //setup adapters for interface
-        ArrayAdapter<Event> eventAdapter = new ArrayAdapter<>(
-                getApplicationContext(),
-                R.layout.ehb_spinner_list_item,
-                R.id.sub_text_seen,
-                eventList
-        );
 
-        ArrayAdapter<Teacher> teacherAdapter = new ArrayAdapter<>(
-                getApplicationContext(),
-                R.layout.ehb_spinner_list_item,
-                R.id.sub_text_seen,
-                teacherList
-        );
-
-
-        eventSP.setAdapter(eventAdapter);
-        docentSP.setAdapter(teacherAdapter);
-
-    }
 
     public void loginClicked(View v) {
 
@@ -170,8 +155,52 @@ public class MainActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void initDataFromDB(HashMap<String, ArrayList> dataLists) {
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        dataLists.put("events", new ArrayList<Event>(Event.listAll(Event.class)));
+        dataLists.put("teachers", new ArrayList<Teacher>(Teacher.listAll(Teacher.class)));
+
+        ArrayList<LocalSubscription> subList = new ArrayList<LocalSubscription>(LocalSubscription.listAll(LocalSubscription.class));
+        dataLists.put(
+                "subscriptions",
+                Subscription.transformLSubscription(
+                        subList
+                )
+        );
+
+        dataLists.put("schools", new ArrayList<School>(School.listAll(School.class)));
+    }
+
+    private void setupLoginAdapters() {
+        ArrayAdapter<Event> eventArrayAdapter = new ArrayAdapter<Event>(
+                getApplicationContext(),
+                R.layout.ehb_spinner_list_item,
+                R.id.sub_text_seen,
+                dataLists.get("events")
+        );
+        ArrayAdapter<Teacher> teacherArrayAdapter = new ArrayAdapter<Teacher>(
+                getApplicationContext(),
+                R.layout.ehb_spinner_list_item,
+                R.id.sub_text_seen,
+                dataLists.get("teachers")
+        );
+
+        eventSP.setAdapter(eventArrayAdapter);
+        docentSP.setAdapter(teacherArrayAdapter);
+
+        loginBTN.setEnabled(true);
+        eventSP.setEnabled(true);
+        docentSP.setEnabled(true);
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+    }
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////                                                                                ////////////////
     ////////////////                        ASYNC TASKS FOR DATA RETRIEVAL                          ////////////////
     ////////////////                                                                                ////////////////
@@ -208,18 +237,26 @@ public class MainActivity extends Activity {
         @Override
         protected HashMap<String, ArrayList> doInBackground(String... params) {
             //if running in debug mode waitForDebugger to debug thread
-            if (debugging)
+            if (preferences.getBoolean("debugging", false))
                 android.os.Debug.waitForDebugger();
 
+            dataLists.put(
+                    "events",
+                    restTemplate.getForObject(server, EventList.class, "events").getEvents()
+            );
 
-            HashMap<String, ArrayList> dataLists = new HashMap<>();
-
-
-            eventList = restTemplate.getForObject(server, EventList.class, "events").getEvents();
-            dataLists.put("events", eventList);
-
-            teacherList = restTemplate.getForObject(server, TeacherList.class, "teachers").getTeachers();
-            dataLists.put("teachers", teacherList);
+            dataLists.put(
+                    "teachers",
+                    restTemplate.getForObject(server, TeacherList.class, "teachers").getTeachers()
+            );
+            dataLists.put(
+                    "schools",
+                    restTemplate.getForObject(server, SchoolList.class, "schools").getSchools()
+            );
+            dataLists.put(
+                    "subscriptions",
+                    restTemplate.getForObject(server, SubscriptionsList.class, "subscriptions").getSubscriptions()
+            );
 
 
 
@@ -235,20 +272,13 @@ public class MainActivity extends Activity {
         @Override
         protected void onPostExecute(HashMap<String, ArrayList> dataLists) {
             super.onPostExecute(dataLists);
-
+            if (dataLists.isEmpty()) {
+                initDataFromDB(dataLists);
+            } else {
+                persistDownloadedData(dataLists);
+            }
             setupLoginAdapters();
 
-            String toastMessage = "";
-
-
-            if (!(eventList.isEmpty() || teacherList.isEmpty())) {
-                toastMessage = "Please select a teacher and event to login";
-            } else
-                toastMessage = "Er is een fout opgetreden bij het ophalen van de gegevens. Neem contact op met de ICT dienst.";
-
-            Toast
-                    .makeText(getApplicationContext(), toastMessage, Toast.LENGTH_SHORT)
-                    .show();
 
 
 
@@ -258,13 +288,11 @@ public class MainActivity extends Activity {
                 preferences.edit().putInt("Image Version Number", serverversion).apply();
             }
 
-            persistDownloadedData(dataLists);
+
 
 
             Utils.animateView(progressOverlay, View.GONE, 0.4f, 200);
-            loginBTN.setEnabled(true);
-            eventSP.setEnabled(true);
-            docentSP.setEnabled(true);
+
 
         }
 
@@ -289,11 +317,27 @@ public class MainActivity extends Activity {
                                 teacher.save();
                             }
                         break;
+                    case "subscriptions":
+                        for (Subscription subscription : (ArrayList<Subscription>) pair.getValue()) {
+                            LocalSubscription lSub = new LocalSubscription(subscription);
+                            if (LocalSubscription.findById(LocalSubscription.class, lSub.getId()) == null) {
+                                lSub.save();
+                            }
+                        }
+                        break;
+                    case "schools":
+                        for (School school : (ArrayList<School>) pair.getValue())
+                            if (School.findById(School.class, school.getId()) == null) {
+
+                                school.save();
+                            }
+                        break;
 
                 }
             }
         }
     }
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////                                                                                ////////////////
@@ -324,7 +368,7 @@ public class MainActivity extends Activity {
         @Override
         protected String doInBackground(Void... params) {
             //if running in debug mode waitForDebugger to debug thread
-            if (debugging)
+            if (preferences.getBoolean("debugging", false))
                 android.os.Debug.waitForDebugger();
 
             ImageList imageList = restTemplate.getForObject(preferences.getString("server", "http://vdabsidin.appspot.com/rest/{required_dataset}"), ImageList.class, "images");

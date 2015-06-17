@@ -1,13 +1,15 @@
 package be.ehb.dt_app.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.orm.SugarRecord;
 
+@JsonIgnoreProperties({"id"})
 public class Teacher extends SugarRecord<Teacher> {
 
 
     private String name;
     private short acadyear;
-    private Long serverId;
+
 
     public Teacher() {
 
@@ -19,13 +21,6 @@ public class Teacher extends SugarRecord<Teacher> {
     }
 
 
-    public Long getServerId() {
-        return serverId;
-    }
-
-    public void setServerId(Long serverId) {
-        this.serverId = serverId;
-    }
 
     public String getName() {
         return name;
@@ -47,4 +42,5 @@ public class Teacher extends SugarRecord<Teacher> {
     public String toString() {
         return name;
     }
+
 }
