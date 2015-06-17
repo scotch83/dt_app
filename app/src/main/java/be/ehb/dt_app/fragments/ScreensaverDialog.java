@@ -10,6 +10,9 @@ import android.view.View;
 import android.widget.ImageView;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FilenameFilter;
 import java.util.ArrayList;
 
 import be.ehb.dt_app.R;
@@ -52,13 +55,30 @@ public class ScreensaverDialog extends Dialog {
 
     public void fillImageArray() {
 
-        String path = "/data/data/be.ehb.dt_app/app_presentation_images";
+        String path = getContext()
+                .getSharedPreferences(
+                        "EHB App SharedPreferences",
+                        Context.MODE_PRIVATE)
+                .getString(
+                        "Images path",
+                        "data/data/be.ehb.dt_app/app_presentation_images");
+
         File f = new File(path);
-        File file[] = f.listFiles();
+
+        File file[] = f.listFiles(new FilenameFilter() {
+            public boolean accept(File dir, String name) {
+                return name.toLowerCase().endsWith(".jpg");
+            }
+        });
+        Bitmap bitmap = null;
         for (int i = 0; i < file.length; i++) {
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-            Bitmap bitmap = BitmapFactory.decodeFile(file[i].getPath(), options);
+            try {
+                bitmap = BitmapFactory.decodeStream(new FileInputStream(file[i]), null, options);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
 
             bitmapArray.add(bitmap);
         }

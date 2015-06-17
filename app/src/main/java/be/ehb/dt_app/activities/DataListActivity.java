@@ -1,6 +1,7 @@
 package be.ehb.dt_app.activities;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +28,7 @@ import java.util.ArrayList;
 import be.ehb.dt_app.R;
 import be.ehb.dt_app.adapters.StudentenlijstAdapter;
 import be.ehb.dt_app.controller.Utils;
+import be.ehb.dt_app.fragments.ScreensaverDialog;
 import be.ehb.dt_app.model.Subscription;
 import be.ehb.dt_app.model.SubscriptionsList;
 
@@ -43,6 +46,9 @@ public class DataListActivity extends ActionBarActivity implements SearchView.On
     private SearchView mStudententSV;
     private LinearLayout studentenlijstLL;
     private ScrollView scrollView;
+    private long lastUsed = System.currentTimeMillis();
+    private boolean stopScreenSaver;
+    private ScreensaverDialog screensaverDialog;
 
 
     @Override
@@ -61,6 +67,8 @@ public class DataListActivity extends ActionBarActivity implements SearchView.On
             //studentenlijstArray = new ArrayList<>(Subscription.listAll(Subscription.class));
             setupAdapters();
         }
+        screensaverDialog = new ScreensaverDialog(this, R.style.screensaver_dialog);
+        startScreensaverThread();
 
         mStudententSV.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -155,6 +163,68 @@ public class DataListActivity extends ActionBarActivity implements SearchView.On
     ////////////////                                                                                ////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    @Override
+    public void onUserInteraction() {
+        super.onUserInteraction();
+        lastUsed = System.currentTimeMillis();
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////                                                                                ////////////////
+    ////////////////                        ASYNC TASKS FOR DATA RETRIEVAL                          ////////////////
+    ////////////////                                                                                ////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public void startScreensaverThread() {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                long idle = 0;
+                Log.d("started", "the screensaver has started");
+                do {
+                    idle = System.currentTimeMillis() - lastUsed;
+                    Log.d("something", "Application is idle for " + idle + " ms");
+
+                    if (idle > 5000) {
+                        if (!screensaverDialog.isShowing()) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+
+                                    screensaverDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                        @Override
+                                        public void onDismiss(DialogInterface dialog) {
+                                            stopScreenSaver = false;
+                                        }
+                                    });
+                                    screensaverDialog.show();
+                                }
+                            });
+                        } else {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    screensaverDialog.screensaverIV.setImageBitmap(screensaverDialog.bitmapArray.get(screensaverDialog.nextImage()));
+                                }
+                            });
+
+                        }
+                    }
+                    try {
+                        Thread.sleep(5000); //check every 5 seconds
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                while (!stopScreenSaver);
+            }
+
+        });
+        thread.start();
+
+    }
+
     private class DatalistPagerAdapter extends FragmentStatePagerAdapter {
 
         Fragment formPart1, formPart2;
@@ -184,13 +254,6 @@ public class DataListActivity extends ActionBarActivity implements SearchView.On
             return 2;
         }
     }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////                                                                                ////////////////
-    ////////////////                        ASYNC TASKS FOR DATA RETRIEVAL                          ////////////////
-    ////////////////                                                                                ////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
     private class HttpDataRequestTask extends AsyncTask<Void, Void, Void> {
 

@@ -3,6 +3,7 @@ package be.ehb.dt_app.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -10,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Debug;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,6 +36,7 @@ import java.util.Map;
 
 import be.ehb.dt_app.R;
 import be.ehb.dt_app.controller.Utils;
+import be.ehb.dt_app.fragments.ScreensaverDialog;
 import be.ehb.dt_app.model.Event;
 import be.ehb.dt_app.model.EventList;
 import be.ehb.dt_app.model.Image;
@@ -70,6 +73,9 @@ public class MainActivity extends Activity {
     private HashMap<String, ArrayList> dataLists = new HashMap<>();
 
     private SharedPreferences preferences;
+    private ScreensaverDialog screensaverDialog;
+    private long lastUsed = System.currentTimeMillis();
+    private boolean stopScreenSaver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +97,9 @@ public class MainActivity extends Activity {
             initDataFromDB(dataLists);
             setupLoginAdapters();
         }
+
+        screensaverDialog = new ScreensaverDialog(this, R.style.screensaver_dialog);
+        startScreensaverThread();
 
 
     }
@@ -206,6 +215,67 @@ public class MainActivity extends Activity {
     ////////////////                                                                                ////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    @Override
+    public void onUserInteraction() {
+        super.onUserInteraction();
+        lastUsed = System.currentTimeMillis();
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////                                                                                ////////////////
+    ////////////////                        ASYNC TASKS FOR IMAGES RETRIEVAL                        ////////////////
+    ////////////////                                                                                ////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public void startScreensaverThread() {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                long idle = 0;
+                Log.d("started", "the screensaver has started");
+                do {
+                    idle = System.currentTimeMillis() - lastUsed;
+                    Log.d("something", "Application is idle for " + idle + " ms");
+
+                    if (idle > preferences.getInt("Screensaver timelapse", 5000)) {
+                        if (!screensaverDialog.isShowing()) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+
+                                    screensaverDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                        @Override
+                                        public void onDismiss(DialogInterface dialog) {
+                                            stopScreenSaver = false;
+                                        }
+                                    });
+                                    screensaverDialog.show();
+                                }
+                            });
+                        } else {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    screensaverDialog.screensaverIV.setImageBitmap(screensaverDialog.bitmapArray.get(screensaverDialog.nextImage()));
+                                }
+                            });
+
+                        }
+                    }
+                    try {
+                        Thread.sleep(5000); //check every 5 seconds
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                while (!stopScreenSaver);
+            }
+
+        });
+        thread.start();
+
+    }
 
     private class HttpDataRequestTask extends AsyncTask<String, Void, HashMap<String, ArrayList>> {
 
@@ -259,8 +329,6 @@ public class MainActivity extends Activity {
             );
 
 
-
-
             //get own image version from SharedPreferences
             ourversion = preferences.getInt("Images Version Number", 1);
             //get Image version from the server to state if images need to be downloaded
@@ -280,15 +348,11 @@ public class MainActivity extends Activity {
             setupLoginAdapters();
 
 
-
-
             if (ourversion < serverversion) {
                 //if Image version lower than the one on the server, download images
                 new ImageAsyncDownload().execute();
                 preferences.edit().putInt("Image Version Number", serverversion).apply();
             }
-
-
 
 
             Utils.animateView(progressOverlay, View.GONE, 0.4f, 200);
@@ -337,13 +401,6 @@ public class MainActivity extends Activity {
             }
         }
     }
-
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////                                                                                ////////////////
-    ////////////////                        ASYNC TASKS FOR IMAGES RETRIEVAL                        ////////////////
-    ////////////////                                                                                ////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private class ImageAsyncDownload extends AsyncTask<Void, Void, String> {
         private RestTemplate restTemplate;

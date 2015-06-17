@@ -18,7 +18,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -109,7 +108,7 @@ public class RegistrationActivity extends ActionBarActivity {
         //fields from second form
 
         //SCHOOL
-        Spinner tempSp = (Spinner) findViewById(R.id.sp_secundaire_school);
+        EditText tempSp = (EditText) findViewById(R.id.sp_secundaire_school);
         School school = new School("My school for test", "Gent", (short) 9000);
         newSubscription.setSchool(school);
 
@@ -185,7 +184,7 @@ public class RegistrationActivity extends ActionBarActivity {
             }
         });
 
-        screensaverDialog = new ScreensaverDialog(RegistrationActivity.this, R.style.screensaver_dialog);
+        screensaverDialog = new ScreensaverDialog(this, R.style.screensaver_dialog);
         startScreensaverThread();
 
     }
