@@ -83,7 +83,6 @@ public class StudentenlijstAdapter extends BaseAdapter implements Filterable {
         super.notifyDataSetChanged();
     }
 
-
     @Override
     public int getCount() {
         return studentenLijst.size();
