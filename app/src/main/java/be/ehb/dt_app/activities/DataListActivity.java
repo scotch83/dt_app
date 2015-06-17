@@ -1,28 +1,48 @@
 package be.ehb.dt_app.activities;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.ScrollView;
+import android.widget.SearchView;
 import android.widget.Toast;
 
+import org.springframework.web.client.RestTemplate;
+
+import java.util.ArrayList;
+
 import be.ehb.dt_app.R;
-import be.ehb.dt_app.controller.ZoomOutPageTransformer;
-import be.ehb.dt_app.fragments.HeatmapFragment;
-import be.ehb.dt_app.fragments.StudentenlijstFragment;
+import be.ehb.dt_app.adapters.StudentenlijstAdapter;
+import be.ehb.dt_app.controller.Utils;
+import be.ehb.dt_app.model.Subscription;
+import be.ehb.dt_app.model.SubscriptionsList;
 
-public class DataListActivity extends ActionBarActivity {
+public class DataListActivity extends ActionBarActivity implements SearchView.OnQueryTextListener {
 
-    protected Fragment form1, form2;
-    private ViewPager mPagerRegistratie;
-    private PagerAdapter mPagerAdapter;
+    //    protected Fragment form1, form2;
+//    private ViewPager mPagerRegistratie;
+//    private PagerAdapter mPagerAdapter;
     private ImageView img_page1, img_page2;
+    private View progressOverlay;
+    private SharedPreferences preferences;
+    private ListView studentenlijstLV;
+    private ArrayList<Subscription> studentenlijstArray = new ArrayList<>();
+    private StudentenlijstAdapter slAdapter;
+    private SearchView mStudententSV;
+    private LinearLayout studentenlijstLL;
+    private ScrollView scrollView;
 
 
     @Override
@@ -30,50 +50,37 @@ public class DataListActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_data_list);
 
-        form1 = new StudentenlijstFragment();
-        form2 = new HeatmapFragment();
+        setupDesign();
 
-        img_page1 = (ImageView) findViewById(R.id.iv_page1_data);
-        img_page2 = (ImageView) findViewById(R.id.iv_page2_data);
+        studentenlijstLL = (LinearLayout) findViewById(R.id.ll_studentenlijst_lijst);
+        preferences = getSharedPreferences("EHB App SharedPreferences", Context.MODE_PRIVATE);
 
-        mPagerRegistratie = (ViewPager) findViewById(R.id.pager_datalist);
-        mPagerAdapter = new DatalistPagerAdapter(getSupportFragmentManager(), form1, form2);
-        mPagerRegistratie.setAdapter(mPagerAdapter);
-        mPagerRegistratie.setPageTransformer(true, new ZoomOutPageTransformer());
+        new HttpDataRequestTask().execute();
 
-        mPagerRegistratie.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        mStudententSV.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            public void onFocusChange(View v, boolean hasFocus) {
 
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                switch (position) {
-                    case 0:
-                        img_page1.setImageResource(R.drawable.dotsselected);
-                        img_page2.setImageResource(R.drawable.dotsunselected);
-
-                        break;
-
-                    case 1:
-                        img_page1.setImageResource(R.drawable.dotsunselected);
-                        img_page2.setImageResource(R.drawable.dotsselected);
-
-                        break;
-                    default:
-                        break;
+                if (v.getId() == mStudententSV.getId()) {
+                    if (hasFocus) {
+                        int[] loc = new int[2];
+                        v.getLocationOnScreen(loc);
+                        studentenlijstLL.scrollBy(0, 80);
+                    }
                 }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
 
             }
         });
 
-        Toast.makeText(this, "Testing branches again!", Toast.LENGTH_LONG).show();
 
+    }
+
+    private void setupDesign() {
+        mStudententSV = (SearchView) findViewById(R.id.sv_studentenlijst);
+        studentenlijstLV = (ListView) findViewById(R.id.lv_studentenlijst);
+        progressOverlay = findViewById(R.id.progress_overlay);
+        studentenlijstLV.setTextFilterEnabled(true);
+        setupSearchView();
 
     }
 
@@ -100,6 +107,49 @@ public class DataListActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
+    private void setupLoginAdapters() {
+
+        slAdapter = new StudentenlijstAdapter(this, studentenlijstArray);
+
+        studentenlijstLV.setAdapter(slAdapter);
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    private void setupSearchView() {
+        mStudententSV.setIconifiedByDefault(false);
+        mStudententSV.setOnQueryTextListener(this);
+        mStudententSV.setSubmitButtonEnabled(true);
+
+        mStudententSV.setQueryHint("Zoek studenten");
+
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        if (TextUtils.isEmpty(newText)) {
+            studentenlijstLV.clearTextFilter();
+
+        } else {
+            slAdapter.getFilter().filter(newText);
+            studentenlijstLV.setFilterText(newText.toString());
+
+        }
+
+        return true;
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////                                                                                ////////////////
+    ////////////////                        DATALIST PAGER                                          ////////////////
+    ////////////////                                                                                ////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     private class DatalistPagerAdapter extends FragmentStatePagerAdapter {
 
         Fragment formPart1, formPart2;
@@ -110,6 +160,7 @@ public class DataListActivity extends ActionBarActivity {
             this.formPart2 = formPart2;
 
         }
+
 
         @Override
         public Fragment getItem(int position) {
@@ -128,4 +179,60 @@ public class DataListActivity extends ActionBarActivity {
             return 2;
         }
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////                                                                                ////////////////
+    ////////////////                        ASYNC TASKS FOR DATA RETRIEVAL                          ////////////////
+    ////////////////                                                                                ////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+    private class HttpDataRequestTask extends AsyncTask<Void, Void, Void> {
+
+
+        private String server;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            //show loading wheel
+            Utils.animateView(progressOverlay, View.VISIBLE, 0.4f, 200);
+            server = preferences.getString("server", "http://vdabsidin.appspot.com/rest/{required_dataset}");
+            //show toast for loading data
+            Toast
+                    .makeText(getApplicationContext(), "Loading subscriptions", Toast.LENGTH_SHORT)
+                    .show();
+        }
+
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            //if running in debug mode waitForDebugger to debug thread
+            if (preferences.getBoolean("debugging", false))
+                android.os.Debug.waitForDebugger();
+
+            RestTemplate restTemplate = new RestTemplate();
+            //get data from webservice
+            studentenlijstArray = restTemplate.getForObject(server, SubscriptionsList.class, "subscriptions").getSubscriptions();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void v) {
+            super.onPostExecute(v);
+            Utils.animateView(progressOverlay, View.GONE, 0.4f, 200);
+
+            setupLoginAdapters();
+            persistDownloadedData(studentenlijstArray);
+        }
+
+        private void persistDownloadedData(ArrayList<Subscription> dataLists) {
+            for (Subscription subscription : dataLists)
+                if (Subscription.findById(Subscription.class, subscription.getId()) == null) {
+                    subscription.save();
+                }
+        }
+    }
+
+
 }

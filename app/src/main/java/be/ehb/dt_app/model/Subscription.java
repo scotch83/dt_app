@@ -1,6 +1,7 @@
 package be.ehb.dt_app.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.orm.SugarRecord;
 
@@ -24,6 +25,7 @@ public class Subscription extends SugarRecord<Subscription> {
     private Teacher teacher;
     private Event event;
     private School school;
+    @JsonIgnore
     private Long serverId;
 
     public Subscription() {

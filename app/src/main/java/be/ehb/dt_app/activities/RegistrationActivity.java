@@ -1,6 +1,8 @@
 package be.ehb.dt_app.activities;
 
-import android.content.DialogInterface;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -14,14 +16,24 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
+import android.widget.TextView;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import be.ehb.dt_app.R;
 import be.ehb.dt_app.controller.ZoomOutPageTransformer;
 import be.ehb.dt_app.fragments.RegistrationFragment;
 import be.ehb.dt_app.fragments.RegistrationFragment2;
+import be.ehb.dt_app.model.Event;
+import be.ehb.dt_app.model.School;
 import be.ehb.dt_app.model.Subscription;
+import be.ehb.dt_app.model.Teacher;
 import be.ehb.dt_app.fragments.ScreensaverDialog;
 
 public class RegistrationActivity extends ActionBarActivity {
@@ -33,12 +45,18 @@ public class RegistrationActivity extends ActionBarActivity {
     private ViewPager mPagerRegistratie;
     private PagerAdapter mPagerAdapter;
     private ImageView img_page1, img_page2;
+    private TextView page1TV, page2TV;
+    private LinearLayout vpindicatorLL;
+    private SharedPreferences preferences;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
+
+        preferences = getSharedPreferences("EHB App SharedPreferences", Context.MODE_PRIVATE);
 
         form1 = new RegistrationFragment();
         form2 = new RegistrationFragment2();
@@ -53,47 +71,87 @@ public class RegistrationActivity extends ActionBarActivity {
     private void initializeDesign() {
         img_page1 = (ImageView) findViewById(R.id.iv_page1);
         img_page2 = (ImageView) findViewById(R.id.iv_page2);
+        page1TV = (TextView) findViewById(R.id.tv_pagina1);
+        page2TV = (TextView) findViewById(R.id.tv_pagina2);
+    }
+
+    public void sendData(View v) {
+
 
         ArrayList<String> dataToSend = new ArrayList<>();
 
         Subscription newSubscription = new Subscription();
 
         EditText temp;
+        //fields from first form
+        temp = (EditText) findViewById(R.id.et_voornaam);
+        newSubscription.setFirstName(temp.getText().toString());
+
+        temp = (EditText) findViewById(R.id.et_achternaam);
+        newSubscription.setLastName(temp.getText().toString());
+
+        temp = (EditText) findViewById(R.id.et_email);
+        newSubscription.setEmail(temp.getText().toString());
+
+        temp = (EditText) findViewById(R.id.et_straatnaam);
+        newSubscription.setStreet(temp.getText().toString());
+
+        temp = (EditText) findViewById(R.id.et_straatnummer);
+        newSubscription.setStreetNumber(temp.getText().toString());
+
+        temp = (EditText) findViewById(R.id.et_stad);
+        newSubscription.setCity(temp.getText().toString());
+
+        temp = (EditText) findViewById(R.id.et_postcode);
+        newSubscription.setZip(temp.getText().toString());
+
+        //fields from second form
+
+        //SCHOOL
+        Spinner tempSp = (Spinner) findViewById(R.id.sp_secundaire_school);
+        School school = new School("My school for test", "Gent", (short) 9000);
+        newSubscription.setSchool(school);
+
+        //INTERESTS
+        HashMap<String, String> interests = new HashMap<>();
+        interests.put("Dig-X", "true");
+        interests.put("Multec", "false");
+        interests.put("Werkstuden", "true");
+        newSubscription.setInterests(interests);
+
+        //Teacher and event
+        String jsonTeacher = preferences.getString("Teacher", "(iets misgelopen. Neem contact met de ICT dienst.)");
+        String jsonEvent = preferences.getString("Event", "(iets misgelopen. Neem contact met de ICT dienst.)");
+        ObjectMapper om = new ObjectMapper();
+        ObjectMapper jxson = new ObjectMapper();
+        try {
+            Teacher docent = jxson.readValue(jsonTeacher, Teacher.class);
+            Event event = jxson.readValue(jsonEvent, Event.class);
+
+            newSubscription.setTeacher(docent);
+            newSubscription.setEvent(event);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
 
-//        temp = (EditText) findViewById(R.id.et_voornaam);
-//        newSubscription.setFirstName(temp.getText().toString());
-//
-//        temp= (EditText) findViewById(R.id.et_achternaam);
-//        newSubscription.setLastName(temp.getText().toString());
-//
-//        temp = (EditText) findViewById(R.id.et_email);
-//        newSubscription.setEmail(temp.getText().toString());
-//
-//        temp = (EditText) findViewById(R.id.et_straatnaam);
-//        newSubscription.setStreet(temp.getText().toString());
-//
-//        String straatnummer = "69";
-//        newSubscription.setStreetNumber(straatnummer);
-//
-//        temp = (EditText) findViewById(R.id.et_stad);
-//        newSubscription.setCity(temp.getText().toString());
-//
-//        temp = (EditText) findViewById(R.id.et_postcode);
-//        newSubscription.setZip(temp.getText().toString());
-
+        Log.d("xxx", newSubscription.toString());
     }
 
     private void initializePager() {
 
         mPagerRegistratie = (ViewPager) findViewById(R.id.pager_registratie);
+
         mPagerAdapter = new RegistratiePagerAdapter(getSupportFragmentManager(), form1, form2);
+        vpindicatorLL = (LinearLayout) findViewById(R.id.ll_viewpagerindicator);
+
         mPagerRegistratie.setAdapter(mPagerAdapter);
         mPagerRegistratie.setPageTransformer(true, new ZoomOutPageTransformer());
-
         mPagerRegistratie.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
 
             }
 
@@ -102,6 +160,8 @@ public class RegistrationActivity extends ActionBarActivity {
                 switch (position) {
                     case 0:
                         img_page1.setImageResource(R.drawable.dotsselected);
+                        page1TV.setTextColor(Color.RED);
+                        page2TV.setTextColor(Color.BLACK);
                         img_page2.setImageResource(R.drawable.dotsunselected);
 
                         break;
@@ -109,6 +169,8 @@ public class RegistrationActivity extends ActionBarActivity {
                     case 1:
                         img_page1.setImageResource(R.drawable.dotsunselected);
                         img_page2.setImageResource(R.drawable.dotsselected);
+                        page2TV.setTextColor(Color.RED);
+                        page1TV.setTextColor(Color.BLACK);
 
                         break;
                     default:

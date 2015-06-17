@@ -30,6 +30,22 @@
                 android:layout_marginTop="20dp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ehbletter" />
+
+            <FrameLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_gravity="center_horizontal"
+                android:paddingRight="150dp"
+                android:paddingTop="20dp">
+
+                <SearchView
+                    android:id="@+id/sv_pdflijst"
+                    android:layout_width="350dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|right"
+                    android:background="#64ffffff"
+                    android:gravity="center" />
+            </FrameLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -54,19 +70,10 @@
                 android:paddingRight="50dp">
 
 
-                <SearchView
-                    android:id="@+id/sv_pdflijst"
-                    android:layout_width="350dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="top"
-                    android:layout_marginTop="40dp"
-                    android:background="#64ffffff"
-                    android:gravity="left" />
-
                 <ListView
                     android:id="@+id/lv_pdflijst"
                     android:layout_width="400dp"
-                    android:layout_height="684dp"
+                    android:layout_height="match_parent"
                     android:layout_gravity="center_horizontal"
                     android:divider="#FFF"
                     android:dividerHeight="0.5px"

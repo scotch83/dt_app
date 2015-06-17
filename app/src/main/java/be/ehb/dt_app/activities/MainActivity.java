@@ -18,9 +18,12 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 
 import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
@@ -31,15 +34,10 @@ import java.util.Map;
 
 import be.ehb.dt_app.R;
 import be.ehb.dt_app.controller.Utils;
-import be.ehb.dt_app.model.CustomGsonHttpMessageConverter;
 import be.ehb.dt_app.model.Event;
 import be.ehb.dt_app.model.EventList;
 import be.ehb.dt_app.model.Image;
 import be.ehb.dt_app.model.ImageList;
-import be.ehb.dt_app.model.School;
-import be.ehb.dt_app.model.SchoolList;
-import be.ehb.dt_app.model.Subscription;
-import be.ehb.dt_app.model.SubscriptionsList;
 import be.ehb.dt_app.model.Teacher;
 import be.ehb.dt_app.model.TeacherList;
 
@@ -47,16 +45,25 @@ import be.ehb.dt_app.model.TeacherList;
 public class MainActivity extends Activity {
 
 
-    private static final String SERVER = "http://vdabsidin.appspot.com/rest/{required_dataset}";
+    //In the "EHB App SharedPreferences" preferences are saved with the following names
+    //"Image Version Number"
+    //"debugging"
+    //"server"
+    //"Images path"
+    //
+    //When the login is performed, also
+    //"Teacher"
+    //and
+    //"Event"
+    //are saved for the selected "Teacher" and "Event". These are saved as a Json string, to be deserialized later
+    //to objects without having to access the DB.
 
     private View progressOverlay;
     private Spinner docentSP, eventSP;
     private Button loginBTN;
+
     private SharedPreferences preferences;
-    private RestTemplate restTemplate;
-    private ArrayList<School> schoolList;
     private ArrayList<Event> eventList;
-    private ArrayList<Subscription> subscriptionsList;
     private ArrayList<Teacher> teacherList;
 
     //DEBUG APPLICATION
@@ -68,6 +75,9 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         //retrieve SharedPreferences in global var
         preferences = getSharedPreferences("EHB App SharedPreferences", Context.MODE_PRIVATE);
+        preferences.edit().putBoolean("debugging", Debug.isDebuggerConnected());
+        preferences.edit().putString("server", "http://vdabsidin.appspot.com/rest/{required_dataset}");
+        preferences.getBoolean("greetings", true);
         //setup needed design elements
         setUpDesign();
         //try to initializate dataLists with existing data in DB
@@ -75,13 +85,7 @@ public class MainActivity extends Activity {
         teacherList = (ArrayList<Teacher>) Teacher.listAll(Teacher.class);
         //if network is available, load data from server
         if (Utils.isNetworkAvailable(this)) {
-
-            restTemplate = new RestTemplate();
-
-            List<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
-            messageConverters.add(new CustomGsonHttpMessageConverter());
-            restTemplate.setMessageConverters(messageConverters);
-            new HttpRequestEventsTask().execute("events", "teachers", "schools", "subscriptions");
+            new HttpDataRequestTask().execute();
         } else {
             Toast.makeText(getApplicationContext(), "Er kon geen internet verbinding gemaakt worden. Data kan niet geupdate zijn.", Toast.LENGTH_SHORT);
         }
@@ -129,10 +133,14 @@ public class MainActivity extends Activity {
         Teacher docent = (Teacher) docentSP.getSelectedItem();
         Event event = (Event) eventSP.getSelectedItem();
 
-        Gson gson = new Gson();
+        ObjectWriter jxson = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        try {
+            preferences.edit().putString("Teacher", jxson.writeValueAsString(docent)).apply();
+            preferences.edit().putString("Event", jxson.writeValueAsString(event)).apply();
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
 
-        preferences.edit().putString("Teacher", gson.toJson(docent)).apply();
-        preferences.edit().putString("Event", gson.toJson(event)).apply();
 
         Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
         startActivity(i);
@@ -170,11 +178,13 @@ public class MainActivity extends Activity {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-    private class HttpRequestEventsTask extends AsyncTask<String, Void, HashMap<String, ArrayList>> {
+    private class HttpDataRequestTask extends AsyncTask<String, Void, HashMap<String, ArrayList>> {
 
 
         private Integer serverversion;
         private int ourversion;
+        private String server;
+        private RestTemplate restTemplate;
 
         @Override
         protected void onPreExecute() {
@@ -185,6 +195,13 @@ public class MainActivity extends Activity {
             Toast
                     .makeText(getApplicationContext(), "Please wait while loading data", Toast.LENGTH_SHORT)
                     .show();
+            server = preferences.getString("server", "http://vdabsidin.appspot.com/rest/{required_dataset}");
+
+            restTemplate = new RestTemplate();
+
+            List<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
+            messageConverters.add(new MappingJackson2HttpMessageConverter());
+            restTemplate.setMessageConverters(messageConverters);
         }
 
 
@@ -197,39 +214,20 @@ public class MainActivity extends Activity {
 
             HashMap<String, ArrayList> dataLists = new HashMap<>();
 
-            for (String requestedData : params) {
 
-                switch (requestedData) {
-                    case "events":
-                        //get data from webservice
-                        eventList = restTemplate.getForObject(SERVER, EventList.class, requestedData).getEvents();
-                        dataLists.put(requestedData, eventList);
-                        break;
-                    case "teachers":
-                        //get data from webservice
-                        teacherList = restTemplate.getForObject(SERVER, TeacherList.class, requestedData).getTeachers();
-                        dataLists.put(requestedData, teacherList);
-                        break;
-                    case "schools":
-                        //get data from webservice
-                        schoolList = restTemplate.getForObject(SERVER, SchoolList.class, requestedData).getSchools();
-                        dataLists.put(requestedData, schoolList);
-                        break;
-                    case "subscriptions":
-                        //get data from webservice
-                        subscriptionsList = restTemplate.getForObject(SERVER, SubscriptionsList.class, requestedData).getSubscriptions();
-                        dataLists.put(requestedData, subscriptionsList);
-                        break;
-                    default:
-                        break;
-                }
+            eventList = restTemplate.getForObject(server, EventList.class, "events").getEvents();
+            dataLists.put("events", eventList);
 
-            }
+            teacherList = restTemplate.getForObject(server, TeacherList.class, "teachers").getTeachers();
+            dataLists.put("teachers", teacherList);
+
+
+
 
             //get own image version from SharedPreferences
             ourversion = preferences.getInt("Images Version Number", 1);
             //get Image version from the server to state if images need to be downloaded
-            serverversion = restTemplate.getForObject(SERVER, Integer.class, "imagesversion");
+            serverversion = restTemplate.getForObject(server, Integer.class, "imagesversion");
 
             return dataLists;
         }
@@ -252,7 +250,6 @@ public class MainActivity extends Activity {
                     .makeText(getApplicationContext(), toastMessage, Toast.LENGTH_SHORT)
                     .show();
 
-            Utils.animateView(progressOverlay, View.GONE, 0.4f, 200);
 
 
             if (ourversion < serverversion) {
@@ -264,6 +261,7 @@ public class MainActivity extends Activity {
             persistDownloadedData(dataLists);
 
 
+            Utils.animateView(progressOverlay, View.GONE, 0.4f, 200);
             loginBTN.setEnabled(true);
             eventSP.setEnabled(true);
             docentSP.setEnabled(true);
@@ -280,35 +278,18 @@ public class MainActivity extends Activity {
                     case "events":
                         for (Event event : (ArrayList<Event>) pair.getValue())
                             if (Event.findById(Event.class, event.getId()) == null) {
-                                event.setServerId(event.getId());
-                                event.setId(null);
+
                                 event.save();
                             }
                         break;
                     case "teachers":
                         for (Teacher teacher : (ArrayList<Teacher>) pair.getValue())
                             if (Teacher.findById(Teacher.class, teacher.getId()) == null) {
-                                teacher.setServerId(teacher.getId());
-                                teacher.setId(null);
+
                                 teacher.save();
                             }
                         break;
-                    case "schools":
-                        for (School school : (ArrayList<School>) pair.getValue())
-                            if (School.findById(School.class, school.getId()) == null) {
-                                school.setServerId(school.getId());
-                                school.setId(null);
-                                school.save();
-                            }
-                        break;
-                    case "subscriptions":
-                        for (Subscription subscription : (ArrayList<Subscription>) pair.getValue())
-                            if (Subscription.findById(Subscription.class, subscription.getId()) == null) {
-                                subscription.setServerId(subscription.getId());
-                                subscription.setId(null);
-                                subscription.save();
-                            }
-                        break;
+
                 }
             }
         }
@@ -321,6 +302,17 @@ public class MainActivity extends Activity {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private class ImageAsyncDownload extends AsyncTask<Void, Void, String> {
+        private RestTemplate restTemplate;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            restTemplate = new RestTemplate();
+
+            List<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
+            messageConverters.add(new MappingJackson2HttpMessageConverter());
+            restTemplate.setMessageConverters(messageConverters);
+        }
 
         @Override
         protected void onPostExecute(String s) {
@@ -335,7 +327,7 @@ public class MainActivity extends Activity {
             if (debugging)
                 android.os.Debug.waitForDebugger();
 
-            ImageList imageList = restTemplate.getForObject(SERVER, ImageList.class, "images");
+            ImageList imageList = restTemplate.getForObject(preferences.getString("server", "http://vdabsidin.appspot.com/rest/{required_dataset}"), ImageList.class, "images");
             for (Image item : imageList.getImages()) {
                 Bitmap imageToSave = BitmapFactory.decodeByteArray(item.getImage(), 0, item.getImage().length);
                 Utils.saveImage(String.valueOf("EHBpicture_id_" + item.getId()) + ".jpg", imageToSave, getApplicationContext());
