@@ -1,6 +1,7 @@
 package be.ehb.dt_app.activities;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -30,6 +31,7 @@ import be.ehb.dt_app.R;
 import be.ehb.dt_app.controller.ZoomOutPageTransformer;
 import be.ehb.dt_app.fragments.RegistrationFragment;
 import be.ehb.dt_app.fragments.RegistrationFragment2;
+import be.ehb.dt_app.fragments.ScreensaverDialog;
 import be.ehb.dt_app.model.Event;
 import be.ehb.dt_app.model.School;
 import be.ehb.dt_app.model.Subscription;
@@ -38,6 +40,9 @@ import be.ehb.dt_app.model.Teacher;
 public class RegistrationActivity extends ActionBarActivity {
 
     protected Fragment form1, form2;
+    long lastUsed = System.currentTimeMillis();
+    boolean stopScreenSaver;
+    ScreensaverDialog screensaverDialog;
     private ViewPager mPagerRegistratie;
     private PagerAdapter mPagerAdapter;
     private ImageView img_page1, img_page2;
@@ -138,6 +143,7 @@ public class RegistrationActivity extends ActionBarActivity {
     private void initializePager() {
 
         mPagerRegistratie = (ViewPager) findViewById(R.id.pager_registratie);
+
         mPagerAdapter = new RegistratiePagerAdapter(getSupportFragmentManager(), form1, form2);
         vpindicatorLL = (LinearLayout) findViewById(R.id.ll_viewpagerindicator);
 
@@ -178,6 +184,10 @@ public class RegistrationActivity extends ActionBarActivity {
 
             }
         });
+
+        screensaverDialog = new ScreensaverDialog(RegistrationActivity.this, R.style.screensaver_dialog);
+        startScreensaverThread();
+
     }
 
     @Override
@@ -200,6 +210,61 @@ public class RegistrationActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onUserInteraction() {
+        super.onUserInteraction();
+        lastUsed = System.currentTimeMillis();
+    }
+
+    public void startScreensaverThread() {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                long idle = 0;
+                Log.d("started", "the screensaver has started");
+                do {
+                    idle = System.currentTimeMillis() - lastUsed;
+                    Log.d("something", "Application is idle for " + idle + " ms");
+
+                    if (idle > 5000) {
+                        if (!screensaverDialog.isShowing()) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+
+                                    screensaverDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                        @Override
+                                        public void onDismiss(DialogInterface dialog) {
+                                            stopScreenSaver = false;
+                                        }
+                                    });
+                                    screensaverDialog.show();
+                                }
+                            });
+                        } else {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    screensaverDialog.screensaverIV.setImageBitmap(screensaverDialog.bitmapArray.get(screensaverDialog.nextImage()));
+                                }
+                            });
+
+                        }
+                    }
+                    try {
+                        Thread.sleep(5000); //check every 5 seconds
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                while (!stopScreenSaver);
+            }
+
+        });
+        thread.start();
+
     }
 
     public void sendSubscriptionClicked(View v) {
