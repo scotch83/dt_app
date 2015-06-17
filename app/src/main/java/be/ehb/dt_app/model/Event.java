@@ -3,7 +3,7 @@ package be.ehb.dt_app.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.orm.SugarRecord;
 
-@JsonIgnoreProperties({"id"})
+@JsonIgnoreProperties({"id", "sqlName", "tableFields"})
 public class Event extends SugarRecord<Event> {
 
 

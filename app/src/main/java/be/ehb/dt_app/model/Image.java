@@ -1,10 +1,6 @@
 package be.ehb.dt_app.model;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-
-@JsonIgnoreProperties({"id"})
 public class Image {
 
     private Long id;

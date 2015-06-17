@@ -29,6 +29,7 @@ import be.ehb.dt_app.R;
 import be.ehb.dt_app.adapters.StudentenlijstAdapter;
 import be.ehb.dt_app.controller.Utils;
 import be.ehb.dt_app.fragments.ScreensaverDialog;
+import be.ehb.dt_app.model.LocalSubscription;
 import be.ehb.dt_app.model.Subscription;
 import be.ehb.dt_app.model.SubscriptionsList;
 
@@ -295,14 +296,12 @@ public class DataListActivity extends ActionBarActivity implements SearchView.On
         }
 
         private void persistDownloadedData(ArrayList<Subscription> dataLists) {
-//            for (Subscription subscription : dataLists)
-//                if (Subscription.findById(Subscription.class, subscription.getId()) == null) {
-//                    subscription.save();
-//                }
+            for (Subscription subscription : dataLists) {
+                LocalSubscription lSub = new LocalSubscription(subscription);
+                if (LocalSubscription.findById(LocalSubscription.class, lSub.getId()) == null) {
+                    lSub.save();
+                }
+            }
         }
     }
-
-
-
-
 }

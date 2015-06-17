@@ -181,7 +181,7 @@ public class LocalSubscription extends SugarRecord<LocalSubscription> {
 
         interestsLijst.setDigx(interests.get("digx"));
         interestsLijst.setMultec(interests.get("multec"));
-        interestsLijst.setWerkstudent(interests.get("multec"));
+        interestsLijst.setWerkstudent(interests.get("werkstudent"));
 //        interestsLijst.setId(id);
         interestsLijst.save();
         this.interests = interestsLijst;
