@@ -87,9 +87,7 @@ public class RegistrationActivity extends ActionBarActivity {
         img_page2 = (ImageView) findViewById(R.id.iv_page2);
         page1TV = (TextView) findViewById(R.id.tv_pagina1);
         page2TV = (TextView) findViewById(R.id.tv_pagina2);
-//        stad_secundaire_onderwijs = (AutoCompleteTextView) findViewById(R.id.et_stad_secundaireschool);
-//        stad_secundaire_onderwijs.setThreshold(Integer.MAX_VALUE);
-//        //stad_secundaire_onderwijs.setLi
+
     }
 
     public void sendData(View v) {
