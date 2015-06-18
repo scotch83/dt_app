@@ -2,6 +2,7 @@ package be.ehb.dt_app.activities;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -29,6 +31,7 @@ import be.ehb.dt_app.R;
 import be.ehb.dt_app.adapters.StudentenlijstAdapter;
 import be.ehb.dt_app.controller.Utils;
 import be.ehb.dt_app.fragments.ScreensaverDialog;
+import be.ehb.dt_app.maps.MapActivity;
 import be.ehb.dt_app.model.LocalSubscription;
 import be.ehb.dt_app.model.Subscription;
 import be.ehb.dt_app.model.SubscriptionsList;
@@ -39,6 +42,7 @@ public class DataListActivity extends ActionBarActivity implements SearchView.On
 //    private ViewPager mPagerRegistratie;
 //    private PagerAdapter mPagerAdapter;
     private ImageView img_page1, img_page2;
+    private ImageButton heatMapIB;
     private View progressOverlay;
     private SharedPreferences preferences;
     private ListView studentenlijstLV;
@@ -59,6 +63,7 @@ public class DataListActivity extends ActionBarActivity implements SearchView.On
 
         setupDesign();
 
+        heatMapIB = (ImageButton) findViewById(R.id.ib_heatmap_navigeer);
         studentenlijstLL = (LinearLayout) findViewById(R.id.ll_registratie1_persoonsgegevens);
         preferences = getSharedPreferences("EHB App SharedPreferences", Context.MODE_PRIVATE);
 
@@ -68,8 +73,8 @@ public class DataListActivity extends ActionBarActivity implements SearchView.On
             //studentenlijstArray = new ArrayList<>(Subscription.listAll(Subscription.class));
             setupAdapters();
         }
-        screensaverDialog = new ScreensaverDialog(this, R.style.screensaver_dialog);
-        startScreensaverThread();
+        //screensaverDialog = new ScreensaverDialog(this, R.style.screensaver_dialog);
+        //startScreensaverThread();
 
         mStudententSV.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -87,6 +92,11 @@ public class DataListActivity extends ActionBarActivity implements SearchView.On
         });
 
 
+    }
+
+    public void goToHeatMap(View V) {
+        Intent i = new Intent(getApplicationContext(), MapActivity.class);
+        startActivity(i);
     }
 
     private void setupDesign() {
@@ -256,6 +266,13 @@ public class DataListActivity extends ActionBarActivity implements SearchView.On
         }
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////                                                                                ////////////////
+    ////////////////                        ASYNC TASKS FOR DATA RETRIEVAL                          ////////////////
+    ////////////////                                                                                ////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
     private class HttpDataRequestTask extends AsyncTask<Void, Void, Void> {
 
 
@@ -304,4 +321,8 @@ public class DataListActivity extends ActionBarActivity implements SearchView.On
             }
         }
     }
+
 }
+
+
+

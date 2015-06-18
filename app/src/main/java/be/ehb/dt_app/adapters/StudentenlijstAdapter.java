@@ -38,6 +38,7 @@ public class StudentenlijstAdapter extends BaseAdapter implements Filterable {
 
     }
 
+
     public Filter getFilter() {
         return new Filter() {
 

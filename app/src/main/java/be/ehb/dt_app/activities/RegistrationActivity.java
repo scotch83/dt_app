@@ -61,7 +61,6 @@ public class RegistrationActivity extends ActionBarActivity {
     private SharedPreferences preferences;
     private String server;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,8 +81,8 @@ public class RegistrationActivity extends ActionBarActivity {
     }
 
     private void initializeDesign() {
-        //img_page1 = (ImageView) findViewById(R.id.iv_page1);
-        //img_page2 = (ImageView) findViewById(R.id.iv_page2);
+        img_page1 = (ImageView) findViewById(R.id.iv_page1);
+        img_page2 = (ImageView) findViewById(R.id.iv_page2);
         page1TV = (TextView) findViewById(R.id.tv_pagina1);
         page2TV = (TextView) findViewById(R.id.tv_pagina2);
     }
@@ -153,7 +152,6 @@ public class RegistrationActivity extends ActionBarActivity {
 
         newSubscription.setTimestamp(new Date());
 
-
         if (Utils.isNetworkAvailable(this)) {
             new SaveAsynctask().execute(newSubscription);
 
@@ -181,16 +179,16 @@ public class RegistrationActivity extends ActionBarActivity {
             public void onPageSelected(int position) {
                 switch (position) {
                     case 0:
-//                        img_page1.setImageResource(R.drawable.dotsselected);
-//                        img_page2.setImageResource(R.drawable.dotsunselected);
+                        img_page1.setImageResource(R.drawable.dotselectedblack);
                         page1TV.setTextColor(Color.RED);
                         page2TV.setTextColor(Color.BLACK);
+                        img_page2.setImageResource(R.drawable.dotunselectedblack);
 
                         break;
 
                     case 1:
-//                        img_page1.setImageResource(R.drawable.dotsunselected);
-//                        img_page2.setImageResource(R.drawable.dotsselected);
+                        img_page1.setImageResource(R.drawable.dotunselectedblack);
+                        img_page2.setImageResource(R.drawable.dotselectedblack);
                         page2TV.setTextColor(Color.RED);
                         page1TV.setTextColor(Color.BLACK);
 
@@ -289,7 +287,13 @@ public class RegistrationActivity extends ActionBarActivity {
 //    }
 
 
+    public void scrollIndicator() {
 
+    }
+
+    /**
+     * private class RegistratiePagerAdapter geeft het juiste fragment voor de positie waarin de viewpager zich bevindt.
+     */
     private class RegistratiePagerAdapter extends FragmentStatePagerAdapter {
 
         Fragment formPart1, formPart2;

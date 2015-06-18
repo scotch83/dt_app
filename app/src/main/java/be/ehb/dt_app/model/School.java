@@ -20,35 +20,17 @@ public class School extends SugarRecord<School> {
 
     }
 
-    public School(String name, String gemeente, short postcode, Long serverId) {
+    public School(long id, String name, String gemeente, int postcode) {
+        this.id = id;
         this.name = name;
         this.gemeente = gemeente;
-        this.postcode = postcode;
-        this.serverId = serverId;
+        this.postcode = (short) postcode;
     }
 
-    public School(String name, String gemeente, short postcode) {
+    public School(String name, String gemeente, int postcode) {
         this.name = name;
         this.gemeente = gemeente;
-        this.postcode = postcode;
-    }
-
-    public School(long l, String s, String jette, int i) {
-
-        this.name = s;
-        this.gemeente = jette;
-        this.postcode = (short) i;
-
-    }
-
-    @JsonProperty("id")
-    public Long getServerId() {
-        return serverId;
-    }
-
-    @JsonProperty("id")
-    public void setServerId(Long serverId) {
-        this.serverId = serverId;
+        this.postcode = (short) postcode;
     }
 
 

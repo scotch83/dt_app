@@ -47,7 +47,6 @@ import be.ehb.dt_app.model.Teacher;
 import be.ehb.dt_app.model.TeacherList;
 
 
-
 public class MainActivity extends Activity {
 
 
@@ -94,10 +93,11 @@ public class MainActivity extends Activity {
         }
 
 
+        //screensaverDialog = new ScreensaverDialog(this, R.style.screensaver_dialog);
+        //startScreensaverThread();
 
 
     }
-
 
     public void setUpDesign() {
 
@@ -112,7 +112,6 @@ public class MainActivity extends Activity {
         loginBTN.setEnabled(false);
 
     }
-
 
 
     public void loginClicked(View v) {

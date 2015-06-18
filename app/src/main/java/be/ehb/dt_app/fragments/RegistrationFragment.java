@@ -11,6 +11,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import be.ehb.dt_app.R;
+import be.ehb.dt_app.activities.RegistrationActivity;
 
 
 public class RegistrationFragment extends Fragment {
@@ -63,6 +64,7 @@ public class RegistrationFragment extends Fragment {
                         int[] loc = new int[2];
                         v.getLocationOnScreen(loc);
                         mScrollView.smoothScrollTo(loc[0], llBottom.getTop());
+                        ((RegistrationActivity) getActivity()).scrollIndicator();
                     }
                 }
 

@@ -20,6 +20,7 @@
         android:layout_alignParentTop="false"
         android:layout_alignTop="@+id/pager_registratie"
         android:layout_alignWithParentIfMissing="false"
+        android:layout_marginBottom="500dp"
         android:baselineAligned="false"
         android:gravity="center_horizontal"
         android:orientation="horizontal"
