@@ -87,6 +87,7 @@
                         android:textStyle="bold" />
 
                     <Spinner
+
                         android:id="@+id/sp_beheer_event"
                         style="@style/ColoredSpinnerCustom"
                         android:layout_width="wrap_content"
