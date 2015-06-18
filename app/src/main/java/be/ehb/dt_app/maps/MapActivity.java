@@ -22,12 +22,13 @@ public class MapActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
+
         maakScholenKort();
         maakSubscriptionen();
         Schooltotaal schooltotaal = new Schooltotaal();
-        schooltotaal.gegevensUitArray(schools, Subscriptions);
+        schooltotaal.gegevens();
 
-        MapFragment fragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
+        MapFragment fragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map_heatmap);
         Schoolkaart kaart = new Schoolkaart(schooltotaal.getIndeling(), this);
         fragment.getMapAsync(kaart);
     }

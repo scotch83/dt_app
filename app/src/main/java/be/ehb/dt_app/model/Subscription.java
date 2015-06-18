@@ -8,6 +8,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 @JsonIgnoreProperties({"sqlName", "tableFields"})
@@ -64,6 +66,15 @@ public class Subscription {
         return result;
     }
 
+    public static boolean isValidEmail(String email) {
+
+        final Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+
+
+        Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(email);
+        return matcher.find();
+
+    }
 
     public String getFirstName() {
         return firstName;
@@ -211,5 +222,11 @@ public class Subscription {
     public void setServerId(Long serverId) {
         this.serverId = serverId;
 
+    }
+
+    @JsonIgnore
+    public boolean isValidForSaving() {
+
+        return firstName != "" && lastName != "" && street != "" && streetNumber != "" && zip != "" && city != "";
     }
 }

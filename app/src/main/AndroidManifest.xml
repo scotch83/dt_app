@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="be.ehb.dt_app" >
+    package="be.ehb.dt_app">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <permission
-        android:name="be.ehb.mobappproject.maps.permission.MAPS_RECIEVE"
+        android:name="be.ehb.dt_app.permission.MAPS_RECIEVE"
         android:protectionLevel="signature" />
 
     <uses-feature
@@ -28,7 +29,7 @@
         android:icon="@mipmap/ic_launcherehb"
         android:label="@string/app_name"
         android:theme="@style/AppBackground"
-        tools:replace="icon, label" >
+        tools:replace="icon, label">
         <meta-data
             android:name="DATABASE"
             android:value="beurs_app_local.db" />
@@ -46,15 +47,12 @@
             android:name=".activities.MainActivity"
             android:clearTaskOnLaunch="true"
             android:label="@string/app_name"
-            android:screenOrientation="landscape" >
             android:noHistory="true"
             android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
         <activity
             android:name=".activities.HomeScreenActivity"
@@ -63,21 +61,22 @@
         <activity
             android:name=".activities.RegistrationActivity"
             android:label="@string/title_activity_registration"
-            android:screenOrientation="landscape" >
-        </activity>
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="stateHidden"></activity>
         <activity
             android:name=".activities.DataListActivity"
             android:label="@string/title_activity_data_list"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="stateHidden"></activity>
         <activity
             android:name=".activities.BeheerActivity"
             android:label="@string/title_activity_beheer"
-            android:screenOrientation="landscape" >
-            =======
-            >>>>>>> Stashed changes
+            android:screenOrientation="landscape">
+
+
         </activity>
 
-        <receiver android:name=".controller.ConnectionChangeReceiver" >
+        <receiver android:name=".controller.ConnectionChangeReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
@@ -86,35 +85,32 @@
         <activity
             android:name=".activities.PdfActivity"
             android:label="@string/title_activity_pdf"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="stateHidden" />
+
         <activity
             android:name=".activities.DepartementLoginActivity"
             android:label="@string/title_activity_departement_login" />
+
         <activity
             android:name=".maps.RegioActivity"
             android:label="@string/title_activity_regio" />
         <activity
             android:name=".maps.MapActivity"
             android:label="@string/title_activity_map" />
+
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyADLcqWxgWnwsVLOecpkmOzonSckOvQFKU" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:label="@string/title_activity_map"
+            android:value="@integer/google_play_services_version" />
+
         <activity
             android:name=".activities.SlideshowActivity"
             android:label="@string/title_activity_slideshow"
-            android:screenOrientation="landscape">
-        </activity>
-
-        <activity
-            android:name="com.dropbox.client2.android.AuthActivity"
-            android:configChanges="orientation|keyboard"
-            android:launchMode="singleTask" >
-            <intent-filter>
-                <data android:scheme="db-9dhgeep8upyf77o" />
-
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.BROWSABLE" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+            android:screenOrientation="landscape"></activity>
     </application>
 
 </manifest>

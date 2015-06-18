@@ -9,7 +9,7 @@
     tools:context="be.ehb.dt_app.maps.MapActivity">
 
     <fragment
-        android:id="@+id/map"
+        android:id="@+id/map_heatmap"
         android:name="com.google.android.gms.maps.MapFragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -1,10 +1,13 @@
 package be.ehb.dt_app.activities;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Debug;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -98,69 +101,100 @@ public class RegistrationActivity extends ActionBarActivity {
         Subscription newSubscription = new Subscription();
 
         EditText temp;
-        //fields from first form
-        temp = (EditText) findViewById(R.id.et_voornaam);
-        newSubscription.setFirstName(temp.getText().toString());
-
-        temp = (EditText) findViewById(R.id.et_achternaam);
-        newSubscription.setLastName(temp.getText().toString());
 
         temp = (EditText) findViewById(R.id.et_email);
-        newSubscription.setEmail(temp.getText().toString());
+        String email = temp.getText().toString();
+        if (Subscription.isValidEmail(email)) {
 
-        temp = (EditText) findViewById(R.id.et_straatnaam);
-        newSubscription.setStreet(temp.getText().toString());
+            //fields from first form
+            newSubscription.setEmail(email);
+            temp = (EditText) findViewById(R.id.et_voornaam);
+            newSubscription.setFirstName(temp.getText().toString());
 
-        temp = (EditText) findViewById(R.id.et_straatnummer);
-        newSubscription.setStreetNumber(temp.getText().toString());
 
-        temp = (EditText) findViewById(R.id.et_stad);
-        newSubscription.setCity(temp.getText().toString());
+            temp = (EditText) findViewById(R.id.et_achternaam);
+            newSubscription.setLastName(temp.getText().toString());
 
-        temp = (EditText) findViewById(R.id.et_postcode);
-        newSubscription.setZip(temp.getText().toString());
 
-        //fields from second form
+            temp = (EditText) findViewById(R.id.et_straatnaam);
+            newSubscription.setStreet(temp.getText().toString());
 
-        //SCHOOL
+            temp = (EditText) findViewById(R.id.et_straatnummer);
+            newSubscription.setStreetNumber(temp.getText().toString());
+
+            temp = (EditText) findViewById(R.id.et_stad);
+            newSubscription.setCity(temp.getText().toString());
+
+            temp = (EditText) findViewById(R.id.et_postcode);
+            newSubscription.setZip(temp.getText().toString());
+
+            //fields from second form
+
+            //SCHOOL
 //        EditText tempSp = (EditText) findViewById(R.id.sp_secundaire_school);
-        School school = new School("Sint-Jan Berchmanscollege", "Brussel-Stad", (short) 1000, 5969014819913728l);
-        newSubscription.setSchool(school);
+            School school = new School("Sint-Jan Berchmanscollege", "Brussel-Stad", (short) 1000, 5969014819913728l);
+            newSubscription.setSchool(school);
 
-        //INTERESTS
-        HashMap<String, String> interests = new HashMap<>();
-        CheckBox cbTemp = (CheckBox) findViewById(R.id.cb_digx);
-        interests.put("digx", String.valueOf(cbTemp.isChecked()));
-        cbTemp = (CheckBox) findViewById(R.id.cb_multex);
-        interests.put("multec", String.valueOf(cbTemp.isChecked()));
-        Switch wrkStud = (Switch) findViewById(R.id.sw_werkstudent);
-        interests.put("werkstudent", String.valueOf(wrkStud.isChecked()));
-        newSubscription.setInterests(interests);
+            //INTERESTS
+            HashMap<String, String> interests = new HashMap<>();
+            CheckBox cbTemp = (CheckBox) findViewById(R.id.cb_digx);
+            interests.put("digx", String.valueOf(cbTemp.isChecked()));
+            cbTemp = (CheckBox) findViewById(R.id.cb_multex);
+            interests.put("multec", String.valueOf(cbTemp.isChecked()));
+            Switch wrkStud = (Switch) findViewById(R.id.sw_werkstudent);
+            interests.put("werkstudent", String.valueOf(wrkStud.isChecked()));
+            newSubscription.setInterests(interests);
 
-        //Teacher and event
-        String jsonTeacher = preferences.getString("Teacher", "(iets misgelopen. Neem contact met de ICT dienst.)");
-        String jsonEvent = preferences.getString("Event", "(iets misgelopen. Neem contact met de ICT dienst.)");
-        ObjectMapper om = new ObjectMapper();
-        ObjectMapper jxson = new ObjectMapper();
-        try {
-            Teacher docent = jxson.readValue(jsonTeacher, Teacher.class);
-            Event event = jxson.readValue(jsonEvent, Event.class);
+            //Teacher and event
+            String jsonTeacher = preferences.getString("Teacher", "(iets misgelopen. Neem contact met de ICT dienst.)");
+            String jsonEvent = preferences.getString("Event", "(iets misgelopen. Neem contact met de ICT dienst.)");
+            ObjectMapper om = new ObjectMapper();
+            ObjectMapper jxson = new ObjectMapper();
+            try {
+                Teacher docent = jxson.readValue(jsonTeacher, Teacher.class);
+                Event event = jxson.readValue(jsonEvent, Event.class);
 
-            newSubscription.setTeacher(docent);
-            newSubscription.setEvent(event);
+                newSubscription.setTeacher(docent);
+                newSubscription.setEvent(event);
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-        newSubscription.setTimestamp(new Date());
+            newSubscription.setTimestamp(new Date());
 
-        if (Utils.isNetworkAvailable(this)) {
-            new SaveAsynctask().execute(newSubscription);
+            //if fields are empty nothing happens and an error is shown
+            if (newSubscription.isValidForSaving()) {
+                if (Utils.isNetworkAvailable(this)) {
+                    new SaveAsynctask().execute(newSubscription);
+                } else {
+                    LocalSubscription subToStore = new LocalSubscription(newSubscription);
+
+                    subToStore.save();
+                }
+                finish();
+            } else {
+                showError("Lege velden", "Sommige velden in de formulier zijn leeg", "Terug");
+
+            }
         } else {
-            LocalSubscription subToStore = new LocalSubscription(newSubscription);
-            subToStore.save();
+            showError("Email onjuist", "Jouwe email is onjuist. Geef een geldige email in, dank u.", "Terug");
         }
+    }
+
+    private void showError(String title, String msg, String btn) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(msg)
+                .setTitle(title).setPositiveButton(btn, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     private void initializePager() {
@@ -235,61 +269,6 @@ public class RegistrationActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-//    @Override
-//    public void onUserInteraction() {
-//        super.onUserInteraction();
-//        lastUsed = System.currentTimeMillis();
-//    }
-
-//    public void startScreensaverThread() {
-//        Thread thread = new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                long idle = 0;
-////                Log.d("started", "the screensaver has started");
-//                do {
-//                    idle = System.currentTimeMillis() - lastUsed;
-////                    Log.d("something", "Application is idle for " + idle + " ms");
-//
-//                    if (idle > 5000) {
-//                        if (!screensaverDialog.isShowing()) {
-//                            runOnUiThread(new Runnable() {
-//                                @Override
-//                                public void run() {
-//
-//                                    screensaverDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-//                                        @Override
-//                                        public void onDismiss(DialogInterface dialog) {
-//                                            stopScreenSaver = false;
-//                                        }
-//                                    });
-//                                    screensaverDialog.show();
-//                                }
-//                            });
-//                        } else {
-//                            runOnUiThread(new Runnable() {
-//                                @Override
-//                                public void run() {
-//                                    screensaverDialog.screensaverIV.setImageBitmap(screensaverDialog.bitmapArray.get(screensaverDialog.nextImage()));
-//                                }
-//                            });
-//
-//                        }
-//                    }
-//                    try {
-//                        Thread.sleep(5000); //check every 5 seconds
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//                while (!stopScreenSaver);
-//            }
-//
-//        });
-//        thread.start();
-//
-//    }
-
 
     public void scrollIndicator() {
 
@@ -333,7 +312,7 @@ public class RegistrationActivity extends ActionBarActivity {
         @Override
         protected Void doInBackground(Subscription... params) {
             if (preferences.getBoolean("debuggin", false))
-                android.os.Debug.waitForDebugger();
+                Debug.waitForDebugger();
 
 
             RestTemplate restTemplate = new RestTemplate();
