@@ -16,17 +16,19 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import be.ehb.dt_app.R;
+import be.ehb.dt_app.model.School;
 
 /**
- * Created by Bart on 10/06/2015.
+ * Created by Bart on 17/06/2015.
  */
-public final class PostcodeParser {
+public class SchoolParser {
     private Activity activity;
-    private ArrayList<Postcode> postcodes;
+    private ArrayList<School> scholen;
 
-    public PostcodeParser(Activity a) {
-        postcodes = new ArrayList<Postcode>();
+    public SchoolParser(Activity a) {
+        scholen = new ArrayList<School>();
         activity = a;
+        Toast.makeText(a.getApplicationContext(), "Test", Toast.LENGTH_SHORT);
     }
 
 
@@ -38,24 +40,24 @@ public final class PostcodeParser {
             XMLReader lezer = saxMaker.getXMLReader();
 
 
-            InputStream inTekst = activity.getResources().openRawResource(R.raw.cities);
-            PostHandler handelaar = new PostHandler();
+            InputStream inTekst = activity.getResources().openRawResource(R.raw.school);
+            SchoolHandler handelaar = new SchoolHandler();
             lezer.setContentHandler(handelaar);
             lezer.parse(new InputSource(inTekst));
 
-            postcodes = handelaar.getPostcodes();
+            scholen = handelaar.getScholen();
         } catch (ParserConfigurationException | SAXException | IOException e) {
             e.printStackTrace();
-            Toast.makeText(activity.getApplicationContext(), "Ophalen postcodes is mislukt", Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity.getApplicationContext(), "Ophalen scholen is mislukt", Toast.LENGTH_SHORT).show();
         }
     }
 
 
-    public ArrayList<Postcode> getPostcodes() {
-        if (postcodes == null) {
+    public ArrayList<School> getScholen() {
+        if (scholen == null) {
             Toast.makeText(activity.getApplicationContext(), "Postcode niet geparset", Toast.LENGTH_SHORT);
-            postcodes = new ArrayList<Postcode>();
+            scholen = new ArrayList<School>();
         }
-        return postcodes;
+        return scholen;
     }
 }
