@@ -34,7 +34,6 @@ import be.ehb.dt_app.fragments.ScreensaverDialog;
 import be.ehb.dt_app.maps.MapActivity;
 import be.ehb.dt_app.model.LocalSubscription;
 import be.ehb.dt_app.model.Subscription;
-import be.ehb.dt_app.model.SubscriptionsList;
 
 public class DataListActivity extends ActionBarActivity implements SearchView.OnQueryTextListener {
 
@@ -299,7 +298,8 @@ public class DataListActivity extends ActionBarActivity implements SearchView.On
 
             RestTemplate restTemplate = new RestTemplate();
             //get data from webservice
-            studentenlijstArray = restTemplate.getForObject(server, SubscriptionsList.class, "subscriptions").getSubscriptions();
+            ArrayList<LocalSubscription> subList = new ArrayList<>(LocalSubscription.listAll(LocalSubscription.class));
+            studentenlijstArray = Subscription.transformLSubscription(subList);
             return null;
         }
 
@@ -309,17 +309,9 @@ public class DataListActivity extends ActionBarActivity implements SearchView.On
             Utils.animateView(progressOverlay, View.GONE, 0.4f, 200);
 
             setupAdapters();
-            persistDownloadedData(studentenlijstArray);
+
         }
 
-        private void persistDownloadedData(ArrayList<Subscription> dataLists) {
-            for (Subscription subscription : dataLists) {
-                LocalSubscription lSub = new LocalSubscription(subscription);
-                if (LocalSubscription.findById(LocalSubscription.class, lSub.getId()) == null) {
-                    lSub.save();
-                }
-            }
-        }
     }
 
 }

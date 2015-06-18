@@ -11,10 +11,10 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -43,6 +43,7 @@ import be.ehb.dt_app.fragments.RegistrationFragment;
 import be.ehb.dt_app.fragments.RegistrationFragment2;
 import be.ehb.dt_app.fragments.ScreensaverDialog;
 import be.ehb.dt_app.model.Event;
+import be.ehb.dt_app.model.LocalSubscription;
 import be.ehb.dt_app.model.School;
 import be.ehb.dt_app.model.Subscription;
 import be.ehb.dt_app.model.Teacher;
@@ -60,6 +61,7 @@ public class RegistrationActivity extends ActionBarActivity {
     private LinearLayout vpindicatorLL;
     private SharedPreferences preferences;
     private String server;
+    private AutoCompleteTextView stad_secundaire_onderwijs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +87,9 @@ public class RegistrationActivity extends ActionBarActivity {
         img_page2 = (ImageView) findViewById(R.id.iv_page2);
         page1TV = (TextView) findViewById(R.id.tv_pagina1);
         page2TV = (TextView) findViewById(R.id.tv_pagina2);
+//        stad_secundaire_onderwijs = (AutoCompleteTextView) findViewById(R.id.et_stad_secundaireschool);
+//        stad_secundaire_onderwijs.setThreshold(Integer.MAX_VALUE);
+//        //stad_secundaire_onderwijs.setLi
     }
 
     public void sendData(View v) {
@@ -154,8 +159,9 @@ public class RegistrationActivity extends ActionBarActivity {
 
         if (Utils.isNetworkAvailable(this)) {
             new SaveAsynctask().execute(newSubscription);
-
-//            Log.d("xxx", String.valueOf(id));
+        } else {
+            LocalSubscription subToStore = new LocalSubscription(newSubscription);
+            subToStore.save();
         }
     }
 
@@ -336,7 +342,7 @@ public class RegistrationActivity extends ActionBarActivity {
             HttpHeaders headers = new HttpHeaders();
             headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
             HttpEntity<Subscription> entity = new HttpEntity<>(params[0], headers);
-            Log.d("xxx", restTemplate.exchange(server, HttpMethod.POST, entity, Subscription.class, "subscription").toString());
+            restTemplate.exchange(server, HttpMethod.POST, entity, Subscription.class, "subscription");
             return null;
         }
     }

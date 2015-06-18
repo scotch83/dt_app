@@ -63,10 +63,16 @@ public class HomeScreenActivity extends Activity {
         startActivity(i);
     }
 
-    public void goToBeheerActivity(View v) {
+    public void registrationClicked(View v) {
+        Intent i = new Intent(getApplicationContext(), RegistrationActivity.class);
+        startActivity(i);
+    }
+
+    public void goToSettings(View v) {
         Intent i = new Intent(getApplicationContext(), BeheerActivity.class);
         startActivity(i);
     }
+
 
     private void setupDesign() {
 
@@ -79,10 +85,6 @@ public class HomeScreenActivity extends Activity {
 
     }
 
-    public void registrationClicked(View v) {
-        Intent i = new Intent(getApplicationContext(), RegistrationActivity.class);
-        startActivity(i);
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

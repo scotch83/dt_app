@@ -8,24 +8,24 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Debug;
 
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
-import be.ehb.dt_app.model.Event;
 import be.ehb.dt_app.model.EventList;
 import be.ehb.dt_app.model.LocalSubscription;
-import be.ehb.dt_app.model.School;
 import be.ehb.dt_app.model.SchoolList;
 import be.ehb.dt_app.model.Subscription;
 import be.ehb.dt_app.model.SubscriptionsList;
-import be.ehb.dt_app.model.Teacher;
 import be.ehb.dt_app.model.TeacherList;
 
 /**
@@ -56,9 +56,7 @@ public class ConnectionChangeReceiver extends BroadcastReceiver {
 
     private class HttpDataRequestTask extends AsyncTask<Void, Void, HashMap<String, ArrayList>> {
 
-
-        private Integer serverversion;
-        private int ourversion;
+        private SubscriptionsList subList;
         private String server;
         private RestTemplate restTemplate;
 
@@ -68,8 +66,13 @@ public class ConnectionChangeReceiver extends BroadcastReceiver {
             //show loading wheel
 
             server = "http://vdabsidin.appspot.com/rest/{required_dataset}";
+            ArrayList<LocalSubscription> listSubsClient = new ArrayList(LocalSubscription.find(LocalSubscription.class, "SERVER_ID IS NULL"));
+            ArrayList<Subscription> listSubsServer = Subscription.transformLSubscription(listSubsClient);
+            subList = new SubscriptionsList();
+            subList.setSubscriptions(listSubsServer);
 
             restTemplate = new RestTemplate();
+
 
             List<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
             messageConverters.add(new MappingJackson2HttpMessageConverter());
@@ -97,6 +100,18 @@ public class ConnectionChangeReceiver extends BroadcastReceiver {
                     "schools",
                     restTemplate.getForObject(server, SchoolList.class, "schools").getSchools()
             );
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+            HttpEntity<Subscription> entity;
+            String server = "http://vdabsidin.appspot.com/rest/{required_dataset}";
+            if (!subList.getSubscriptions().isEmpty()) {
+                for (Subscription subscription : subList.getSubscriptions()) {
+                    entity = new HttpEntity<>(subscription, headers);
+                    restTemplate.exchange(server, HttpMethod.POST, entity, Subscription.class, "subscription");
+                }
+            }
+
             dataLists.put(
                     "subscriptions",
                     restTemplate.getForObject(server, SubscriptionsList.class, "subscriptions").getSubscriptions()
@@ -109,51 +124,10 @@ public class ConnectionChangeReceiver extends BroadcastReceiver {
         protected void onPostExecute(HashMap<String, ArrayList> dataLists) {
             super.onPostExecute(dataLists);
 
-            persistDownloadedData(dataLists);
+            Utils.persistDownloadedData(dataLists);
         }
 
-        private void persistDownloadedData(HashMap<String, ArrayList> dataLists) {
-
-            Iterator it = dataLists.entrySet().iterator();
-
-            while (it.hasNext()) {
-                Map.Entry pair = (Map.Entry) it.next();
-                switch (pair.getKey().toString()) {
-                    case "events":
-                        for (Event event : (ArrayList<Event>) pair.getValue())
-                            if (Event.findById(Event.class, event.getId()) == null) {
-                                event.save();
-                            }
-
-                        break;
-                    case "teachers":
-                        for (Teacher teacher : (ArrayList<Teacher>) pair.getValue())
-                            if (Teacher.findById(Teacher.class, teacher.getId()) == null) {
-
-                                teacher.save();
-                            }
-                        break;
-                    case "subscriptions":
-                        for (Subscription subscription : (ArrayList<Subscription>) pair.getValue()) {
-                            LocalSubscription lSub = new LocalSubscription(subscription);
-                            if (LocalSubscription.findById(LocalSubscription.class, lSub.getId()) == null) {
-                                lSub.save();
-                            }
-                        }
-                        break;
-                    case "schools":
-                        for (School school : (ArrayList<School>) pair.getValue())
-                            if (School.findById(School.class, school.getId()) == null) {
-
-                                school.save();
-                            }
-                        break;
-
-                }
-            }
-        }
     }
-
 
 }
 

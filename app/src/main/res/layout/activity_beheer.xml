@@ -5,6 +5,8 @@
     android:layout_height="match_parent"
     tools:context="be.ehb.dt_app.activities.BeheerActivity">
 
+    <include layout="@layout/overlay_loading_data" />
+
     <ScrollView
         android:id="@+id/sv_registratie1"
         android:layout_width="fill_parent"
@@ -119,11 +121,12 @@
                         android:textStyle="bold" />
 
                     <Button
-                        android:id="@+id/button"
+                        android:id="@+id/btn_sync"
                         android:layout_width="200dp"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="30dp"
                         android:background="#b4ffffff"
+                        android:onClick="syncDataWithBackEnd"
                         android:text="Syncroniseer" />
 
                     <TextView
@@ -141,6 +144,15 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:spinnerMode="dropdown" />
+
+                    <Button
+                        android:id="@+id/btn_save"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="30dp"
+                        android:background="#b4ffffff"
+                        android:onClick="syncDataWithBackEnd"
+                        android:text="Save" />
 
                 </LinearLayout>
             </LinearLayout>

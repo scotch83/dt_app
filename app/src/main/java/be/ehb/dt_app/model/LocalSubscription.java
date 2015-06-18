@@ -1,7 +1,5 @@
 package be.ehb.dt_app.model;
 
-import android.util.Log;
-
 import com.orm.SugarRecord;
 
 import java.util.Date;
@@ -176,7 +174,7 @@ public class LocalSubscription extends SugarRecord<LocalSubscription> {
         if (localTeacher.isEmpty()) {
             teacher.save();
             localTeacher = Teacher.find(Teacher.class, "SERVER_ID=?", String.valueOf(teacher.getServerId()));
-            Log.d("xxx", "Event saved with id=" + localTeacher.get(0).getId());
+
         }
         this.teacher = localTeacher.get(0);
     }
@@ -191,7 +189,7 @@ public class LocalSubscription extends SugarRecord<LocalSubscription> {
         if (localEvent.isEmpty()) {
             event.save();
             localEvent = Event.find(Event.class, "SERVER_ID=?", String.valueOf(event.getServerId()));
-            Log.d("xxx", "Event saved with id=" + localEvent.get(0).getId());
+
 
         }
 
@@ -209,7 +207,6 @@ public class LocalSubscription extends SugarRecord<LocalSubscription> {
         if (localSchool.isEmpty()) {
             school.save();
             localSchool = School.find(School.class, "SERVER_ID=?", String.valueOf(school.getServerId()));
-            Log.d("xxx", "School saved with id=" + localSchool.get(0).getId());
 
         }
         this.school = localSchool.get(0);

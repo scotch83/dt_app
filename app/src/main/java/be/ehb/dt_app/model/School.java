@@ -1,7 +1,6 @@
 package be.ehb.dt_app.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.orm.SugarRecord;
 
 
