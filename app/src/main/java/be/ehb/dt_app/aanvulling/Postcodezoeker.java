@@ -22,10 +22,6 @@ import java.util.ArrayList;
 public final class Postcodezoeker {
     private ArrayList<String> gemeenten;
     private short postcode = 1000;
-    private ArrayList<Postcode> postcodes;
-    private EditText postcodeTxt, gemeenteTxt;
-    private Activity activity;
-    private PostcodeParser postcodeParser;
     private TextWatcher postcodeZoeker = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -52,6 +48,10 @@ public final class Postcodezoeker {
 
         }
     };
+    private ArrayList<Postcode> postcodes;
+    private EditText postcodeTxt, gemeenteTxt;
+    private Activity activity;
+    private PostcodeParser postcodeParser;
 
 
     public Postcodezoeker(EditText postcodeTxt, EditText gemeenteTxt, Activity a) {
@@ -61,7 +61,8 @@ public final class Postcodezoeker {
         activity = a;
         maakPostcodes();
         gemeenten = new ArrayList<String>();
-        this.postcodeTxt.addTextChangedListener(postcodeZoeker);
+        if (postcodeTxt != null)
+            this.postcodeTxt.addTextChangedListener(postcodeZoeker);
 
     }
 

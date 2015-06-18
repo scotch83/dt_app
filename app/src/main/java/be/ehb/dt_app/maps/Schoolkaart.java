@@ -127,8 +127,8 @@ public class Schoolkaart implements OnMapReadyCallback, GoogleMap.OnMapClickList
 
     private float bepaalKleur(int aantal, float gem) {
         if (aantal > gem * 1.5f) return BitmapDescriptorFactory.HUE_RED; //Rood
-        if (aantal > gem) return BitmapDescriptorFactory.HUE_ORANGE; //Oranje
-        if (aantal > gem * 0.5f && aantal < gem) return BitmapDescriptorFactory.HUE_YELLOW; //Geel
-        return BitmapDescriptorFactory.HUE_GREEN; //Groen
+        if (aantal > gem) return 20; //Donker oranje
+        if (aantal > gem * 0.5f && aantal < gem) return 40; //Licht oranje
+        return 60; //Geel
     }
 }

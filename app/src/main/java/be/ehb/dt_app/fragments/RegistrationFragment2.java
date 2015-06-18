@@ -8,12 +8,19 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import be.ehb.dt_app.R;
+import be.ehb.dt_app.aanvulling.Postcodezoeker;
+import be.ehb.dt_app.aanvulling.Schoolzoeker;
 
 public class RegistrationFragment2 extends Fragment {
+
+    EditText schoolStad, schoolNaam;
+    private Postcodezoeker postcodezoeker;
+    private Schoolzoeker schoolzoeker;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
     }
 
@@ -23,9 +30,11 @@ public class RegistrationFragment2 extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_registration_fragment2, container, false);
 
-        EditText schoolStad = (EditText) v.findViewById(R.id.et_stad_secundaireschool);
-        EditText schoolNaam = (EditText) v.findViewById(R.id.sp_secundaire_school);
+        schoolStad = (EditText) v.findViewById(R.id.et_stad_secundaireschool);
+        schoolNaam = (EditText) v.findViewById(R.id.sp_secundaire_school);
 
+        postcodezoeker = new Postcodezoeker(null, null, getActivity());
+        schoolzoeker = new Schoolzoeker(schoolStad, schoolNaam, getActivity(), postcodezoeker);
 
         return v;
     }
