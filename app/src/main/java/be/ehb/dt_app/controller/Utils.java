@@ -13,6 +13,17 @@ import android.view.View;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
+import be.ehb.dt_app.model.Event;
+import be.ehb.dt_app.model.LocalSubscription;
+import be.ehb.dt_app.model.School;
+import be.ehb.dt_app.model.Subscription;
+import be.ehb.dt_app.model.SubscriptionsList;
+import be.ehb.dt_app.model.Teacher;
 
 /**
  * Created by Mattia on 07/06/15.
@@ -94,5 +105,53 @@ public class Utils {
             e.printStackTrace();
         }
 //            return directory.getAbsolutePath();
+    }
+
+    public static void persistDownloadedData(HashMap<String, ArrayList> dataLists) {
+
+        Iterator it = dataLists.entrySet().iterator();
+
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry) it.next();
+            switch (pair.getKey().toString()) {
+                case "events":
+                    for (Event event : (ArrayList<Event>) pair.getValue())
+                        if (Event.find(Event.class, "SERVER_ID=?", String.valueOf(event.getServerId())).isEmpty()) {
+                            event.save();
+                        }
+                    break;
+                case "teachers":
+                    for (Teacher teacher : (ArrayList<Teacher>) pair.getValue())
+                        if (Teacher.find(Teacher.class, "SERVER_ID=?", String.valueOf(teacher.getServerId())).isEmpty()) {
+                            teacher.save();
+                        }
+                    break;
+
+                case "schools":
+                    for (School school : (ArrayList<School>) pair.getValue())
+                        if (School.find(School.class, "SERVER_ID=?", String.valueOf(school.getServerId())).isEmpty()) {
+                            school.save();
+                        }
+                    break;
+                case "subscriptions":
+                    for (Subscription subscription : (ArrayList<Subscription>) pair.getValue()) {
+                        LocalSubscription lSub = new LocalSubscription(subscription);
+                        if (LocalSubscription.find(LocalSubscription.class, "SERVER_ID=?", String.valueOf(lSub.getServerId())).isEmpty()) {
+                            lSub.save();
+                        }
+                    }
+                    break;
+
+            }
+        }
+    }
+
+    public static void persistNewData(SubscriptionsList newData) {
+        LocalSubscription.deleteAll(LocalSubscription.class);
+        for (Subscription subscription : newData.getSubscriptions()) {
+            LocalSubscription lSub = new LocalSubscription(subscription);
+            lSub.save();
+        }
+
     }
 }

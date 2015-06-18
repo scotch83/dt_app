@@ -39,25 +39,25 @@
             android:linksClickable="true"
             android:text="Persoonsgegevens"
             android:textAppearance="?android:attr/textAppearanceMedium" />
+        <!--
+                <ImageView
+                    android:id="@+id/iv_page1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="20dp"
+                    android:baselineAlignBottom="true"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/dotselectedblack" />
 
-        <ImageView
-            android:id="@+id/iv_page1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginRight="20dp"
-            android:baselineAlignBottom="true"
-            android:scaleType="centerInside"
-            android:src="@drawable/dotselectedblack" />
+                <ImageView
+                    android:id="@+id/iv_page2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
 
-        <ImageView
-            android:id="@+id/iv_page2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:layout_gravity="center"
-            android:baselineAlignBottom="true"
-            android:src="@drawable/dotunselectedblack" />
+                    android:layout_gravity="center"
+                    android:baselineAlignBottom="true"
+                    android:src="@drawable/dotunselectedblack" /> -->
 
         <TextView
             android:id="@+id/tv_pagina2"

@@ -10,10 +10,10 @@ import java.util.Date;
 import java.util.HashMap;
 
 
-@JsonIgnoreProperties({"id", "sqlName", "tableFields"})
+@JsonIgnoreProperties({"sqlName", "tableFields"})
 public class Subscription {
 
-    private Long id;
+
     private String firstName;
     private String lastName;
     private String email;
@@ -27,10 +27,12 @@ public class Subscription {
     private Teacher teacher;
     private Event event;
     private School school;
+    private Long serverId;
 
 
     public Subscription() {
     }
+
 
     public Subscription(LocalSubscription localSubscription) {
 
@@ -47,6 +49,7 @@ public class Subscription {
         this.teacher = localSubscription.getTeacher();
         this.event = localSubscription.getEvent();
         this.school = localSubscription.getSchool();
+        this.serverId = localSubscription.getServerId();
     }
 
     public static ArrayList<Subscription> transformLSubscription(ArrayList<LocalSubscription> localSubscriptions)
@@ -61,13 +64,6 @@ public class Subscription {
         return result;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getFirstName() {
         return firstName;
@@ -129,20 +125,20 @@ public class Subscription {
         return interests;
     }
 
-    @JsonProperty("interests")
-    public void setInterests(HashMap<String, String> interests) {
-        this.interests = interests;
-    }
-
     @JsonIgnore
     public void setInterests(Interests interests) {
 
-        HashMap<String,String> intMap = new HashMap<>();
-        intMap.put("digx",interests.getDigx());
-        intMap.put("multec",interests.getMultec());
-        intMap.put("werkstudent",interests.getWerkstudent());
+        HashMap<String, String> intMap = new HashMap<>();
+        intMap.put("digx", interests.getDigx());
+        intMap.put("multec", interests.getMultec());
+        intMap.put("werkstudent", interests.getWerkstudent());
 
         this.interests = intMap;
+    }
+
+    @JsonProperty("interests")
+    public void setInterests(HashMap<String, String> interests) {
+        this.interests = interests;
     }
 
     public Date getTimestamp() {
@@ -189,7 +185,7 @@ public class Subscription {
     @Override
     public String toString() {
         return "Subscription{" +
-                "id=" + id +
+                "id=" + serverId +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
@@ -204,5 +200,16 @@ public class Subscription {
                 ", event=" + event +
                 ", school=" + school +
                 '}';
+    }
+
+    @JsonProperty("id")
+    public Long getServerId() {
+        return serverId;
+    }
+
+    @JsonProperty("id")
+    public void setServerId(Long serverId) {
+        this.serverId = serverId;
+
     }
 }

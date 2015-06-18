@@ -1,14 +1,16 @@
 package be.ehb.dt_app.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.orm.SugarRecord;
 
-@JsonIgnoreProperties({"id", "sqlName", "tableFields"})
+@JsonIgnoreProperties({"sqlName", "tableFields"})
 public class Event extends SugarRecord<Event> {
 
 
     private String name;
     private short acadyear;
+    private Long serverId;
 
     public Event() {
 
@@ -21,6 +23,15 @@ public class Event extends SugarRecord<Event> {
         this.acadyear = acadyear;
     }
 
+    @JsonProperty("id")
+    public Long getServerId() {
+        return serverId;
+    }
+
+    @JsonProperty("id")
+    public void setServerId(Long serverId) {
+        this.serverId = serverId;
+    }
 
     public short getAcadyear() {
         return acadyear;

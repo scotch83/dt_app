@@ -1,10 +1,8 @@
 package be.ehb.dt_app.activities;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
@@ -59,9 +57,7 @@ public class PdfActivity extends Activity implements SearchView.OnQueryTextListe
         setupSearchView();
 
 
-        //screensaverDialog = new ScreensaverDialog(this, R.style.screensaver_dialog);
-
-        //startScreensaverThread();
+       
 
 
     }
@@ -117,58 +113,58 @@ public class PdfActivity extends Activity implements SearchView.OnQueryTextListe
         return true;
     }
 
-    @Override
-    public void onUserInteraction() {
-        super.onUserInteraction();
-        lastUsed = System.currentTimeMillis();
-    }
-
-    public void startScreensaverThread() {
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                long idle = 0;
-                Log.d("started", "the screensaver has started");
-                do {
-                    idle = System.currentTimeMillis() - lastUsed;
-                    Log.d("something", "Application is idle for " + idle + " ms");
-
-                    if (idle > 5000) {
-                        if (!screensaverDialog.isShowing()) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-
-                                    screensaverDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                                        @Override
-                                        public void onDismiss(DialogInterface dialog) {
-                                            stopScreenSaver = false;
-                                        }
-                                    });
-                                    screensaverDialog.show();
-                                }
-                            });
-                        } else {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    screensaverDialog.screensaverIV.setImageBitmap(screensaverDialog.bitmapArray.get(screensaverDialog.nextImage()));
-                                }
-                            });
-
-                        }
-                    }
-                    try {
-                        Thread.sleep(5000); //check every 5 seconds
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                while (!stopScreenSaver);
-            }
-
-        });
-        thread.start();
-
-    }
+//    @Override
+//    public void onUserInteraction() {
+//        super.onUserInteraction();
+//        lastUsed = System.currentTimeMillis();
+//    }
+//
+//    public void startScreensaverThread() {
+//        Thread thread = new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                long idle = 0;
+//                Log.d("started", "the screensaver has started");
+//                do {
+//                    idle = System.currentTimeMillis() - lastUsed;
+//                    Log.d("something", "Application is idle for " + idle + " ms");
+//
+//                    if (idle > 5000) {
+//                        if (!screensaverDialog.isShowing()) {
+//                            runOnUiThread(new Runnable() {
+//                                @Override
+//                                public void run() {
+//
+//                                    screensaverDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+//                                        @Override
+//                                        public void onDismiss(DialogInterface dialog) {
+//                                            stopScreenSaver = false;
+//                                        }
+//                                    });
+//                                    screensaverDialog.show();
+//                                }
+//                            });
+//                        } else {
+//                            runOnUiThread(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    screensaverDialog.screensaverIV.setImageBitmap(screensaverDialog.bitmapArray.get(screensaverDialog.nextImage()));
+//                                }
+//                            });
+//
+//                        }
+//                    }
+//                    try {
+//                        Thread.sleep(5000); //check every 5 seconds
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//                while (!stopScreenSaver);
+//            }
+//
+//        });
+//        thread.start();
+//
+//    }
 }

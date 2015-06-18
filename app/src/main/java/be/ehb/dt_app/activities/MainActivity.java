@@ -28,9 +28,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import be.ehb.dt_app.R;
 import be.ehb.dt_app.controller.Utils;
@@ -196,11 +194,6 @@ public class MainActivity extends Activity {
     }
 
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-    }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////                                                                                ////////////////
     ////////////////                        ASYNC TASKS FOR DATA RETRIEVAL                          ////////////////
@@ -254,6 +247,10 @@ public class MainActivity extends Activity {
                 android.os.Debug.waitForDebugger();
 
             dataLists.put(
+                    "subscriptions",
+                    restTemplate.getForObject(server, SubscriptionsList.class, "subscriptions").getSubscriptions()
+            );
+            dataLists.put(
                     "events",
                     restTemplate.getForObject(server, EventList.class, "events").getEvents()
             );
@@ -265,10 +262,6 @@ public class MainActivity extends Activity {
             dataLists.put(
                     "schools",
                     restTemplate.getForObject(server, SchoolList.class, "schools").getSchools()
-            );
-            dataLists.put(
-                    "subscriptions",
-                    restTemplate.getForObject(server, SubscriptionsList.class, "subscriptions").getSubscriptions()
             );
 
 
@@ -286,7 +279,7 @@ public class MainActivity extends Activity {
             if (dataLists.isEmpty()) {
                 initDataFromDB(dataLists);
             } else {
-                persistDownloadedData(dataLists);
+                Utils.persistDownloadedData(dataLists);
             }
             setupLoginAdapters();
 
@@ -303,46 +296,7 @@ public class MainActivity extends Activity {
 
         }
 
-        private void persistDownloadedData(HashMap<String, ArrayList> dataLists) {
 
-            Iterator it = dataLists.entrySet().iterator();
-
-            while (it.hasNext()) {
-                Map.Entry pair = (Map.Entry) it.next();
-                switch (pair.getKey().toString()) {
-                    case "events":
-                        for (Event event : (ArrayList<Event>) pair.getValue())
-                            if (Event.findById(Event.class, event.getId()) == null) {
-
-                                event.save();
-                            }
-                        break;
-                    case "teachers":
-                        for (Teacher teacher : (ArrayList<Teacher>) pair.getValue())
-                            if (Teacher.findById(Teacher.class, teacher.getId()) == null) {
-
-                                teacher.save();
-                            }
-                        break;
-                    case "subscriptions":
-                        for (Subscription subscription : (ArrayList<Subscription>) pair.getValue()) {
-                            LocalSubscription lSub = new LocalSubscription(subscription);
-                            if (LocalSubscription.findById(LocalSubscription.class, lSub.getId()) == null) {
-                                lSub.save();
-                            }
-                        }
-                        break;
-                    case "schools":
-                        for (School school : (ArrayList<School>) pair.getValue())
-                            if (School.findById(School.class, school.getId()) == null) {
-
-                                school.save();
-                            }
-                        break;
-
-                }
-            }
-        }
     }
 
     private class ImageAsyncDownload extends AsyncTask<Void, Void, String> {
