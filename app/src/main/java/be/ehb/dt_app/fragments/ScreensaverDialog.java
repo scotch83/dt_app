@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -30,6 +29,10 @@ public class ScreensaverDialog extends Dialog {
         super(context, theme);
     }
 
+    public void setBitmapArray(ArrayList<Bitmap> bitmapArray) {
+        this.bitmapArray = bitmapArray;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,7 +42,7 @@ public class ScreensaverDialog extends Dialog {
         screensaverIV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("slideshow", "screensaver dismiss");
+//                Log.d("slideshow", "screensaver dismiss");
                 dismiss();
             }
         });
@@ -81,6 +84,7 @@ public class ScreensaverDialog extends Dialog {
             }
 
             bitmapArray.add(bitmap);
+
         }
     }
 

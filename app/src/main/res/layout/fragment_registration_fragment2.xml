@@ -112,6 +112,7 @@
                         style="@style/CheckBoxCustomHolo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:contentDescription="digx"
                         android:text="Multec"
                         android:textSize="20sp" />
 
@@ -135,30 +136,31 @@
                         android:textColor="#e6ffffff"
                         android:textStyle="bold" />
 
+                    <!--
+                                        <RadioGroup
+                                            android:layout_width="fill_parent"
+                                            android:layout_height="wrap_content"
+                                            android:id="@+id/rg_werkstudent">
 
-                    <RadioGroup
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content">
+                                            <RadioButton
+                                                android:id="@+id/rb_ja"
+                                                style="@style/RadioButtonCustumHolo"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:layout_marginBottom="15dp"
+                                                android:checked="false"
+                                                android:text="Ja"
+                                                android:textSize="20sp" />
 
-                        <RadioButton
-                            android:id="@+id/rb_ja"
-                            style="@style/RadioButtonCustumHolo"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="15dp"
-                            android:checked="false"
-                            android:text="Ja"
-                            android:textSize="20sp" />
-
-                        <RadioButton
-                            android:id="@+id/rb_nee"
-                            style="@style/RadioButtonCustumHolo"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:checked="false"
-                            android:text="Nee"
-                            android:textSize="20sp" />
-                    </RadioGroup>
+                                            <RadioButton
+                                                android:id="@+id/rb_nee"
+                                                style="@style/RadioButtonCustumHolo"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:checked="false"
+                                                android:text="Nee"
+                                                android:textSize="20sp" />
+                                        </RadioGroup> -->
 
                     <LinearLayout
                         android:id="@+id/ll_btn_voegtoe"
@@ -169,6 +171,15 @@
                         android:orientation="horizontal"
                         android:paddingBottom="20dp"
                         android:paddingRight="20dp">
+
+                        <Switch
+                            android:id="@+id/sw_werkstudent"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="false"
+                            android:text=""
+                            android:textOff="Nee"
+                            android:textOn="Ja" />
 
                         <ImageButton
                             android:id="@+id/ib_voegstudenttoe"

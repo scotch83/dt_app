@@ -1,9 +1,9 @@
 package be.ehb.dt_app.activities;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,22 +11,31 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.web.client.RestTemplate;
+
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import be.ehb.dt_app.R;
+import be.ehb.dt_app.controller.Utils;
 import be.ehb.dt_app.controller.ZoomOutPageTransformer;
 import be.ehb.dt_app.fragments.RegistrationFragment;
 import be.ehb.dt_app.fragments.RegistrationFragment2;
@@ -48,7 +57,7 @@ public class RegistrationActivity extends ActionBarActivity {
     private TextView page1TV, page2TV;
     private LinearLayout vpindicatorLL;
     private SharedPreferences preferences;
-
+    private String server;
 
 
     @Override
@@ -64,6 +73,8 @@ public class RegistrationActivity extends ActionBarActivity {
         initializeDesign();
 
         initializePager();
+
+        server = preferences.getString("server", "http://vdabsidin.appspot.com/rest/{required_dataset}");
 
 
     }
@@ -108,15 +119,18 @@ public class RegistrationActivity extends ActionBarActivity {
         //fields from second form
 
         //SCHOOL
-        EditText tempSp = (EditText) findViewById(R.id.sp_secundaire_school);
-        School school = new School("My school for test", "Gent", (short) 9000);
+//        EditText tempSp = (EditText) findViewById(R.id.sp_secundaire_school);
+        School school = new School("Sint-Jan Berchmanscollege", "Brussel-Stad", (short) 1000);
         newSubscription.setSchool(school);
 
         //INTERESTS
         HashMap<String, String> interests = new HashMap<>();
-        interests.put("Dig-X", "true");
-        interests.put("Multec", "false");
-        interests.put("Werkstuden", "true");
+        CheckBox cbTemp = (CheckBox) findViewById(R.id.cb_digx);
+        interests.put("digx", String.valueOf(cbTemp.isChecked()));
+        cbTemp = (CheckBox) findViewById(R.id.cb_multex);
+        interests.put("multec", String.valueOf(cbTemp.isChecked()));
+        Switch wrkStud = (Switch) findViewById(R.id.sw_werkstudent);
+        interests.put("werkstudent", String.valueOf(wrkStud.isChecked()));
         newSubscription.setInterests(interests);
 
         //Teacher and event
@@ -136,7 +150,11 @@ public class RegistrationActivity extends ActionBarActivity {
         }
 
 
-        Log.d("xxx", newSubscription.toString());
+        if (Utils.isNetworkAvailable(this)) {
+            new SaveAsynctask().execute(newSubscription);
+
+//            Log.d("xxx", String.valueOf(id));
+        }
     }
 
     private void initializePager() {
@@ -184,8 +202,8 @@ public class RegistrationActivity extends ActionBarActivity {
             }
         });
 
-        screensaverDialog = new ScreensaverDialog(this, R.style.screensaver_dialog);
-        startScreensaverThread();
+//        screensaverDialog = new ScreensaverDialog(this, R.style.screensaver_dialog);
+//        startScreensaverThread();
 
     }
 
@@ -211,64 +229,62 @@ public class RegistrationActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onUserInteraction() {
-        super.onUserInteraction();
-        lastUsed = System.currentTimeMillis();
-    }
+//    @Override
+//    public void onUserInteraction() {
+//        super.onUserInteraction();
+//        lastUsed = System.currentTimeMillis();
+//    }
 
-    public void startScreensaverThread() {
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                long idle = 0;
-                Log.d("started", "the screensaver has started");
-                do {
-                    idle = System.currentTimeMillis() - lastUsed;
-                    Log.d("something", "Application is idle for " + idle + " ms");
+//    public void startScreensaverThread() {
+//        Thread thread = new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                long idle = 0;
+////                Log.d("started", "the screensaver has started");
+//                do {
+//                    idle = System.currentTimeMillis() - lastUsed;
+////                    Log.d("something", "Application is idle for " + idle + " ms");
+//
+//                    if (idle > 5000) {
+//                        if (!screensaverDialog.isShowing()) {
+//                            runOnUiThread(new Runnable() {
+//                                @Override
+//                                public void run() {
+//
+//                                    screensaverDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+//                                        @Override
+//                                        public void onDismiss(DialogInterface dialog) {
+//                                            stopScreenSaver = false;
+//                                        }
+//                                    });
+//                                    screensaverDialog.show();
+//                                }
+//                            });
+//                        } else {
+//                            runOnUiThread(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    screensaverDialog.screensaverIV.setImageBitmap(screensaverDialog.bitmapArray.get(screensaverDialog.nextImage()));
+//                                }
+//                            });
+//
+//                        }
+//                    }
+//                    try {
+//                        Thread.sleep(5000); //check every 5 seconds
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//                while (!stopScreenSaver);
+//            }
+//
+//        });
+//        thread.start();
+//
+//    }
 
-                    if (idle > 5000) {
-                        if (!screensaverDialog.isShowing()) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
 
-                                    screensaverDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                                        @Override
-                                        public void onDismiss(DialogInterface dialog) {
-                                            stopScreenSaver = false;
-                                        }
-                                    });
-                                    screensaverDialog.show();
-                                }
-                            });
-                        } else {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    screensaverDialog.screensaverIV.setImageBitmap(screensaverDialog.bitmapArray.get(screensaverDialog.nextImage()));
-                                }
-                            });
-
-                        }
-                    }
-                    try {
-                        Thread.sleep(5000); //check every 5 seconds
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                while (!stopScreenSaver);
-            }
-
-        });
-        thread.start();
-
-    }
-
-    public void sendSubscriptionClicked(View v) {
-
-    }
 
     private class RegistratiePagerAdapter extends FragmentStatePagerAdapter {
 
@@ -296,6 +312,24 @@ public class RegistrationActivity extends ActionBarActivity {
         @Override
         public int getCount() {
             return 2;
+        }
+    }
+
+    private class SaveAsynctask extends AsyncTask<Subscription, Void, Void> {
+
+
+        @Override
+        protected Void doInBackground(Subscription... params) {
+            if (preferences.getBoolean("debuggin", false))
+                android.os.Debug.waitForDebugger();
+
+
+            RestTemplate restTemplate = new RestTemplate();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+            HttpEntity<Subscription> entity = new HttpEntity<Subscription>(params[0], headers);
+            restTemplate.exchange(server, HttpMethod.POST, entity, Subscription.class, "subscription");
+            return null;
         }
     }
 }

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.orm.SugarRecord;
 
 
-@JsonIgnoreProperties({"id"})
+@JsonIgnoreProperties({"id", "sqlName", "tableFields"})
 public class School extends SugarRecord<School> {
 
 
@@ -57,6 +57,13 @@ public class School extends SugarRecord<School> {
         this.postcode = postcode;
     }
 
-
+    @Override
+    public String toString() {
+        return "School{" +
+                "name='" + name + '\'' +
+                ", gemeente='" + gemeente + '\'' +
+                ", postcode=" + postcode +
+                '}';
+    }
 }
 

@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 
-@JsonIgnoreProperties({"id"})
+@JsonIgnoreProperties({"id", "sqlName", "tableFields"})
 public class Subscription {
 
     private Long id;
@@ -129,6 +129,11 @@ public class Subscription {
         return interests;
     }
 
+    @JsonProperty("interests")
+    public void setInterests(HashMap<String, String> interests) {
+        this.interests = interests;
+    }
+
     @JsonIgnore
     public void setInterests(Interests interests) {
 
@@ -138,11 +143,6 @@ public class Subscription {
         intMap.put("werkstudent",interests.getWerkstudent());
 
         this.interests = intMap;
-    }
-
-    @JsonProperty("interests")
-    public void setInterests(HashMap<String, String> interests) {
-        this.interests = interests;
     }
 
     public Date getTimestamp() {
@@ -184,5 +184,25 @@ public class Subscription {
 
     public void setSchool(School school) {
         this.school = school;
+    }
+
+    @Override
+    public String toString() {
+        return "Subscription{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", street='" + street + '\'' +
+                ", streetNumber='" + streetNumber + '\'' +
+                ", zip='" + zip + '\'' +
+                ", city='" + city + '\'' +
+                ", interests=" + interests +
+                ", timestamp=" + timestamp +
+                ", isNew=" + isNew +
+                ", teacher=" + teacher +
+                ", event=" + event +
+                ", school=" + school +
+                '}';
     }
 }
