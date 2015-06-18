@@ -26,6 +26,9 @@ import be.ehb.dt_app.model.Pdf;
 
 public class PdfActivity extends Activity implements SearchView.OnQueryTextListener {
 
+    //https://www.dropbox.com/developers/core/sdks/android
+    //https://www.dropbox.com/developers/core/start/android
+
     final static private String APP_KEY = "zaoo56rk9zylzzt";
     final static private String APP_SECRET = "uzk9zlhe6ro5vg1";
     private DropboxAPI<AndroidAuthSession> mDBApi;
