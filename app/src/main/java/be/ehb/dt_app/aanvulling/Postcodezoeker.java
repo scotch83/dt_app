@@ -11,7 +11,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.widget.EditText;
 
 import java.util.ArrayList;
@@ -76,7 +75,7 @@ public final class Postcodezoeker {
         builder.setItems(g, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Log.d("", "keuze = " + which);
+
                 gemeenteTxt.setText(gemeenten.get(which));
             }
         });
@@ -96,7 +95,7 @@ public final class Postcodezoeker {
             s = 0;
             if (p != null) s = p.getPostcode();
             if (s == postcode) {
-                Log.d("", "Gemeente " + p.getGemeente());
+
                 gemeenten.add(p.getGemeente());
             }
         }
@@ -109,4 +108,13 @@ public final class Postcodezoeker {
         postcodes = postcodeParser.getPostcodes();
 
     }
+
+    public short getPostcode() {
+        return postcode;
+    }
+
+    public void setPostcode(short postcode) {
+        this.postcode = postcode;
+    }
+
 }

@@ -53,7 +53,8 @@ import be.ehb.dt_app.model.Teacher;
 
 public class RegistrationActivity extends ActionBarActivity {
 
-    protected Fragment form1, form2;
+    protected RegistrationFragment form1;
+    protected RegistrationFragment2 form2;
     long lastUsed = System.currentTimeMillis();
     boolean stopScreenSaver;
     ScreensaverDialog screensaverDialog;
@@ -132,7 +133,17 @@ public class RegistrationActivity extends ActionBarActivity {
 
             //SCHOOL
 //        EditText tempSp = (EditText) findViewById(R.id.sp_secundaire_school);
-            School school = new School("Sint-Jan Berchmanscollege", "Brussel-Stad", (short) 1000, 5969014819913728l);
+            School school = new School();
+            temp = (EditText) findViewById(R.id.et_stad_secundaireschool);
+
+            school.setGemeente(String.valueOf(temp.getText()));
+
+            school.setPostcode(form2.getSchoolzoeker().getPostcode());
+            school.setServerId(form2.getSchoolzoeker().getSchoolId());
+
+            temp = (EditText) findViewById(R.id.sp_secundaire_school);
+            school.setName(String.valueOf(temp.getText()));
+
             newSubscription.setSchool(school);
 
             //INTERESTS

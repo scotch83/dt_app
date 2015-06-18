@@ -3,19 +3,8 @@ package be.ehb.dt_app.aanvulling;
 import android.app.Activity;
 import android.widget.Toast;
 
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
-import be.ehb.dt_app.R;
 import be.ehb.dt_app.model.School;
 
 /**
@@ -33,23 +22,23 @@ public class SchoolParser {
 
 
     public void parsen() {
-        try {
+//        try {
 
-            SAXParserFactory saxFabriek = SAXParserFactory.newInstance();
-            SAXParser saxMaker = saxFabriek.newSAXParser();
-            XMLReader lezer = saxMaker.getXMLReader();
+//            SAXParserFactory saxFabriek = SAXParserFactory.newInstance();
+//            SAXParser saxMaker = saxFabriek.newSAXParser();
+//            XMLReader lezer = saxMaker.getXMLReader();
+//
+//
+//            InputStream inTekst = activity.getResources().openRawResource(R.raw.school);
+//            SchoolHandler handelaar = new SchoolHandler();
+//            lezer.setContentHandler(handelaar);
+//            lezer.parse(new InputSource(inTekst));
 
-
-            InputStream inTekst = activity.getResources().openRawResource(R.raw.school);
-            SchoolHandler handelaar = new SchoolHandler();
-            lezer.setContentHandler(handelaar);
-            lezer.parse(new InputSource(inTekst));
-
-            scholen = handelaar.getScholen();
-        } catch (ParserConfigurationException | SAXException | IOException e) {
-            e.printStackTrace();
-            Toast.makeText(activity.getApplicationContext(), "Ophalen scholen is mislukt", Toast.LENGTH_SHORT).show();
-        }
+        scholen = new ArrayList(School.listAll(School.class));
+//        } catch (ParserConfigurationException | SAXException | IOException e) {
+//            e.printStackTrace();
+//            Toast.makeText(activity.getApplicationContext(), "Ophalen scholen is mislukt", Toast.LENGTH_SHORT).show();
+//        }
     }
 
 

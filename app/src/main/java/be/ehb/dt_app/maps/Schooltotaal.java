@@ -1,7 +1,5 @@
 package be.ehb.dt_app.maps;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -36,10 +34,10 @@ public class Schooltotaal {
             if (scholen.containsKey(school)) {
                 aantal = scholen.get(school);
                 aantal++;
-                Log.d("", "Studenten van school" + school.getName() + " aangepast");
+
             }
             scholen.put(student.getSchool(), aantal);
-            Log.d("", "Nieuw aantal toegegoegd");
+
         }
 
     }
@@ -53,7 +51,7 @@ public class Schooltotaal {
             school = i.next();
             aantal = j.next();
             indeling.schoolToevoegenAanProvincie(school, aantal);
-            Log.d("", "School toegevoegd");
+
         }
 
         //scholen.clear();
