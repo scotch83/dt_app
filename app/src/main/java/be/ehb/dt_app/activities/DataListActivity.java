@@ -53,6 +53,7 @@ public class DataListActivity extends ActionBarActivity implements SearchView.On
     private long lastUsed = System.currentTimeMillis();
     private boolean stopScreenSaver;
     private ScreensaverDialog screensaverDialog;
+    private ImageButton mapBtn;
 
 
     @Override
@@ -62,8 +63,7 @@ public class DataListActivity extends ActionBarActivity implements SearchView.On
 
         setupDesign();
 
-        heatMapIB = (ImageButton) findViewById(R.id.ib_heatmap_navigeer);
-        studentenlijstLL = (LinearLayout) findViewById(R.id.ll_registratie1_persoonsgegevens);
+
         preferences = getSharedPreferences("EHB App SharedPreferences", Context.MODE_PRIVATE);
 
         if (Utils.isNetworkAvailable(this))
@@ -75,20 +75,20 @@ public class DataListActivity extends ActionBarActivity implements SearchView.On
         //screensaverDialog = new ScreensaverDialog(this, R.style.screensaver_dialog);
         //startScreensaverThread();
 
-        mStudententSV.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-
-                if (v.getId() == mStudententSV.getId()) {
-                    if (hasFocus) {
-                        int[] loc = new int[2];
-                        v.getLocationOnScreen(loc);
-                        studentenlijstLL.scrollBy(0, 80);
-                    }
-                }
-
-            }
-        });
+//        mStudententSV.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View v, boolean hasFocus) {
+//
+//                if (v.getId() == mStudententSV.getId()) {
+//                    if (hasFocus) {
+//                        int[] loc = new int[2];
+//                        v.getLocationOnScreen(loc);
+//                        studentenlijstLL.scrollBy(0, 80);
+//                    }
+//                }
+//
+//            }
+//        });
 
 
     }
@@ -103,6 +103,10 @@ public class DataListActivity extends ActionBarActivity implements SearchView.On
         studentenlijstLV = (ListView) findViewById(R.id.lv_studentenlijst);
         progressOverlay = findViewById(R.id.progress_overlay);
         studentenlijstLV.setTextFilterEnabled(true);
+        heatMapIB = (ImageButton) findViewById(R.id.ib_heatmap_navigeer);
+        studentenlijstLL = (LinearLayout) findViewById(R.id.ll_registratie1_persoonsgegevens);
+        heatMapIB.setEnabled(false);
+
         setupSearchView();
 
     }
@@ -309,6 +313,7 @@ public class DataListActivity extends ActionBarActivity implements SearchView.On
             Utils.animateView(progressOverlay, View.GONE, 0.4f, 200);
 
             setupAdapters();
+            heatMapIB.setEnabled(true);
 
         }
 

@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.widget.EditText;
 
 import java.util.ArrayList;
@@ -24,6 +23,7 @@ public final class Schoolzoeker {
     private EditText schoolTxt, locSchoolTxt;
     private ArrayList<String> scholen;
     private short postcode;
+    private Long schoolId;
     private ArrayList<Postcode> postcodes;
     private boolean gemeenteZoeken, schoolZoeken;
     private TextWatcher schoolLocatiezoeker = new TextWatcher() {
@@ -47,8 +47,8 @@ public final class Schoolzoeker {
                 zoekSchoolOpGemeente(schoollocatie);
             }
 
-            Log.d("", "Schoollocatie = " + schoollocatie);
-            Log.d("", "Veldlengte = " + schoollocatie.length());
+            //Log.d("", "Schoollocatie = " + schoollocatie);
+            //Log.d("", "Veldlengte = " + schoollocatie.length());
             if (schoollocatie.length() < 4) {
                 gemeenteZoeken = true;
                 schoolZoeken = true;
@@ -105,14 +105,14 @@ public final class Schoolzoeker {
 
     private ArrayList<String> zoekSchoolMetPostcode(short postcode) {
         School school;
-        Log.d("", "Postcode " + postcode);
+        //Log.d("", "Postcode " + postcode);
         short s = 0;
         for (short i = 0; i < schools.size(); i++) {
             school = schools.get(i);
             s = 0;
             if (school != null) s = school.getPostcode();
             if (s == postcode) {
-                Log.d("", "Gemeente " + school.getName() + " " + school.getGemeente());
+                //Log.d("", "Gemeente " + school.getName() + " " + school.getGemeente());
                 scholen.add(school.getName() + " " + school.getGemeente());
             }
         }
@@ -142,7 +142,7 @@ public final class Schoolzoeker {
             if (!ok) ok = gemeente.contains(zoek);
 
             if (ok) {
-                Log.d("", "School " + school.getName() + " " + school.getGemeente());
+                //Log.d("", "School " + school.getName() + " " + school.getGemeente());
                 scholen.add(school.getName() + " " + school.getGemeente());
             }
         }
@@ -162,14 +162,14 @@ public final class Schoolzoeker {
             if (p != null) {
                 s = p.getGemeente().toLowerCase();
                 if (s.contains(zoek)) {
-                    Log.d("", "Geemeente " + s);
+                    //Log.d("", "Geemeente " + s);
                     postcodes.add(p);
                 }
             }
 
         }
 
-        Log.d("", "Aantal gevonden: " + postcodes.size());
+        //Log.d("", "Aantal gevonden: " + postcodes.size());
         if (postcodes.size() > 0) {
             if (gemeenteZoeken) maakGemeentenPopup();
 
@@ -191,7 +191,7 @@ public final class Schoolzoeker {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 schoolZoeken = false;
-                Log.d("", "keuze = " + which);
+                //Log.d("", "keuze = " + which);
                 schoolTxt.setText(scholen.get(which));
 
             }
@@ -213,9 +213,10 @@ public final class Schoolzoeker {
             public void onClick(DialogInterface dialog, int which) {
                 gemeenteZoeken = false;
 
-                Log.d("", "keuze = " + which);
-                Log.d("", "Gekozen locatie " + postcodes.get(which).getGemeente());
+                //Log.d("", "keuze = " + which);
+                //Log.d("", "Gekozen locatie " + postcodes.get(which).getGemeente());
                 postcode = postcodes.get(which).getPostcode();
+                schoolId = schools.get(which).getServerId();
                 locSchoolTxt.setText(postcodes.get(which).getGemeente());
                 scholen = zoekSchoolMetPostcode(postcode);
             }
@@ -250,5 +251,19 @@ public final class Schoolzoeker {
         schools = schoolParser.getScholen();
     }
 
+    public short getPostcode() {
+        return postcode;
+    }
 
+    public void setPostcode(short postcode) {
+        this.postcode = postcode;
+    }
+
+    public Long getSchoolId() {
+        return schoolId;
+    }
+
+    public void setSchoolId(Long schoolId) {
+        this.schoolId = schoolId;
+    }
 }

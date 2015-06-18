@@ -38,4 +38,20 @@ public class RegistrationFragment2 extends Fragment {
 
         return v;
     }
+
+    public Postcodezoeker getPostcodezoeker() {
+        return postcodezoeker;
+    }
+
+    public void setPostcodezoeker(Postcodezoeker postcodezoeker) {
+        this.postcodezoeker = postcodezoeker;
+    }
+
+    public Schoolzoeker getSchoolzoeker() {
+        return schoolzoeker;
+    }
+
+    public void setSchoolzoeker(Schoolzoeker schoolzoeker) {
+        this.schoolzoeker = schoolzoeker;
+    }
 }

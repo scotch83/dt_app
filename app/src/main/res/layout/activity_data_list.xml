@@ -122,6 +122,8 @@
                         android:layout_height="130dp"
                         android:alpha="0.7"
                         android:background="#00ffffff"
+                        android:clickable="true"
+                        android:onClick="goToHeatMap"
                         android:scaleType="centerInside"
                         android:src="@drawable/iconsheatmap" />
                 </LinearLayout>
