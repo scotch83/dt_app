@@ -60,7 +60,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="0dp"
-                        android:text="Stad huidige school"
+                        android:text="stad secundaire school"
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textColor="#e6ffffff"
                         android:textStyle="italic" />
@@ -74,9 +74,20 @@
                         android:inputType="textPersonName" />
 
 
+                    <TextView
+                        android:id="@+id/textView4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="0dp"
+                        android:singleLine="true"
+                        android:text="secundaire school"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="#e6ffffff"
+                        android:textStyle="italic" />
+
                     <EditText
                         android:id="@+id/sp_secundaire_school"
-                        style="@style/ColoredSpinnerCustom"
+                        style="@style/EditTextCustomHolo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="40dp"
@@ -162,16 +173,6 @@
                                                 android:textSize="20sp" />
                                         </RadioGroup> -->
 
-                    <Switch
-                        android:id="@+id/sw_werkstudent"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="40dp"
-                        android:checked="false"
-                        android:text=""
-                        android:textOff="Nee"
-                        android:textOn="Ja" />
-
                     <LinearLayout
                         android:id="@+id/ll_btn_voegtoe"
                         android:layout_width="match_parent"
@@ -181,6 +182,15 @@
                         android:orientation="horizontal"
                         android:paddingBottom="20dp"
                         android:paddingRight="20dp">
+
+                        <Switch
+                            android:id="@+id/sw_werkstudent"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:checked="false"
+                            android:text=""
+                            android:textOff="Nee"
+                            android:textOn="Ja" />
 
                         <ImageButton
                             android:id="@+id/ib_voegstudenttoe"
