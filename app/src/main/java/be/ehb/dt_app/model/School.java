@@ -1,21 +1,30 @@
 package be.ehb.dt_app.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.orm.SugarRecord;
 
 
-@JsonIgnoreProperties({"id", "sqlName", "tableFields"})
+@JsonIgnoreProperties({"sqlName", "tableFields"})
 public class School extends SugarRecord<School> {
 
 
     private String name;
     private String gemeente;
     private short postcode;
+    private Long serverId;
 
 
     public School() {
 
 
+    }
+
+    public School(String name, String gemeente, short postcode, Long serverId) {
+        this.name = name;
+        this.gemeente = gemeente;
+        this.postcode = postcode;
+        this.serverId = serverId;
     }
 
     public School(String name, String gemeente, short postcode) {
@@ -30,6 +39,16 @@ public class School extends SugarRecord<School> {
         this.gemeente = jette;
         this.postcode = (short) i;
 
+    }
+
+    @JsonProperty("id")
+    public Long getServerId() {
+        return serverId;
+    }
+
+    @JsonProperty("id")
+    public void setServerId(Long serverId) {
+        this.serverId = serverId;
     }
 
 

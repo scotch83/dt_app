@@ -255,6 +255,10 @@ public class MainActivity extends Activity {
                 android.os.Debug.waitForDebugger();
 
             dataLists.put(
+                    "subscriptions",
+                    restTemplate.getForObject(server, SubscriptionsList.class, "subscriptions").getSubscriptions()
+            );
+            dataLists.put(
                     "events",
                     restTemplate.getForObject(server, EventList.class, "events").getEvents()
             );
@@ -266,10 +270,6 @@ public class MainActivity extends Activity {
             dataLists.put(
                     "schools",
                     restTemplate.getForObject(server, SchoolList.class, "schools").getSchools()
-            );
-            dataLists.put(
-                    "subscriptions",
-                    restTemplate.getForObject(server, SubscriptionsList.class, "subscriptions").getSubscriptions()
             );
 
 
@@ -313,32 +313,30 @@ public class MainActivity extends Activity {
                 switch (pair.getKey().toString()) {
                     case "events":
                         for (Event event : (ArrayList<Event>) pair.getValue())
-                            if (Event.findById(Event.class, event.getId()) == null) {
-
+                            if (Event.find(Event.class, "SERVER_ID=?", String.valueOf(event.getServerId())).isEmpty()) {
                                 event.save();
                             }
                         break;
                     case "teachers":
                         for (Teacher teacher : (ArrayList<Teacher>) pair.getValue())
-                            if (Teacher.findById(Teacher.class, teacher.getId()) == null) {
-
+                            if (Teacher.find(Teacher.class, "SERVER_ID=?", String.valueOf(teacher.getServerId())).isEmpty()) {
                                 teacher.save();
+                            }
+                        break;
+
+                    case "schools":
+                        for (School school : (ArrayList<School>) pair.getValue())
+                            if (School.find(School.class, "SERVER_ID=?", String.valueOf(school.getServerId())).isEmpty()) {
+                                school.save();
                             }
                         break;
                     case "subscriptions":
                         for (Subscription subscription : (ArrayList<Subscription>) pair.getValue()) {
                             LocalSubscription lSub = new LocalSubscription(subscription);
-                            if (LocalSubscription.findById(LocalSubscription.class, lSub.getId()) == null) {
+                            if (LocalSubscription.find(LocalSubscription.class, "SERVER_ID=?", String.valueOf(lSub.getServerId())).isEmpty()) {
                                 lSub.save();
                             }
                         }
-                        break;
-                    case "schools":
-                        for (School school : (ArrayList<School>) pair.getValue())
-                            if (School.findById(School.class, school.getId()) == null) {
-
-                                school.save();
-                            }
                         break;
 
                 }

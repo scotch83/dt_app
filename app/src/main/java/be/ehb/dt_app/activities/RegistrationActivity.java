@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,6 +33,7 @@ import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 
 import be.ehb.dt_app.R;
@@ -80,8 +82,8 @@ public class RegistrationActivity extends ActionBarActivity {
     }
 
     private void initializeDesign() {
-        img_page1 = (ImageView) findViewById(R.id.iv_page1);
-        img_page2 = (ImageView) findViewById(R.id.iv_page2);
+        //img_page1 = (ImageView) findViewById(R.id.iv_page1);
+        //img_page2 = (ImageView) findViewById(R.id.iv_page2);
         page1TV = (TextView) findViewById(R.id.tv_pagina1);
         page2TV = (TextView) findViewById(R.id.tv_pagina2);
     }
@@ -120,7 +122,7 @@ public class RegistrationActivity extends ActionBarActivity {
 
         //SCHOOL
 //        EditText tempSp = (EditText) findViewById(R.id.sp_secundaire_school);
-        School school = new School("Sint-Jan Berchmanscollege", "Brussel-Stad", (short) 1000);
+        School school = new School("Sint-Jan Berchmanscollege", "Brussel-Stad", (short) 1000, 5969014819913728l);
         newSubscription.setSchool(school);
 
         //INTERESTS
@@ -148,6 +150,8 @@ public class RegistrationActivity extends ActionBarActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        newSubscription.setTimestamp(new Date());
 
 
         if (Utils.isNetworkAvailable(this)) {
@@ -177,16 +181,16 @@ public class RegistrationActivity extends ActionBarActivity {
             public void onPageSelected(int position) {
                 switch (position) {
                     case 0:
-                        img_page1.setImageResource(R.drawable.dotsselected);
+//                        img_page1.setImageResource(R.drawable.dotsselected);
+//                        img_page2.setImageResource(R.drawable.dotsunselected);
                         page1TV.setTextColor(Color.RED);
                         page2TV.setTextColor(Color.BLACK);
-                        img_page2.setImageResource(R.drawable.dotsunselected);
 
                         break;
 
                     case 1:
-                        img_page1.setImageResource(R.drawable.dotsunselected);
-                        img_page2.setImageResource(R.drawable.dotsselected);
+//                        img_page1.setImageResource(R.drawable.dotsunselected);
+//                        img_page2.setImageResource(R.drawable.dotsselected);
                         page2TV.setTextColor(Color.RED);
                         page1TV.setTextColor(Color.BLACK);
 
@@ -327,8 +331,8 @@ public class RegistrationActivity extends ActionBarActivity {
             RestTemplate restTemplate = new RestTemplate();
             HttpHeaders headers = new HttpHeaders();
             headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-            HttpEntity<Subscription> entity = new HttpEntity<Subscription>(params[0], headers);
-            restTemplate.exchange(server, HttpMethod.POST, entity, Subscription.class, "subscription");
+            HttpEntity<Subscription> entity = new HttpEntity<>(params[0], headers);
+            Log.d("xxx", restTemplate.exchange(server, HttpMethod.POST, entity, Subscription.class, "subscription").toString());
             return null;
         }
     }
