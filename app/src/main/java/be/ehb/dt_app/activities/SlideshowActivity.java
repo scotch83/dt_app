@@ -63,7 +63,6 @@ public class SlideshowActivity extends Activity {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-
             }while (!slideshow);
 
             return null;
