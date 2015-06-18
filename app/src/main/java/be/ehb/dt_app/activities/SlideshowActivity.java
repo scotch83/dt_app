@@ -32,6 +32,8 @@ public class SlideshowActivity extends Activity {
                         "data/data/be.ehb.dt_app/app_presentation_images");
 
         relativeLayout = (RelativeLayout) findViewById(R.id.relativeLayout);
+
+
         relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
