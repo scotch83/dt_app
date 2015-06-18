@@ -21,12 +21,6 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
-    <meta-data
-        android:name="com.google.android.maps.v2.API_KEY"
-        android:value="AIzaSyDKNAznODly-yzTffQhZXK-PEGLQhfbexY" />
-    <meta-data
-        android:name="com.google.android.gms.version"
-        android:value="@integer/google_play_services_version" />
 
     <application
         android:name="com.orm.SugarApp"
@@ -34,7 +28,7 @@
         android:icon="@mipmap/ic_launcherehb"
         android:label="@string/app_name"
         android:theme="@style/AppBackground"
-        tools:replace="icon, label">
+        tools:replace="icon, label" >
         <meta-data
             android:name="DATABASE"
             android:value="beurs_app_local.db" />
@@ -53,18 +47,9 @@
             android:clearTaskOnLaunch="true"
             android:label="@string/app_name"
             android:screenOrientation="landscape" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
             android:noHistory="true"
             android:screenOrientation="landscape">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
         <activity
             android:name=".activities.HomeScreenActivity"
@@ -75,21 +60,19 @@
             android:label="@string/title_activity_registration"
             android:screenOrientation="landscape" >
         </activity>
-
         <activity
             android:name=".activities.DataListActivity"
             android:label="@string/title_activity_data_list"
-            android:screenOrientation="landscape"></activity>
+            android:screenOrientation="landscape" />
         <activity
             android:name=".activities.BeheerActivity"
             android:label="@string/title_activity_beheer"
-            android:screenOrientation="landscape">
-
+            android:screenOrientation="landscape" >
             =======
             >>>>>>> Stashed changes
         </activity>
 
-        <receiver android:name=".controller.ConnectionChangeReceiver">
+        <receiver android:name=".controller.ConnectionChangeReceiver" >
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
@@ -99,17 +82,20 @@
             android:name=".activities.PdfActivity"
             android:label="@string/title_activity_pdf"
             android:screenOrientation="landscape" />
-
         <activity
             android:name=".activities.DepartementLoginActivity"
-            android:label="@string/title_activity_departement_login"></activity>
-
+            android:label="@string/title_activity_departement_login" />
         <activity
             android:name=".maps.RegioActivity"
-            android:label="@string/title_activity_regio"></activity>
+            android:label="@string/title_activity_regio" />
         <activity
             android:name=".maps.MapActivity"
-            android:label="@string/title_activity_map"></activity>
+            android:label="@string/title_activity_map" />
+        <activity
+            android:name=".activities.SlideshowActivity"
+            android:label="@string/title_activity_slideshow"
+            android:screenOrientation="landscape">
+        </activity>
     </application>
 
 </manifest>
