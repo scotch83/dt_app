@@ -51,7 +51,6 @@ public class SlideshowActivity extends Activity {
             }
         });
 
-
         @Override
         protected Void doInBackground(Void... params) {
 
@@ -64,7 +63,6 @@ public class SlideshowActivity extends Activity {
                     e.printStackTrace();
                 }
             }while (!slideshow);
-
             return null;
         }
 
@@ -72,7 +70,6 @@ public class SlideshowActivity extends Activity {
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
             relativeLayout.setBackground(Drawable.createFromPath(String.valueOf(file[values[0]])));
-
         }
     }
 }
