@@ -66,6 +66,15 @@ public class Subscription {
         return result;
     }
 
+    public static boolean isValidEmail(String email) {
+
+        final Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+
+
+        Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(email);
+        return matcher.find();
+
+    }
 
     public String getFirstName() {
         return firstName;
@@ -127,6 +136,11 @@ public class Subscription {
         return interests;
     }
 
+    @JsonProperty("interests")
+    public void setInterests(HashMap<String, String> interests) {
+        this.interests = interests;
+    }
+
     @JsonIgnore
     public void setInterests(Interests interests) {
 
@@ -136,11 +150,6 @@ public class Subscription {
         intMap.put("werkstudent", interests.getWerkstudent());
 
         this.interests = intMap;
-    }
-
-    @JsonProperty("interests")
-    public void setInterests(HashMap<String, String> interests) {
-        this.interests = interests;
     }
 
     public Date getTimestamp() {
@@ -219,21 +228,5 @@ public class Subscription {
     public boolean isValidForSaving() {
 
         return firstName != "" && lastName != "" && street != "" && streetNumber != "" && zip != "" && city != "";
-    }
-
-    @JsonIgnore
-    public boolean isValidForSaving() {
-
-        return firstName != "" && lastName != "" && street != "" && streetNumber != "" && zip != "" && city != "";
-    }
-
-    public static boolean isValidEmail(String email) {
-
-        final Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
-
-
-        Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(email);
-        return matcher.find();
-
     }
 }
