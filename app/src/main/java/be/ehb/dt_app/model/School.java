@@ -18,18 +18,17 @@ public class School extends SugarRecord<School> {
 
     }
 
-    public School(String name, String gemeente, short postcode) {
+    public School(long id, String name, String gemeente, int postcode) {
+        this.id = id;
         this.name = name;
         this.gemeente = gemeente;
-        this.postcode = postcode;
+        this.postcode = (short) postcode;
     }
 
-    public School(long l, String s, String jette, int i) {
-
-        this.name = s;
-        this.gemeente = jette;
-        this.postcode = (short) i;
-
+    public School(String name, String gemeente, int postcode) {
+        this.name = name;
+        this.gemeente = gemeente;
+        this.postcode = (short) postcode;
     }
 
 

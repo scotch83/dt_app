@@ -59,9 +59,9 @@ public class PdfActivity extends Activity implements SearchView.OnQueryTextListe
         setupSearchView();
 
 
-        screensaverDialog = new ScreensaverDialog(this, R.style.screensaver_dialog);
+        //screensaverDialog = new ScreensaverDialog(this, R.style.screensaver_dialog);
 
-        startScreensaverThread();
+        //startScreensaverThread();
 
 
     }

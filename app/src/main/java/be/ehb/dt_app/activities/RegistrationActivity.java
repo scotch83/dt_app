@@ -59,7 +59,6 @@ public class RegistrationActivity extends ActionBarActivity {
     private SharedPreferences preferences;
     private String server;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -170,23 +169,22 @@ public class RegistrationActivity extends ActionBarActivity {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-
             }
 
             @Override
             public void onPageSelected(int position) {
                 switch (position) {
                     case 0:
-                        img_page1.setImageResource(R.drawable.dotsselected);
+                        img_page1.setImageResource(R.drawable.dotselectedblack);
                         page1TV.setTextColor(Color.RED);
                         page2TV.setTextColor(Color.BLACK);
-                        img_page2.setImageResource(R.drawable.dotsunselected);
+                        img_page2.setImageResource(R.drawable.dotunselectedblack);
 
                         break;
 
                     case 1:
-                        img_page1.setImageResource(R.drawable.dotsunselected);
-                        img_page2.setImageResource(R.drawable.dotsselected);
+                        img_page1.setImageResource(R.drawable.dotunselectedblack);
+                        img_page2.setImageResource(R.drawable.dotselectedblack);
                         page2TV.setTextColor(Color.RED);
                         page1TV.setTextColor(Color.BLACK);
 
@@ -202,8 +200,13 @@ public class RegistrationActivity extends ActionBarActivity {
             }
         });
 
+
 //        screensaverDialog = new ScreensaverDialog(this, R.style.screensaver_dialog);
 //        startScreensaverThread();
+
+        //screensaverDialog = new ScreensaverDialog(this, R.style.screensaver_dialog);
+        //startScreensaverThread();
+
 
     }
 
@@ -285,6 +288,9 @@ public class RegistrationActivity extends ActionBarActivity {
 //    }
 
 
+    public void scrollIndicator() {
+
+    }
 
     private class RegistratiePagerAdapter extends FragmentStatePagerAdapter {
 
@@ -302,8 +308,10 @@ public class RegistrationActivity extends ActionBarActivity {
 
             switch (position) {
                 case 0:
+
                     return formPart1;
                 case 1:
+
                     return formPart2;
             }
             return null;

@@ -24,7 +24,6 @@ import be.ehb.dt_app.model.Teacher;
 public class HomeScreenActivity extends Activity {
 
 
-
     private View lay;
 
     private SharedPreferences preferences;
@@ -53,8 +52,8 @@ public class HomeScreenActivity extends Activity {
 
         }
 
-        screensaverDialog = new ScreensaverDialog(this, R.style.screensaver_dialog);
-        startScreensaverThread();
+        //screensaverDialog = new ScreensaverDialog(this, R.style.screensaver_dialog);
+        //startScreensaverThread();
 
 
     }
@@ -68,6 +67,12 @@ public class HomeScreenActivity extends Activity {
         Intent i = new Intent(getApplicationContext(), PdfActivity.class);
         startActivity(i);
     }
+
+    public void goToBeheerActivity(View v) {
+        Intent i = new Intent(getApplicationContext(), BeheerActivity.class);
+        startActivity(i);
+    }
+
     private void setupDesign() {
 
         lay = findViewById(R.id.rl_homescreen);
