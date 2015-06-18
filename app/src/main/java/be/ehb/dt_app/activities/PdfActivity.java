@@ -1,29 +1,39 @@
 package be.ehb.dt_app.activities;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.SearchView;
 
+import com.dropbox.client2.DropboxAPI;
+import com.dropbox.client2.android.AndroidAuthSession;
+import com.dropbox.client2.exception.DropboxException;
+import com.dropbox.client2.session.AppKeyPair;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 
 import be.ehb.dt_app.R;
 import be.ehb.dt_app.adapters.PdflijstAdapter;
-import be.ehb.dt_app.fragments.ScreensaverDialog;
 import be.ehb.dt_app.model.Pdf;
 
 public class PdfActivity extends Activity implements SearchView.OnQueryTextListener {
+
+    final static private String APP_KEY = "zaoo56rk9zylzzt";
+    final static private String APP_SECRET = "uzk9zlhe6ro5vg1";
+    private DropboxAPI<AndroidAuthSession> mDBApi;
 
     private SearchView mPdfSV;
     private ListView mPdfLV;
     private ArrayList<Pdf> pdfArrayList;
     private PdflijstAdapter pdflijstAdapter;
-    private long lastUsed = System.currentTimeMillis();
-    private boolean stopScreenSaver;
-    private ScreensaverDialog screensaverDialog;
 
 
     @Override
@@ -33,7 +43,7 @@ public class PdfActivity extends Activity implements SearchView.OnQueryTextListe
 
         mPdfLV = (ListView) findViewById(R.id.lv_pdflijst);
         mPdfSV = (SearchView) findViewById(R.id.sv_pdflijst);
-
+/*
         pdfArrayList = new ArrayList<Pdf>();
         pdfArrayList.add(new Pdf("Overzicht curriculum", "20 maart 2014"));
         pdfArrayList.add(new Pdf("Brochures", "5 april 2014"));
@@ -48,20 +58,37 @@ public class PdfActivity extends Activity implements SearchView.OnQueryTextListe
         pdfArrayList.add(new Pdf("Multec2", "21 januari 2014"));
         pdfArrayList.add(new Pdf("Dig-ex2", "2 maart 2015"));
         pdfArrayList.add(new Pdf("Curriculum Dig-x2", "21 januari 2014"));
-        pdfArrayList.add(new Pdf("Informatie EhB3", "2 maart 2015"));
+        pdfArrayList.add(new Pdf("Informatie EhB3", "2 maart 2015"));*/
 
-        pdflijstAdapter = new PdflijstAdapter(this, pdfArrayList);
-        mPdfLV.setAdapter(pdflijstAdapter);
+        AppKeyPair appKeys = new AppKeyPair(APP_KEY, APP_SECRET);
+        AndroidAuthSession session = new AndroidAuthSession(appKeys);
+        mDBApi = new DropboxAPI<AndroidAuthSession>(session);
+
+        mDBApi.getSession().startOAuth2Authentication(PdfActivity.this);
+
+//        pdflijstAdapter = new PdflijstAdapter(this, pdfArrayList);
+//        mPdfLV.setAdapter(pdflijstAdapter);
 
         mPdfLV.setTextFilterEnabled(true);
         setupSearchView();
-
-
-       
-
-
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (mDBApi.getSession().authenticationSuccessful()) {
+            try {
+                // Required to complete auth, sets the access token on the session
+                mDBApi.getSession().finishAuthentication();
+
+                String accessToken = mDBApi.getSession().getOAuth2AccessToken();
+                //new PDFDownloadTask().execute();
+            } catch (IllegalStateException e) {
+                Log.i("DbAuthLog", "Error authenticating", e);
+            }
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -109,62 +136,34 @@ public class PdfActivity extends Activity implements SearchView.OnQueryTextListe
             mPdfLV.setFilterText(newText.toString());
 
         }
-
         return true;
     }
 
-//    @Override
-//    public void onUserInteraction() {
-//        super.onUserInteraction();
-//        lastUsed = System.currentTimeMillis();
-//    }
-//
-//    public void startScreensaverThread() {
-//        Thread thread = new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                long idle = 0;
-//                Log.d("started", "the screensaver has started");
-//                do {
-//                    idle = System.currentTimeMillis() - lastUsed;
-//                    Log.d("something", "Application is idle for " + idle + " ms");
-//
-//                    if (idle > 5000) {
-//                        if (!screensaverDialog.isShowing()) {
-//                            runOnUiThread(new Runnable() {
-//                                @Override
-//                                public void run() {
-//
-//                                    screensaverDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-//                                        @Override
-//                                        public void onDismiss(DialogInterface dialog) {
-//                                            stopScreenSaver = false;
-//                                        }
-//                                    });
-//                                    screensaverDialog.show();
-//                                }
-//                            });
-//                        } else {
-//                            runOnUiThread(new Runnable() {
-//                                @Override
-//                                public void run() {
-//                                    screensaverDialog.screensaverIV.setImageBitmap(screensaverDialog.bitmapArray.get(screensaverDialog.nextImage()));
-//                                }
-//                            });
-//
-//                        }
-//                    }
-//                    try {
-//                        Thread.sleep(5000); //check every 5 seconds
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//                while (!stopScreenSaver);
-//            }
-//
-//        });
-//        thread.start();
-//
-//    }
+    private class PDFDownloadTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            DropboxAPI.Entry entries = null;
+            try {
+                entries = mDBApi.metadata("/pdf", 100, null, true, null);
+            } catch (DropboxException e) {
+                e.printStackTrace();
+            }
+
+            for (DropboxAPI.Entry e : entries.contents) {
+                File file = new File("/data/data/be.ehb.hellocloudpdf/files/", e.fileName());
+                FileOutputStream outputStream = null;
+                try {
+                    outputStream = new FileOutputStream(file);
+                    DropboxAPI.DropboxFileInfo info = mDBApi.getFile("/"+e.fileName(), null, outputStream, null);
+
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (DropboxException e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        }
+    }
 }
