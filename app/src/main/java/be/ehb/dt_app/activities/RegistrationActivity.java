@@ -156,6 +156,10 @@ public class RegistrationActivity extends ActionBarActivity {
         }
     }
 
+    /**
+     * instellen van de viewpager voor het registratieformulier. Aanduiding met viewpagerindicator wordt gecreert in de
+     * onPageSelected().
+     */
     private void initializePager() {
 
         mPagerRegistratie = (ViewPager) findViewById(R.id.pager_registratie);
@@ -292,6 +296,9 @@ public class RegistrationActivity extends ActionBarActivity {
 
     }
 
+    /**
+     * private class RegistratiePagerAdapter geeft het juiste fragment voor de positie waarin de viewpager zich bevindt.
+     */
     private class RegistratiePagerAdapter extends FragmentStatePagerAdapter {
 
         Fragment formPart1, formPart2;
