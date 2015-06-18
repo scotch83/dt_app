@@ -136,11 +136,6 @@ public class Subscription {
         return interests;
     }
 
-    @JsonProperty("interests")
-    public void setInterests(HashMap<String, String> interests) {
-        this.interests = interests;
-    }
-
     @JsonIgnore
     public void setInterests(Interests interests) {
 
@@ -150,6 +145,11 @@ public class Subscription {
         intMap.put("werkstudent", interests.getWerkstudent());
 
         this.interests = intMap;
+    }
+
+    @JsonProperty("interests")
+    public void setInterests(HashMap<String, String> interests) {
+        this.interests = interests;
     }
 
     public Date getTimestamp() {
