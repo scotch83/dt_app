@@ -64,7 +64,7 @@ public class Schooltotaal {
         while (i.hasNext()) {
             ls = i.next();
             //Log.d("", "school: "+ ls.getSchool().getName());
-            scholen.put(ls.getSchool(), (short) 0);
+            scholen.put(ls.getSchool(), (short) 1);
         }
         optellen();
         toevoegenAanMap();
