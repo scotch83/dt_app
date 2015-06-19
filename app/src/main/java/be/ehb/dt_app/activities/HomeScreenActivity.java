@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,6 +30,7 @@ public class HomeScreenActivity extends Activity {
     private long lastUsed = System.currentTimeMillis();
     private boolean stopScreenSaver;
     private ScreensaverDialog screensaverDialog;
+    private ImageButton ehb_btn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +83,14 @@ public class HomeScreenActivity extends Activity {
 
         int pic = R.drawable.achtergrond2;
         lay.setBackgroundResource(pic);
+        ehb_btn = (ImageButton) findViewById(R.id.ib_startslideshow);
+        ehb_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(), SlideshowActivity.class);
+                startActivity(i);
+            }
+        });
 
 
     }
