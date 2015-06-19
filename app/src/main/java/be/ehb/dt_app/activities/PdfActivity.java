@@ -1,12 +1,18 @@
 package be.ehb.dt_app.activities;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
 
@@ -18,10 +24,10 @@ import com.dropbox.client2.session.AppKeyPair;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import be.ehb.dt_app.R;
-import be.ehb.dt_app.adapters.PdflijstAdapter;
 import be.ehb.dt_app.model.Pdf;
 
 public class PdfActivity extends Activity implements SearchView.OnQueryTextListener {
@@ -36,7 +42,9 @@ public class PdfActivity extends Activity implements SearchView.OnQueryTextListe
     private SearchView mPdfSV;
     private ListView mPdfLV;
     private ArrayList<Pdf> pdfArrayList;
-    private PdflijstAdapter pdflijstAdapter;
+    private ArrayAdapter<String> pdflijstAdapter;
+    private String path;
+    private ArrayList<String> fileNames;
 
 
     @Override
@@ -46,22 +54,7 @@ public class PdfActivity extends Activity implements SearchView.OnQueryTextListe
 
         mPdfLV = (ListView) findViewById(R.id.lv_pdflijst);
         mPdfSV = (SearchView) findViewById(R.id.sv_pdflijst);
-/*
-        pdfArrayList = new ArrayList<Pdf>();
-        pdfArrayList.add(new Pdf("Overzicht curriculum", "20 maart 2014"));
-        pdfArrayList.add(new Pdf("Brochures", "5 april 2014"));
-        pdfArrayList.add(new Pdf("Presentatie", "6 juni 2013"));
-        pdfArrayList.add(new Pdf("Multec", "21 januari 2014"));
-        pdfArrayList.add(new Pdf("Dig-ex", "2 maart 2015"));
-        pdfArrayList.add(new Pdf("Curriculum Dig-x", "21 januari 2014"));
-        pdfArrayList.add(new Pdf("Informatie EhB", "2 maart 2015"));
-        pdfArrayList.add(new Pdf("Overzicht curriculum2", "20 maart 2014"));
-        pdfArrayList.add(new Pdf("Brochures2", "5 april 2014"));
-        pdfArrayList.add(new Pdf("Presentatie2", "6 juni 2013"));
-        pdfArrayList.add(new Pdf("Multec2", "21 januari 2014"));
-        pdfArrayList.add(new Pdf("Dig-ex2", "2 maart 2015"));
-        pdfArrayList.add(new Pdf("Curriculum Dig-x2", "21 januari 2014"));
-        pdfArrayList.add(new Pdf("Informatie EhB3", "2 maart 2015"));*/
+
 
         AppKeyPair appKeys = new AppKeyPair(APP_KEY, APP_SECRET);
         AndroidAuthSession session = new AndroidAuthSession(appKeys);
@@ -69,11 +62,24 @@ public class PdfActivity extends Activity implements SearchView.OnQueryTextListe
 
         mDBApi.getSession().startOAuth2Authentication(PdfActivity.this);
 
-//        pdflijstAdapter = new PdflijstAdapter(this, pdfArrayList);
-//        mPdfLV.setAdapter(pdflijstAdapter);
+        path = getFilesDir().getPath();
 
-        mPdfLV.setTextFilterEnabled(true);
-        setupSearchView();
+        mPdfLV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                File file = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_DOWNLOADS), fileNames.get(position));
+                Uri myUri = Uri.fromFile(file);
+
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setDataAndType(myUri, "*/*");
+
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                getApplicationContext().startActivity(intent);
+            }
+        });
+
+
     }
 
     @Override
@@ -86,7 +92,7 @@ public class PdfActivity extends Activity implements SearchView.OnQueryTextListe
                 mDBApi.getSession().finishAuthentication();
 
                 String accessToken = mDBApi.getSession().getOAuth2AccessToken();
-                //new PDFDownloadTask().execute();
+                new PDFDownloadTask().execute();
             } catch (IllegalStateException e) {
                 Log.i("DbAuthLog", "Error authenticating", e);
             }
@@ -146,27 +152,47 @@ public class PdfActivity extends Activity implements SearchView.OnQueryTextListe
 
         @Override
         protected Void doInBackground(Void... params) {
+
             DropboxAPI.Entry entries = null;
             try {
                 entries = mDBApi.metadata("/pdf", 100, null, true, null);
             } catch (DropboxException e) {
+
                 e.printStackTrace();
             }
-
+            fileNames = new ArrayList<>();
             for (DropboxAPI.Entry e : entries.contents) {
-                File file = new File("/data/data/be.ehb.hellocloudpdf/files/", e.fileName());
+                Log.i("Is Folder",String.valueOf(e.isDir));
+                Log.i("Item Name",e.fileName());
+                fileNames.add(e.fileName());
+                File file = new File(Environment.getExternalStoragePublicDirectory(
+                        Environment.DIRECTORY_DOWNLOADS), e.fileName());
                 FileOutputStream outputStream = null;
+
                 try {
                     outputStream = new FileOutputStream(file);
-                    DropboxAPI.DropboxFileInfo info = mDBApi.getFile("/"+e.fileName(), null, outputStream, null);
-
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (DropboxException e) {
-                    e.printStackTrace();
+                    DropboxAPI.DropboxFileInfo info = mDBApi.getFile("/pdf/"+e.fileName(), null, outputStream, null);
+                    outputStream.close();
+                } catch (FileNotFoundException e1) {
+                    e1.printStackTrace();
+                } catch (DropboxException e1) {
+                    e1.printStackTrace();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
                 }
             }
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            pdflijstAdapter = new ArrayAdapter<String>(getApplicationContext(),R.layout.ehb_pdflijst_listview,R.id.tv_pdfnaam,fileNames);
+            mPdfLV.setAdapter(pdflijstAdapter);
+
+            mPdfLV.setTextFilterEnabled(true);
+            setupSearchView();
+
         }
     }
 }
