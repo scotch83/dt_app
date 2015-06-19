@@ -53,11 +53,14 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
         <activity
             android:name=".activities.HomeScreenActivity"
             android:label="@string/title_activity_home_screen"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape" >
+
+        </activity>
         <activity
             android:name=".activities.RegistrationActivity"
             android:label="@string/title_activity_registration"
@@ -86,7 +89,8 @@
             android:name=".activities.PdfActivity"
             android:label="@string/title_activity_pdf"
             android:screenOrientation="landscape"
-            android:windowSoftInputMode="stateHidden" />
+            android:windowSoftInputMode="stateHidden" >
+        </activity>
 
         <activity
             android:name=".activities.DepartementLoginActivity"
@@ -111,6 +115,20 @@
             android:name=".activities.SlideshowActivity"
             android:label="@string/title_activity_slideshow"
             android:screenOrientation="landscape"></activity>
+
+        <activity
+            android:name="com.dropbox.client2.android.AuthActivity"
+            android:configChanges="orientation|keyboard"
+            android:launchMode="singleTask" >
+            <intent-filter>
+                <data android:scheme="db-zaoo56rk9zylzzt" />
+
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
