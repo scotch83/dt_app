@@ -49,10 +49,7 @@
             android:label="@string/app_name"
             android:noHistory="true"
             android:screenOrientation="landscape">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+
         </activity>
         <activity
             android:name=".activities.HomeScreenActivity"
@@ -90,7 +87,13 @@
 
         <activity
             android:name=".activities.DepartementLoginActivity"
-            android:label="@string/title_activity_departement_login" />
+            android:label="@string/title_activity_departement_login"
+            android:windowSoftInputMode="stateHidden">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <activity
             android:name=".maps.RegioActivity"

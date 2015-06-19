@@ -1,6 +1,9 @@
 package be.ehb.dt_app.activities;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -12,7 +15,6 @@ import java.util.ArrayList;
 
 import be.ehb.dt_app.R;
 import be.ehb.dt_app.adapters.PdflijstAdapter;
-import be.ehb.dt_app.fragments.ScreensaverDialog;
 import be.ehb.dt_app.model.Pdf;
 
 public class PdfActivity extends Activity implements SearchView.OnQueryTextListener {
@@ -22,14 +24,14 @@ public class PdfActivity extends Activity implements SearchView.OnQueryTextListe
     private ArrayList<Pdf> pdfArrayList;
     private PdflijstAdapter pdflijstAdapter;
     private long lastUsed = System.currentTimeMillis();
-    private boolean stopScreenSaver;
-    private ScreensaverDialog screensaverDialog;
+    private SharedPreferences preferences;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pdf);
+        preferences = getSharedPreferences("EHB App SharedPreferences", Context.MODE_PRIVATE);
 
         mPdfLV = (ListView) findViewById(R.id.lv_pdflijst);
         mPdfSV = (SearchView) findViewById(R.id.sv_pdflijst);
@@ -55,11 +57,7 @@ public class PdfActivity extends Activity implements SearchView.OnQueryTextListe
 
         mPdfLV.setTextFilterEnabled(true);
         setupSearchView();
-
-
-       
-
-
+        startScreensaverThread();
     }
 
 
@@ -113,58 +111,33 @@ public class PdfActivity extends Activity implements SearchView.OnQueryTextListe
         return true;
     }
 
-//    @Override
-//    public void onUserInteraction() {
-//        super.onUserInteraction();
-//        lastUsed = System.currentTimeMillis();
-//    }
-//
-//    public void startScreensaverThread() {
-//        Thread thread = new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                long idle = 0;
-//                Log.d("started", "the screensaver has started");
-//                do {
-//                    idle = System.currentTimeMillis() - lastUsed;
-//                    Log.d("something", "Application is idle for " + idle + " ms");
-//
-//                    if (idle > 5000) {
-//                        if (!screensaverDialog.isShowing()) {
-//                            runOnUiThread(new Runnable() {
-//                                @Override
-//                                public void run() {
-//
-//                                    screensaverDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-//                                        @Override
-//                                        public void onDismiss(DialogInterface dialog) {
-//                                            stopScreenSaver = false;
-//                                        }
-//                                    });
-//                                    screensaverDialog.show();
-//                                }
-//                            });
-//                        } else {
-//                            runOnUiThread(new Runnable() {
-//                                @Override
-//                                public void run() {
-//                                    screensaverDialog.screensaverIV.setImageBitmap(screensaverDialog.bitmapArray.get(screensaverDialog.nextImage()));
-//                                }
-//                            });
-//
-//                        }
-//                    }
-//                    try {
-//                        Thread.sleep(5000); //check every 5 seconds
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//                while (!stopScreenSaver);
-//            }
-//
-//        });
-//        thread.start();
-//
-//    }
+    @Override
+    public void onUserInteraction() {
+        super.onUserInteraction();
+        lastUsed = System.currentTimeMillis();
+    }
+
+    public void startScreensaverThread() {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                long idle = 0;
+
+                idle = System.currentTimeMillis() - lastUsed;
+
+                if (idle > preferences.getInt("Screensaver timelapse", 5000)) {
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Intent i = new Intent(getApplicationContext(), SlideshowActivity.class);
+                            startActivity(i);
+                        }
+                    });
+                }
+            }
+        });
+        thread.start();
+
+    }
 }

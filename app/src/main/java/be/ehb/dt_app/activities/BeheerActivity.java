@@ -16,6 +16,10 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -45,6 +49,7 @@ public class BeheerActivity extends Activity {
     private HashMap<String, ArrayList> dataLists = new HashMap<>();
     private View progressOverlay;
     private Button syncBTN;
+    private Spinner timelapseSP;
 
 
     @Override
@@ -53,6 +58,7 @@ public class BeheerActivity extends Activity {
         setContentView(R.layout.activity_beheer);
 
         preferences = getSharedPreferences("EHB App SharedPreferences", Context.MODE_PRIVATE);
+
         setUpDesign();
         initDataFromDB();
         setupAdapters();
@@ -83,10 +89,57 @@ public class BeheerActivity extends Activity {
 
         eventSP.setAdapter(eventArrayAdapter);
         docentSP.setAdapter(teacherArrayAdapter);
+        saveBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Teacher docent = (Teacher) docentSP.getSelectedItem();
+                Event event = (Event) eventSP.getSelectedItem();
+
+                ObjectWriter jxson = new ObjectMapper().writer().withDefaultPrettyPrinter();
+                try {
+                    preferences.edit().putString("Teacher", jxson.writeValueAsString(docent)).apply();
+                    preferences.edit().putString("Event", jxson.writeValueAsString(event)).apply();
+                } catch (JsonProcessingException e) {
+                    e.printStackTrace();
+                }
+
+                int timelapse;
+                switch (timelapseSP.getSelectedItem().toString()) {
+                    case "5 minutes":
+                        timelapse = 300000;
+                        break;
+                    case "10 minutes":
+                        timelapse = 600000;
+                        break;
+                    case "15 minutes":
+                        timelapse = 900000;
+                        break;
+                    default:
+                        timelapse = 300000;
+                        break;
+                }
+
+                preferences.edit().putInt("Screensaver timelapse", timelapse).apply();
+                finish();
+            }
+        });
+        ArrayList<String> timelapseValues = new ArrayList<>();
+        timelapseValues.add("5 minutes");
+        timelapseValues.add("10 minutes");
+        timelapseValues.add("15 minutes");
+
+        ArrayAdapter<String> timelapseAdapter = new ArrayAdapter<String>(this, R.layout.ehb_spinner_list_item, R.id.sub_text_seen,
+                timelapseValues);
+        timelapseSP.setAdapter(timelapseAdapter);
+
+
+
+
 
         saveBTN.setEnabled(true);
         eventSP.setEnabled(true);
         docentSP.setEnabled(true);
+        timelapseSP.setEnabled(true);
         syncBTN.setEnabled(true);
     }
 
@@ -99,11 +152,15 @@ public class BeheerActivity extends Activity {
         eventSP = (Spinner) findViewById(R.id.sp_beheer_event);
         saveBTN = (Button) findViewById(R.id.btn_save);
         syncBTN = (Button) findViewById(R.id.btn_sync);
+        timelapseSP = (Spinner) findViewById(R.id.sp_timelapse_screensaver);
         //lock all UI elements to avoid user interaction until data has not been load
         docentSP.setEnabled(false);
         eventSP.setEnabled(false);
         saveBTN.setEnabled(false);
         syncBTN.setEnabled(false);
+        timelapseSP.setEnabled(false);
+
+
 
     }
 
@@ -162,6 +219,7 @@ public class BeheerActivity extends Activity {
         }
 
     }
+
 
     private class SynsAsync extends AsyncTask<SubscriptionsList, Void, HashMap<String, ArrayList>> {
 

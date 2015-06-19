@@ -79,14 +79,15 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
                     android:layout_marginBottom="5dp"
-                    android:gravity="left" />
+                    android:gravity="left"
+                    android:singleLine="true" />
 
                 <Button
                     android:id="@+id/btn_import_data"
                     android:layout_width="350dp"
                     android:layout_height="wrap_content"
                     android:background="#96ffffff"
-                    android:text="IMPORT DATA" />
+                    android:text="Start" />
 
             </LinearLayout>
 
