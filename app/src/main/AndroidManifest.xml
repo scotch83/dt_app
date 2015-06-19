@@ -114,7 +114,9 @@
         <activity
             android:name=".activities.SlideshowActivity"
             android:label="@string/title_activity_slideshow"
-            android:screenOrientation="landscape"></activity>
+            android:screenOrientation="landscape">
+
+        </activity>
 
         <activity
             android:name="com.dropbox.client2.android.AuthActivity"
