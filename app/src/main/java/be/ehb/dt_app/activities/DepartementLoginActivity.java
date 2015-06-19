@@ -28,7 +28,7 @@ public class DepartementLoginActivity extends Activity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_departement_login);
         preferences = getSharedPreferences("EHB App SharedPreferences", Context.MODE_PRIVATE);
-        if (preferences.contains("DepCode")) {
+        if (preferences.contains("server")) {
             Intent i = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(i);
         }
@@ -72,7 +72,8 @@ public class DepartementLoginActivity extends Activity implements View.OnClickLi
             RestTemplate restTemplate = new RestTemplate();
             String code = String.valueOf(codeTv.getText());
             String server_url = restTemplate.getForObject(SERVER_DEP, String.class, code);
-            preferences.edit().putString("server", server_url);
+            preferences.edit().putString("server", "http://" + server_url + "/rest/{required_dataset}").apply();
+
             return null;
         }
 

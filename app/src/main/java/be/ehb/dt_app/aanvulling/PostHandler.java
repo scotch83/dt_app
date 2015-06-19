@@ -1,7 +1,5 @@
 package be.ehb.dt_app.aanvulling;
 
-import android.util.Log;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -67,7 +65,7 @@ public final class PostHandler extends DefaultHandler {
                 gemeente = builder.toString();
                 gemeente.replace("<![CDATA[", "");
                 gemeente.replace("]]>", "");
-                Log.d("", "Postcode " + pc + ": " + gemeente);
+
                 postcode.setGemeente(gemeente);
                 break;
 

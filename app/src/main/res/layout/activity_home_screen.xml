@@ -25,6 +25,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="100dp"
                 android:background="#00ffffff"
+                android:onClick="startScreensaver"
                 android:scaleType="centerInside"
                 android:src="@drawable/ehbletter" />
         </LinearLayout>

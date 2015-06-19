@@ -3,6 +3,7 @@ package be.ehb.dt_app.activities;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -34,7 +35,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -97,7 +97,7 @@ public class RegistrationActivity extends ActionBarActivity {
     public void sendData(View v) {
 
 
-        ArrayList<String> dataToSend = new ArrayList<>();
+
 
         Subscription newSubscription = new Subscription();
 
@@ -159,7 +159,7 @@ public class RegistrationActivity extends ActionBarActivity {
             //Teacher and event
             String jsonTeacher = preferences.getString("Teacher", "(iets misgelopen. Neem contact met de ICT dienst.)");
             String jsonEvent = preferences.getString("Event", "(iets misgelopen. Neem contact met de ICT dienst.)");
-            ObjectMapper om = new ObjectMapper();
+
             ObjectMapper jxson = new ObjectMapper();
             try {
                 Teacher docent = jxson.readValue(jsonTeacher, Teacher.class);
@@ -183,9 +183,10 @@ public class RegistrationActivity extends ActionBarActivity {
 
                     subToStore.save();
                 }
-                finish();
+                //finish();
+
             } else {
-                showError("Lege velden", "Sommige velden in de formulier zijn leeg", "Terug");
+                showError("Lege velden", "Sommige velden in het formulier zijn leeg", "Terug");
 
             }
         } else {
@@ -332,6 +333,13 @@ public class RegistrationActivity extends ActionBarActivity {
             HttpEntity<Subscription> entity = new HttpEntity<>(params[0], headers);
             restTemplate.exchange(server, HttpMethod.POST, entity, Subscription.class, "subscription");
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
+            startActivity(i);
         }
     }
 }

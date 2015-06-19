@@ -69,7 +69,11 @@ public class DataListActivity extends ActionBarActivity implements SearchView.On
         if (Utils.isNetworkAvailable(this))
             new HttpDataRequestTask().execute();
         else {
-            //studentenlijstArray = new ArrayList<>(Subscription.listAll(Subscription.class));
+            studentenlijstArray = Subscription.transformLSubscription(
+                    new ArrayList<LocalSubscription>(
+                            LocalSubscription.listAll(LocalSubscription.class)
+                    )
+            );
             setupAdapters();
         }
         //screensaverDialog = new ScreensaverDialog(this, R.style.screensaver_dialog);

@@ -78,28 +78,25 @@ public class MainActivity extends Activity {
 
         SharedPreferences.Editor prefEdit = preferences.edit();
         prefEdit.putBoolean("debugging", Debug.isDebuggerConnected()).apply();
-        prefEdit.putString("server", "http://vdabsidin.appspot.com/rest/{required_dataset}").apply();
-        prefEdit.putBoolean("greetings", true).apply();
+
         //setup needed design elements
         setUpDesign();
         //if network is available, load data from server
         if (Utils.isNetworkAvailable(this))
             new HttpDataRequestTask().execute();
         else {
+            //otherwise load from local database
             initDataFromDB(dataLists);
             setupLoginAdapters();
         }
-
-
         //screensaverDialog = new ScreensaverDialog(this, R.style.screensaver_dialog);
         //startScreensaverThread();
-
-
     }
 
     public void setUpDesign() {
 
         progressOverlay = findViewById(R.id.progress_overlay);
+        Utils.animateView(progressOverlay, View.VISIBLE, 0.4f, 200);
         //assign spinners for latter assignment of teachers and events lists
         docentSP = (Spinner) findViewById(R.id.sp_docent);
         eventSP = (Spinner) findViewById(R.id.sp_event);
@@ -191,6 +188,8 @@ public class MainActivity extends Activity {
         loginBTN.setEnabled(true);
         eventSP.setEnabled(true);
         docentSP.setEnabled(true);
+
+        Utils.animateView(progressOverlay, View.GONE, 0.4f, 200);
     }
 
 
@@ -210,7 +209,7 @@ public class MainActivity extends Activity {
     @Override
     public void finish() {
         super.finish();
-        preferences.edit().putBoolean("greetings", true);
+        //preferences.edit().putBoolean("greetings", true);
     }
 
     private class HttpDataRequestTask extends AsyncTask<String, Void, HashMap<String, ArrayList>> {
@@ -225,7 +224,7 @@ public class MainActivity extends Activity {
         protected void onPreExecute() {
             super.onPreExecute();
             //show loading wheel
-            Utils.animateView(progressOverlay, View.VISIBLE, 0.4f, 200);
+
             //show toast for loading data
             Toast
                     .makeText(getApplicationContext(), "Please wait while loading data", Toast.LENGTH_SHORT)
@@ -291,7 +290,6 @@ public class MainActivity extends Activity {
             }
 
 
-            Utils.animateView(progressOverlay, View.GONE, 0.4f, 200);
 
 
         }

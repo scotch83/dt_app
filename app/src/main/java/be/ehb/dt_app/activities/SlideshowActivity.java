@@ -17,11 +17,14 @@ public class SlideshowActivity extends Activity {
 
     String path;
     RelativeLayout relativeLayout;
+    private int i;
+    private Slideshow task;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_slideshow);
+        //get the path to the images downloaded from the server
 
         path = this
                 .getSharedPreferences(
@@ -31,47 +34,66 @@ public class SlideshowActivity extends Activity {
                         "Images path",
                         "data/data/be.ehb.dt_app/app_presentation_images");
 
-        relativeLayout = (RelativeLayout) findViewById(R.id.relativeLayout);
-
-
+        //retrieve the layout and set a listener to finish activity if user touch the screen
+        relativeLayout = (RelativeLayout) findViewById(R.id.slideshowLayout);
         relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
-        new Slideshow().execute();
+        //start the slide show
+        task = new Slideshow();
+        task.execute();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        task.cancel(true);
+
     }
 
     public class Slideshow extends AsyncTask<Void, Integer, Void>{
-        boolean slideshow;
-        int i;
-        File f = new File(path);
-        File file[]= f.listFiles(new FilenameFilter() {
-            public boolean accept(File dir, String name) {
-                return name.toLowerCase().endsWith(".jpg");
-            }
-        });
+
+
+        File dir = null;
+        String fileNames[] = null;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            dir = new File(path);
+            fileNames = dir.list(new FilenameFilter() {
+                public boolean accept(File dir, String name) {
+                    return name.toLowerCase().endsWith(".jpg");
+                }
+            });
+        }
 
         @Override
         protected Void doInBackground(Void... params) {
 
-            do {
-                if(++i +1 > file.length) i = 0;
-                publishProgress(i);
                 try {
-                    Thread.sleep(3000);
+                    for (i = 0; i < fileNames.length; i++) {
+                        if (i == fileNames.length)
+                            i = 0;
+                        else {
+                            publishProgress(i);
+                            Thread.sleep(5000l);
+                        }
+                    }
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-            }while (!slideshow);
+
             return null;
         }
 
         @Override
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
-            relativeLayout.setBackground(Drawable.createFromPath(String.valueOf(file[values[0]])));
+            relativeLayout.setBackgroundDrawable(Drawable.createFromPath(path + "/" + fileNames[values[0]]));
         }
     }
 }

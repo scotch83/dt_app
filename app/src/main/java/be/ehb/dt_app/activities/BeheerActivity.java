@@ -26,6 +26,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -60,6 +61,7 @@ public class BeheerActivity extends Activity {
         preferences = getSharedPreferences("EHB App SharedPreferences", Context.MODE_PRIVATE);
 
         setUpDesign();
+
         initDataFromDB();
         setupAdapters();
 
@@ -89,6 +91,23 @@ public class BeheerActivity extends Activity {
 
         eventSP.setAdapter(eventArrayAdapter);
         docentSP.setAdapter(teacherArrayAdapter);
+        int i = 0;
+        String jsonTeacher = preferences.getString("Teacher", "(iets misgelopen. Neem contact met de ICT dienst.)");
+        String jsonEvent = preferences.getString("Event", "(iets misgelopen. Neem contact met de ICT dienst.)");
+        ObjectMapper jxson = new ObjectMapper();
+        try {
+            Teacher docent = jxson.readValue(jsonTeacher, Teacher.class);
+            while (!dataLists.get("teachers").get(i).equals(docent))
+                i++;
+            docentSP.setSelection(i);
+            Event event = jxson.readValue(jsonEvent, Event.class);
+            i = 0;
+            while (!dataLists.get("events").get(i).equals(event))
+                i++;
+            eventSP.setSelection(i);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         saveBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -130,6 +149,10 @@ public class BeheerActivity extends Activity {
 
         ArrayAdapter<String> timelapseAdapter = new ArrayAdapter<String>(this, R.layout.ehb_spinner_list_item, R.id.sub_text_seen,
                 timelapseValues);
+        i = 0;
+        while (timelapseValues.get(i) != String.valueOf(preferences.getInt("Screensaver timelapse", 300000) / 60000) + " minutes")
+            i++;
+        timelapseSP.setSelection(i);
         timelapseSP.setAdapter(timelapseAdapter);
 
 
@@ -283,6 +306,7 @@ public class BeheerActivity extends Activity {
         protected void onPostExecute(HashMap<String, ArrayList> dataLists) {
             super.onPostExecute(dataLists);
             Utils.animateView(progressOverlay, View.GONE, 0.4f, 200);
+            Utils.persistDownloadedData(dataLists);
             docentSP.setEnabled(true);
             eventSP.setEnabled(true);
             saveBTN.setEnabled(true);

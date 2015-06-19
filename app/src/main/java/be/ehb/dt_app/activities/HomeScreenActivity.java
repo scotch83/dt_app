@@ -38,9 +38,9 @@ public class HomeScreenActivity extends Activity {
         setContentView(R.layout.activity_home_screen);
         setupDesign();
         preferences = getSharedPreferences("EHB App SharedPreferences", Context.MODE_PRIVATE);
-        if (preferences.getBoolean("greetings", true)) {
-            String jsonTeacher = preferences.getString("Teacher", "(iets misgelopen. Neem contact met de ICT dienst.)");
+        if (!preferences.contains("greetings")) {
 
+            String jsonTeacher = preferences.getString("Teacher", "(iets misgelopen. Neem contact met de ICT dienst.)");
             ObjectMapper jxson = new ObjectMapper();
             try {
                 Teacher docent = jxson.readValue(jsonTeacher, Teacher.class);
@@ -55,6 +55,10 @@ public class HomeScreenActivity extends Activity {
 
     }
 
+    public void startScreensaver(View v) {
+        Intent i = new Intent(getApplicationContext(), SlideshowActivity.class);
+        startActivity(i);
+    }
     public void goToSubscriptionsList(View v) {
         Intent i = new Intent(getApplicationContext(), DataListActivity.class);
         startActivity(i);

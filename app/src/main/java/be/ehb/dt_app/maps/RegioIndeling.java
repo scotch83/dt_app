@@ -153,17 +153,5 @@ public class RegioIndeling {
         return gemiddelde;
     }
 
-    public void toonRegios() {
-        Iterator<Regio> i = regios.values().iterator();
-
-        Regio regio;
-        while (i.hasNext()) {
-            regio = i.next();
-            if (!regio.getLocaties().isEmpty()) {
-                Log.d("", "Regio: " + regio.getNaam() + "\nScholen: " + regio.getAantalStudenten());
-            }
-
-        }
-    }
 
 }
