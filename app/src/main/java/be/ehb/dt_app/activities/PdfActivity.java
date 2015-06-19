@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import com.dropbox.client2.DropboxAPI;
 import com.dropbox.client2.android.AndroidAuthSession;
@@ -152,7 +153,7 @@ public class PdfActivity extends Activity implements SearchView.OnQueryTextListe
 
         @Override
         protected Void doInBackground(Void... params) {
-
+            publishProgress();
             DropboxAPI.Entry entries = null;
             try {
                 entries = mDBApi.metadata("/pdf", 100, null, true, null);
@@ -182,6 +183,12 @@ public class PdfActivity extends Activity implements SearchView.OnQueryTextListe
                 }
             }
             return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+            Toast.makeText(getApplicationContext(), "PDF's downloaden", Toast.LENGTH_LONG).show();
         }
 
         @Override
