@@ -74,7 +74,7 @@
                     <Spinner
                         android:id="@+id/sp_beheer_docent"
                         style="@style/ColoredSpinnerCustom"
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="30dp" />
 
@@ -92,7 +92,7 @@
 
                         android:id="@+id/sp_beheer_event"
                         style="@style/ColoredSpinnerCustom"
-                        android:layout_width="wrap_content"
+                        android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="30dp" />
                 </LinearLayout>
@@ -125,6 +125,7 @@
                         android:layout_width="200dp"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="30dp"
+                        android:alpha="0.7"
                         android:background="#b4ffffff"
                         android:onClick="syncDataWithBackEnd"
                         android:text="Syncroniseer" />
@@ -147,9 +148,10 @@
 
                     <Button
                         android:id="@+id/btn_save"
-                        android:layout_width="wrap_content"
+                        android:layout_width="200dp"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="30dp"
+                        android:alpha="0.7"
                         android:background="#b4ffffff"
                         android:onClick="syncDataWithBackEnd"
                         android:text="Save" />

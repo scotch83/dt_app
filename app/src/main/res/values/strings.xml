@@ -28,6 +28,7 @@
     <string name="title_activity_regio">RegioActivity</string>
     <string name="title_activity_map">MapActivity</string>
     <string name="title_activity_slideshow">SlideshowActivity</string>
+    <string name="text_tv_heatmap_details">Bekijk een map waarop het aantal studenten wordt weergegeven die zich per provincie hebben ingeschreven.</string>
 
 
 </resources>
