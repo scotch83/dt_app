@@ -173,30 +173,30 @@
                                                 android:textSize="20sp" />
                                         </RadioGroup> -->
 
+                    <Switch
+                        android:id="@+id/sw_werkstudent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="false"
+                        android:text=""
+                        android:textOff="Nee"
+                        android:textOn="Ja" />
+
                     <LinearLayout
                         android:id="@+id/ll_btn_voegtoe"
                         android:layout_width="match_parent"
                         android:layout_height="fill_parent"
                         android:layout_gravity="right"
-                        android:gravity="right"
+                        android:gravity="right|top"
                         android:orientation="horizontal"
                         android:paddingBottom="20dp"
                         android:paddingRight="20dp">
 
-                        <Switch
-                            android:id="@+id/sw_werkstudent"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:checked="false"
-                            android:text=""
-                            android:textOff="Nee"
-                            android:textOn="Ja" />
-
                         <ImageButton
                             android:id="@+id/ib_voegstudenttoe"
-                            android:layout_width="80dp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="bottom"
+                            android:layout_width="wrap_content"
+                            android:layout_height="100dp"
+                            android:layout_marginTop="40dp"
                             android:background="#00000000"
                             android:clickable="true"
                             android:onClick="sendData"
