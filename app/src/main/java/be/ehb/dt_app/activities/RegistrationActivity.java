@@ -182,6 +182,8 @@ public class RegistrationActivity extends ActionBarActivity {
                     LocalSubscription subToStore = new LocalSubscription(newSubscription);
 
                     subToStore.save();
+                    Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
+                    startActivity(i);
                 }
                 //finish();
 
