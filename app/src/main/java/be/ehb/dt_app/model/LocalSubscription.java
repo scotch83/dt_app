@@ -131,10 +131,6 @@ public class LocalSubscription extends SugarRecord<LocalSubscription> {
         return interestsMap;
     }
 
-    public void setInterests(Interests interests) {
-        this.interests = interests;
-    }
-
     private void setInterests(HashMap<String, String> interests) {
 
         Interests interestsLijst = new Interests(interests);
@@ -156,6 +152,10 @@ public class LocalSubscription extends SugarRecord<LocalSubscription> {
 
         this.interests = localInterest.get(0);
 
+    }
+
+    public void setInterests(Interests interests) {
+        this.interests = interests;
     }
 
     public Interests getRealInterests() {
