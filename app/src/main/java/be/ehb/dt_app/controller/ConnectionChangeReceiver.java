@@ -59,6 +59,7 @@ public class ConnectionChangeReceiver extends BroadcastReceiver {
         private SubscriptionsList subList;
         private String server;
         private RestTemplate restTemplate;
+        private ArrayList listSubsClient;
 
         @Override
         protected void onPreExecute() {
@@ -66,7 +67,7 @@ public class ConnectionChangeReceiver extends BroadcastReceiver {
             //show loading wheel
 
             server = "http://vdabsidin.appspot.com/rest/{required_dataset}";
-            ArrayList<LocalSubscription> listSubsClient = new ArrayList(LocalSubscription.find(LocalSubscription.class, "SERVER_ID IS NULL"));
+            listSubsClient = new ArrayList(LocalSubscription.find(LocalSubscription.class, "SERVER_ID IS NULL"));
             ArrayList<Subscription> listSubsServer = Subscription.transformLSubscription(listSubsClient);
             subList = new SubscriptionsList();
             subList.setSubscriptions(listSubsServer);
@@ -109,6 +110,7 @@ public class ConnectionChangeReceiver extends BroadcastReceiver {
                 for (Subscription subscription : subList.getSubscriptions()) {
                     entity = new HttpEntity<>(subscription, headers);
                     restTemplate.exchange(server, HttpMethod.POST, entity, Subscription.class, "subscription");
+
                 }
             }
 
@@ -125,6 +127,7 @@ public class ConnectionChangeReceiver extends BroadcastReceiver {
             super.onPostExecute(dataLists);
 
             Utils.persistDownloadedData(dataLists);
+            LocalSubscription.deleteAll(LocalSubscription.class, "SERVER_ID IS NULL");
         }
 
     }

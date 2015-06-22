@@ -312,6 +312,7 @@ public class BeheerActivity extends Activity implements View.OnClickListener {
             super.onPostExecute(dataLists);
             Utils.animateView(progressOverlay, View.GONE, 0.4f, 200);
             Utils.persistDownloadedData(dataLists);
+
             docentSP.setEnabled(true);
             eventSP.setEnabled(true);
             saveBTN.setEnabled(true);
