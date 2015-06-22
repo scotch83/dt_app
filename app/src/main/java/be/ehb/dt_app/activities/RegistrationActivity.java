@@ -286,6 +286,19 @@ public class RegistrationActivity extends ActionBarActivity {
 
     }
 
+    @Override
+    public void onUserInteraction() {
+        super.onUserInteraction();
+        lastUsed = System.currentTimeMillis();
+        long idle = System.currentTimeMillis() - lastUsed;
+
+
+        if (idle > preferences.getInt("Screensaver timelapse", 5000)) {
+            Intent i = new Intent(getApplicationContext(), SlideshowActivity.class);
+            startActivity(i);
+        }
+    }
+
     /**
      * private class RegistratiePagerAdapter geeft het juiste fragment voor de positie waarin de viewpager zich bevindt.
      */

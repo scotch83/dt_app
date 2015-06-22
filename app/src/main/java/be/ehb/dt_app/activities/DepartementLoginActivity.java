@@ -31,6 +31,7 @@ public class DepartementLoginActivity extends Activity implements View.OnClickLi
         if (preferences.contains("server")) {
             Intent i = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(i);
+            finish();
         }
         codeTv = (EditText) findViewById(R.id.et_departement_code);
         startBtn = (Button) findViewById(R.id.btn_import_data);
@@ -71,8 +72,12 @@ public class DepartementLoginActivity extends Activity implements View.OnClickLi
         protected Void doInBackground(Void... params) {
             RestTemplate restTemplate = new RestTemplate();
             String code = String.valueOf(codeTv.getText());
-            String server_url = restTemplate.getForObject(SERVER_DEP, String.class, code);
-            preferences.edit().putString("server", "http://" + server_url + "/rest/{required_dataset}").apply();
+            try {
+                String server_url = restTemplate.getForObject(SERVER_DEP, String.class, code);
+                preferences.edit().putString("server", "http://" + server_url + "/rest/{required_dataset}").apply();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             return null;
         }

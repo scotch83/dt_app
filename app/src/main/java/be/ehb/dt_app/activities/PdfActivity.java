@@ -1,7 +1,9 @@
 package be.ehb.dt_app.activities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -46,12 +48,17 @@ public class PdfActivity extends Activity implements SearchView.OnQueryTextListe
     private ArrayAdapter<String> pdflijstAdapter;
     private String path;
     private ArrayList<String> fileNames;
+    private long lastUsed;
+    private SharedPreferences preferences;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pdf);
+        preferences = getSharedPreferences("EHB App SharedPreferences", Context.MODE_PRIVATE);
+
+        Log.d("xxx", "Context private: " + Context.MODE_PRIVATE + "\n" + "Private e basta: " + MODE_PRIVATE);
 
         mPdfLV = (ListView) findViewById(R.id.lv_pdflijst);
         mPdfSV = (SearchView) findViewById(R.id.sv_pdflijst);
@@ -137,6 +144,19 @@ public class PdfActivity extends Activity implements SearchView.OnQueryTextListe
     }
 
     @Override
+    public void onUserInteraction() {
+        super.onUserInteraction();
+        lastUsed = System.currentTimeMillis();
+        long idle = System.currentTimeMillis() - lastUsed;
+
+
+        if (idle > preferences.getInt("Screensaver timelapse", 5000)) {
+            Intent i = new Intent(getApplicationContext(), SlideshowActivity.class);
+            startActivity(i);
+        }
+    }
+
+    @Override
     public boolean onQueryTextChange(String newText) {
         if (TextUtils.isEmpty(newText)) {
             mPdfLV.clearTextFilter();
@@ -201,5 +221,8 @@ public class PdfActivity extends Activity implements SearchView.OnQueryTextListe
             setupSearchView();
 
         }
+
+
     }
+
 }

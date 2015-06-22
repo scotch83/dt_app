@@ -2,6 +2,8 @@ package be.ehb.dt_app.model;
 
 import com.orm.SugarRecord;
 
+import java.util.HashMap;
+
 /**
  * Created by Mattia on 17/06/15.
  */
@@ -14,6 +16,11 @@ public class Interests extends SugarRecord<Interests> {
     public Interests() {
     }
 
+    public Interests(HashMap<String, String> interests) {
+        this.digx = interests.get("digx");
+        this.multec = interests.get("multec");
+        this.werkstudent = interests.get("werkstudent");
+    }
 
     public String getDigx() {
         return digx;

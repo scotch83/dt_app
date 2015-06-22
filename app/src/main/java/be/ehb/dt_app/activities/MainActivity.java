@@ -22,10 +22,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.DefaultResponseErrorHandler;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -82,6 +87,7 @@ public class MainActivity extends Activity {
         //setup needed design elements
         setUpDesign();
         //if network is available, load data from server
+
         if (Utils.isNetworkAvailable(this))
             new HttpDataRequestTask().execute();
         else {
@@ -89,8 +95,7 @@ public class MainActivity extends Activity {
             initDataFromDB(dataLists);
             setupLoginAdapters();
         }
-        //screensaverDialog = new ScreensaverDialog(this, R.style.screensaver_dialog);
-        //startScreensaverThread();
+
     }
 
     public void setUpDesign() {
@@ -212,6 +217,19 @@ public class MainActivity extends Activity {
         //preferences.edit().putBoolean("greetings", true);
     }
 
+    void restartActivity()
+
+
+    {
+
+        this.finish();
+
+        Intent mIntent = new Intent(this, MainActivity.class);
+
+        startActivity(mIntent);
+
+    }
+
     private class HttpDataRequestTask extends AsyncTask<String, Void, HashMap<String, ArrayList>> {
 
 
@@ -232,6 +250,18 @@ public class MainActivity extends Activity {
             server = preferences.getString("server", "http://vdabsidin.appspot.com/rest/{required_dataset}");
 
             restTemplate = new RestTemplate();
+            restTemplate.setErrorHandler(new DefaultResponseErrorHandler() {
+                @Override
+                protected boolean hasError(HttpStatus statusCode) {
+                    return false;
+                }
+
+                @Override
+                public void handleError(ClientHttpResponse response) throws IOException {
+                    super.handleError(response);
+                    restartActivity();
+                }
+            });
 
             List<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
             messageConverters.add(new MappingJackson2HttpMessageConverter());
@@ -244,30 +274,34 @@ public class MainActivity extends Activity {
             //if running in debug mode waitForDebugger to debug thread
             if (preferences.getBoolean("debugging", false))
                 android.os.Debug.waitForDebugger();
+            try {
+                dataLists.put(
+                        "subscriptions",
+                        restTemplate.getForObject(server, SubscriptionsList.class, "subscriptions").getSubscriptions()
+                );
+                dataLists.put(
+                        "events",
+                        restTemplate.getForObject(server, EventList.class, "events").getEvents()
+                );
 
-            dataLists.put(
-                    "subscriptions",
-                    restTemplate.getForObject(server, SubscriptionsList.class, "subscriptions").getSubscriptions()
-            );
-            dataLists.put(
-                    "events",
-                    restTemplate.getForObject(server, EventList.class, "events").getEvents()
-            );
-
-            dataLists.put(
-                    "teachers",
-                    restTemplate.getForObject(server, TeacherList.class, "teachers").getTeachers()
-            );
-            dataLists.put(
-                    "schools",
-                    restTemplate.getForObject(server, SchoolList.class, "schools").getSchools()
-            );
+                dataLists.put(
+                        "teachers",
+                        restTemplate.getForObject(server, TeacherList.class, "teachers").getTeachers()
+                );
+                dataLists.put(
+                        "schools",
+                        restTemplate.getForObject(server, SchoolList.class, "schools").getSchools()
+                );
 
 
-            //get own image version from SharedPreferences
-            ourversion = preferences.getInt("Images Version Number", 1);
-            //get Image version from the server to state if images need to be downloaded
-            serverversion = restTemplate.getForObject(server, Integer.class, "imagesversion");
+                //get own image version from SharedPreferences
+                ourversion = preferences.getInt("Images Version Number", 1);
+                //get Image version from the server to state if images need to be downloaded
+                serverversion = restTemplate.getForObject(server, Integer.class, "imagesversion");
+            } catch (RestClientException e) {
+
+                restartActivity();
+            }
 
             return dataLists;
         }
@@ -279,6 +313,7 @@ public class MainActivity extends Activity {
                 initDataFromDB(dataLists);
             } else {
                 Utils.persistDownloadedData(dataLists);
+
             }
             setupLoginAdapters();
 
@@ -288,8 +323,6 @@ public class MainActivity extends Activity {
                 new ImageAsyncDownload().execute();
                 preferences.edit().putInt("Image Version Number", serverversion).apply();
             }
-
-
 
 
         }

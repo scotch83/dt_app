@@ -1,25 +1,17 @@
 package be.ehb.dt_app.activities;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v7.app.ActionBarActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ScrollView;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -30,17 +22,13 @@ import java.util.ArrayList;
 import be.ehb.dt_app.R;
 import be.ehb.dt_app.adapters.StudentenlijstAdapter;
 import be.ehb.dt_app.controller.Utils;
-import be.ehb.dt_app.fragments.ScreensaverDialog;
 import be.ehb.dt_app.maps.MapActivity;
 import be.ehb.dt_app.model.LocalSubscription;
 import be.ehb.dt_app.model.Subscription;
+import be.ehb.dt_app.model.SubscriptionsList;
 
 public class DataListActivity extends ActionBarActivity implements SearchView.OnQueryTextListener {
 
-    //    protected Fragment form1, form2;
-//    private ViewPager mPagerRegistratie;
-//    private PagerAdapter mPagerAdapter;
-    private ImageView img_page1, img_page2;
     private ImageButton heatMapIB;
     private View progressOverlay;
     private SharedPreferences preferences;
@@ -48,12 +36,7 @@ public class DataListActivity extends ActionBarActivity implements SearchView.On
     private ArrayList<Subscription> studentenlijstArray = new ArrayList<>();
     private StudentenlijstAdapter slAdapter;
     private SearchView mStudententSV;
-    private LinearLayout studentenlijstLL;
-    private ScrollView scrollView;
-    private long lastUsed = System.currentTimeMillis();
-    private boolean stopScreenSaver;
-    private ScreensaverDialog screensaverDialog;
-    private ImageButton mapBtn;
+
 
 
     @Override
@@ -65,7 +48,7 @@ public class DataListActivity extends ActionBarActivity implements SearchView.On
 
 
         preferences = getSharedPreferences("EHB App SharedPreferences", Context.MODE_PRIVATE);
-
+        setupAdapters();
         if (Utils.isNetworkAvailable(this))
             new HttpDataRequestTask().execute();
         else {
@@ -76,23 +59,7 @@ public class DataListActivity extends ActionBarActivity implements SearchView.On
             );
             setupAdapters();
         }
-        //screensaverDialog = new ScreensaverDialog(this, R.style.screensaver_dialog);
-        //startScreensaverThread();
 
-//        mStudententSV.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//            @Override
-//            public void onFocusChange(View v, boolean hasFocus) {
-//
-//                if (v.getId() == mStudententSV.getId()) {
-//                    if (hasFocus) {
-//                        int[] loc = new int[2];
-//                        v.getLocationOnScreen(loc);
-//                        studentenlijstLL.scrollBy(0, 80);
-//                    }
-//                }
-//
-//            }
-//        });
 
 
     }
@@ -108,7 +75,6 @@ public class DataListActivity extends ActionBarActivity implements SearchView.On
         progressOverlay = findViewById(R.id.progress_overlay);
         studentenlijstLV.setTextFilterEnabled(true);
         heatMapIB = (ImageButton) findViewById(R.id.ib_heatmap_navigeer);
-        studentenlijstLL = (LinearLayout) findViewById(R.id.ll_registratie1_persoonsgegevens);
         heatMapIB.setEnabled(false);
 
         setupSearchView();
@@ -184,94 +150,8 @@ public class DataListActivity extends ActionBarActivity implements SearchView.On
     @Override
     public void onUserInteraction() {
         super.onUserInteraction();
-        lastUsed = System.currentTimeMillis();
     }
 
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////                                                                                ////////////////
-    ////////////////                        ASYNC TASKS FOR DATA RETRIEVAL                          ////////////////
-    ////////////////                                                                                ////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public void startScreensaverThread() {
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                long idle = 0;
-                Log.d("started", "the screensaver has started");
-                do {
-                    idle = System.currentTimeMillis() - lastUsed;
-                    Log.d("something", "Application is idle for " + idle + " ms");
-
-                    if (idle > 5000) {
-                        if (!screensaverDialog.isShowing()) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-
-                                    screensaverDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                                        @Override
-                                        public void onDismiss(DialogInterface dialog) {
-                                            stopScreenSaver = false;
-                                        }
-                                    });
-                                    screensaverDialog.show();
-                                }
-                            });
-                        } else {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    screensaverDialog.screensaverIV.setImageBitmap(screensaverDialog.bitmapArray.get(screensaverDialog.nextImage()));
-                                }
-                            });
-
-                        }
-                    }
-                    try {
-                        Thread.sleep(5000); //check every 5 seconds
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                while (!stopScreenSaver);
-            }
-
-        });
-        thread.start();
-
-    }
-
-    private class DatalistPagerAdapter extends FragmentStatePagerAdapter {
-
-        Fragment formPart1, formPart2;
-
-        public DatalistPagerAdapter(FragmentManager supportFragmentManager, Fragment formPart1, Fragment formPart2) {
-            super(supportFragmentManager);
-            this.formPart1 = formPart1;
-            this.formPart2 = formPart2;
-
-        }
-
-
-        @Override
-        public Fragment getItem(int position) {
-
-            switch (position) {
-                case 0:
-                    return formPart1;
-                case 1:
-                    return formPart2;
-            }
-            return null;
-        }
-
-        @Override
-        public int getCount() {
-            return 2;
-        }
-    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////                                                                                ////////////////
@@ -306,8 +186,11 @@ public class DataListActivity extends ActionBarActivity implements SearchView.On
 
             RestTemplate restTemplate = new RestTemplate();
             //get data from webservice
-            ArrayList<LocalSubscription> subList = new ArrayList<>(LocalSubscription.listAll(LocalSubscription.class));
-            studentenlijstArray = Subscription.transformLSubscription(subList);
+            studentenlijstArray =
+                    restTemplate.getForObject(server, SubscriptionsList.class, "subscriptions").getSubscriptions();
+
+
+
             return null;
         }
 

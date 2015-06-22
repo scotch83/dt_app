@@ -131,22 +131,35 @@ public class LocalSubscription extends SugarRecord<LocalSubscription> {
         return interestsMap;
     }
 
+    public void setInterests(Interests interests) {
+        this.interests = interests;
+    }
+
     private void setInterests(HashMap<String, String> interests) {
 
-        Interests interestsLijst = new Interests();
+        Interests interestsLijst = new Interests(interests);
 
 
-        interestsLijst.setDigx(interests.get("digx"));
-        interestsLijst.setMultec(interests.get("multec"));
-        interestsLijst.setWerkstudent(interests.get("werkstudent"));
+        String[] whereArgs = {
+                interestsLijst.getDigx(),
+                interestsLijst.getMultec(),
+                interestsLijst.getWerkstudent()
+        };
 
-        interestsLijst.save();
-        this.interests = interestsLijst;
+        List<Interests> localInterest = Interests.find(Interests.class, "DIGX=? AND MULTEC=? AND WERKSTUDENT=?", whereArgs);
+
+        if (localInterest.isEmpty()) {
+            interestsLijst.save();
+            localInterest = Interests.find(Interests.class, "DIGX=? AND MULTEC=? AND WERKSTUDENT=?", whereArgs);
+
+        }
+
+        this.interests = localInterest.get(0);
 
     }
 
-    public void setInterests(Interests interests) {
-        this.interests = interests;
+    public Interests getRealInterests() {
+        return this.interests;
     }
 
     public Date getTimestamp() {

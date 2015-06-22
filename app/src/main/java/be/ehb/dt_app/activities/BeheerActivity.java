@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -42,7 +43,7 @@ import be.ehb.dt_app.model.SubscriptionsList;
 import be.ehb.dt_app.model.Teacher;
 import be.ehb.dt_app.model.TeacherList;
 
-public class BeheerActivity extends Activity {
+public class BeheerActivity extends Activity implements View.OnClickListener {
 
     private SharedPreferences preferences;
     private Spinner docentSP, eventSP;
@@ -91,10 +92,11 @@ public class BeheerActivity extends Activity {
 
         eventSP.setAdapter(eventArrayAdapter);
         docentSP.setAdapter(teacherArrayAdapter);
-        int i = 0;
+
         String jsonTeacher = preferences.getString("Teacher", "(iets misgelopen. Neem contact met de ICT dienst.)");
         String jsonEvent = preferences.getString("Event", "(iets misgelopen. Neem contact met de ICT dienst.)");
         ObjectMapper jxson = new ObjectMapper();
+        int i = 0;
         try {
             Teacher docent = jxson.readValue(jsonTeacher, Teacher.class);
             while (!dataLists.get("teachers").get(i).equals(docent))
@@ -108,40 +110,9 @@ public class BeheerActivity extends Activity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        saveBTN.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Teacher docent = (Teacher) docentSP.getSelectedItem();
-                Event event = (Event) eventSP.getSelectedItem();
+        saveBTN.setOnClickListener(this);
 
-                ObjectWriter jxson = new ObjectMapper().writer().withDefaultPrettyPrinter();
-                try {
-                    preferences.edit().putString("Teacher", jxson.writeValueAsString(docent)).apply();
-                    preferences.edit().putString("Event", jxson.writeValueAsString(event)).apply();
-                } catch (JsonProcessingException e) {
-                    e.printStackTrace();
-                }
 
-                int timelapse;
-                switch (timelapseSP.getSelectedItem().toString()) {
-                    case "5 minutes":
-                        timelapse = 300000;
-                        break;
-                    case "10 minutes":
-                        timelapse = 600000;
-                        break;
-                    case "15 minutes":
-                        timelapse = 900000;
-                        break;
-                    default:
-                        timelapse = 300000;
-                        break;
-                }
-
-                preferences.edit().putInt("Screensaver timelapse", timelapse).apply();
-                finish();
-            }
-        });
         ArrayList<String> timelapseValues = new ArrayList<>();
         timelapseValues.add("5 minutes");
         timelapseValues.add("10 minutes");
@@ -150,14 +121,11 @@ public class BeheerActivity extends Activity {
         ArrayAdapter<String> timelapseAdapter = new ArrayAdapter<String>(this, R.layout.ehb_spinner_list_item, R.id.sub_text_seen,
                 timelapseValues);
         i = 0;
-        while (timelapseValues.get(i) != String.valueOf(preferences.getInt("Screensaver timelapse", 300000) / 60000) + " minutes")
+        while (!timelapseValues.get(i).equals(String.valueOf(preferences.getInt("Screensaver timelapse", 300000) / 60000) + " minutes")) {
             i++;
-        timelapseSP.setSelection(i);
+        }
         timelapseSP.setAdapter(timelapseAdapter);
-
-
-
-
+        timelapseSP.setSelection(i);
 
         saveBTN.setEnabled(true);
         eventSP.setEnabled(true);
@@ -182,7 +150,6 @@ public class BeheerActivity extends Activity {
         saveBTN.setEnabled(false);
         syncBTN.setEnabled(false);
         timelapseSP.setEnabled(false);
-
 
 
     }
@@ -243,6 +210,41 @@ public class BeheerActivity extends Activity {
 
     }
 
+    @Override
+    public void onClick(View v) {
+        Teacher docent = (Teacher) docentSP.getSelectedItem();
+        Event event = (Event) eventSP.getSelectedItem();
+
+        ObjectWriter jxson = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        try {
+            preferences.edit().putString("Teacher", jxson.writeValueAsString(docent)).apply();
+            preferences.edit().putString("Event", jxson.writeValueAsString(event)).apply();
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        int timelapse;
+        switch (timelapseSP.getSelectedItem().toString()) {
+            case "5 minutes":
+                timelapse = 300000;
+                break;
+            case "10 minutes":
+                timelapse = 600000;
+                break;
+            case "15 minutes":
+                timelapse = 900000;
+                break;
+            default:
+                timelapse = 300000;
+                break;
+        }
+
+        preferences.edit().putInt("Screensaver timelapse", timelapse).apply();
+        Intent i = new Intent(getApplicationContext(), HomeScreenActivity.class);
+        startActivity(i);
+
+    }
+
 
     private class SynsAsync extends AsyncTask<SubscriptionsList, Void, HashMap<String, ArrayList>> {
 
@@ -268,36 +270,39 @@ public class BeheerActivity extends Activity {
 
             String server = preferences.getString("server", "http://vdabsidin.appspot.com/rest/{required_dataset}");
 
-            HashMap<String, ArrayList> dataLists = new HashMap<>();
-            dataLists.put(
-                    "events",
-                    restTemplate.getForObject(server, EventList.class, "events").getEvents()
-            );
-
-            dataLists.put(
-                    "teachers",
-                    restTemplate.getForObject(server, TeacherList.class, "teachers").getTeachers()
-            );
-            dataLists.put(
-                    "schools",
-                    restTemplate.getForObject(server, SchoolList.class, "schools").getSchools()
-            );
-
             HttpHeaders headers = new HttpHeaders();
             headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
             HttpEntity<Subscription> entity;
-
-            if (!params[0].getSubscriptions().isEmpty()) {
-                for (Subscription subscription : params[0].getSubscriptions()) {
-                    entity = new HttpEntity<>(subscription, headers);
-                    restTemplate.exchange(server, HttpMethod.POST, entity, Subscription.class, "subscription");
+            try {
+                if (!params[0].getSubscriptions().isEmpty()) {
+                    for (Subscription subscription : params[0].getSubscriptions()) {
+                        entity = new HttpEntity<>(subscription, headers);
+                        restTemplate.exchange(server, HttpMethod.POST, entity, Subscription.class, "subscription");
+                    }
                 }
-            }
 
-            dataLists.put(
-                    "subscriptions",
-                    restTemplate.getForObject(server, SubscriptionsList.class, "subscriptions").getSubscriptions()
-            );
+                HashMap<String, ArrayList> dataLists = new HashMap<>();
+                dataLists.put(
+                        "events",
+                        restTemplate.getForObject(server, EventList.class, "events").getEvents()
+                );
+
+                dataLists.put(
+                        "teachers",
+                        restTemplate.getForObject(server, TeacherList.class, "teachers").getTeachers()
+                );
+                dataLists.put(
+                        "schools",
+                        restTemplate.getForObject(server, SchoolList.class, "schools").getSchools()
+                );
+
+                dataLists.put(
+                        "subscriptions",
+                        restTemplate.getForObject(server, SubscriptionsList.class, "subscriptions").getSubscriptions()
+                );
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             return dataLists;
         }

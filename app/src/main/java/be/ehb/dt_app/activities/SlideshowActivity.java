@@ -18,7 +18,7 @@ public class SlideshowActivity extends Activity {
     String path;
     RelativeLayout relativeLayout;
     private int i;
-    private Slideshow task;
+    private Slideshow slideshow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,16 +43,13 @@ public class SlideshowActivity extends Activity {
             }
         });
         //start the slide show
-        task = new Slideshow();
-        task.execute();
+
+        slideshow = new Slideshow();
+
+        AsyncTask.Status status = slideshow.getStatus();
+        slideshow.execute();
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        task.cancel(true);
-
-    }
 
     public class Slideshow extends AsyncTask<Void, Integer, Void>{
 
@@ -94,6 +91,7 @@ public class SlideshowActivity extends Activity {
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
             relativeLayout.setBackgroundDrawable(Drawable.createFromPath(path + "/" + fileNames[values[0]]));
+            cancel(true);
         }
     }
 }

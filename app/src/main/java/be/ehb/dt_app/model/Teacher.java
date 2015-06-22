@@ -53,4 +53,22 @@ public class Teacher extends SugarRecord<Teacher> {
         return name;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Teacher teacher = (Teacher) o;
+
+        if (acadyear != teacher.acadyear) return false;
+        return name.equals(teacher.name);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name.hashCode();
+        result = 31 * result + (int) acadyear;
+        return result;
+    }
 }

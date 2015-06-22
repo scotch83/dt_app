@@ -22,7 +22,6 @@ import be.ehb.dt_app.model.Event;
 import be.ehb.dt_app.model.LocalSubscription;
 import be.ehb.dt_app.model.School;
 import be.ehb.dt_app.model.Subscription;
-import be.ehb.dt_app.model.SubscriptionsList;
 import be.ehb.dt_app.model.Teacher;
 
 /**
@@ -136,6 +135,7 @@ public class Utils {
                 case "subscriptions":
                     for (Subscription subscription : (ArrayList<Subscription>) pair.getValue()) {
                         LocalSubscription lSub = new LocalSubscription(subscription);
+
                         if (LocalSubscription.find(LocalSubscription.class, "SERVER_ID=?", String.valueOf(lSub.getServerId())).isEmpty()) {
                             lSub.save();
                         }
@@ -146,12 +146,5 @@ public class Utils {
         }
     }
 
-    public static void persistNewData(SubscriptionsList newData) {
-        LocalSubscription.deleteAll(LocalSubscription.class);
-        for (Subscription subscription : newData.getSubscriptions()) {
-            LocalSubscription lSub = new LocalSubscription(subscription);
-            lSub.save();
-        }
 
-    }
 }

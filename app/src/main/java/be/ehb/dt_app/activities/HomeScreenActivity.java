@@ -16,7 +16,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 
 import be.ehb.dt_app.R;
-import be.ehb.dt_app.fragments.ScreensaverDialog;
 import be.ehb.dt_app.model.Teacher;
 
 
@@ -28,9 +27,8 @@ public class HomeScreenActivity extends Activity {
     private SharedPreferences preferences;
 
     private long lastUsed = System.currentTimeMillis();
-    private boolean stopScreenSaver;
-    private ScreensaverDialog screensaverDialog;
     private ImageButton ehb_btn;
+    private Thread thread;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,21 +36,38 @@ public class HomeScreenActivity extends Activity {
         setContentView(R.layout.activity_home_screen);
         setupDesign();
         preferences = getSharedPreferences("EHB App SharedPreferences", Context.MODE_PRIVATE);
-        if (!preferences.contains("greetings")) {
+        if (preferences.getBoolean("greetings", true)) {
 
             String jsonTeacher = preferences.getString("Teacher", "(iets misgelopen. Neem contact met de ICT dienst.)");
             ObjectMapper jxson = new ObjectMapper();
             try {
                 Teacher docent = jxson.readValue(jsonTeacher, Teacher.class);
                 Toast.makeText(getApplicationContext(), "Welkom " + docent.getName(), Toast.LENGTH_SHORT).show();
-                preferences.edit().putBoolean("greetings", false);
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            preferences.edit().putBoolean("greetings", false).apply();
 
         }
 
 
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+//        Thread.State state = thread.getState();
+//        if(thread.getState() != Thread.State.NEW)
+//            thread.run();
+//        else
+//            thread.start();
     }
 
     public void startScreensaver(View v) {
@@ -121,59 +136,22 @@ public class HomeScreenActivity extends Activity {
 
         return super.onOptionsItemSelected(item);
     }
-//
-//    @Override
-//    public void onUserInteraction() {
-//        super.onUserInteraction();
-//        lastUsed = System.currentTimeMillis();
-//    }
 
-//    public void startScreensaverThread() {
-//        Thread thread = new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                long idle = 0;
-//                Log.d("started", "the screensaver has started");
-//                do {
-//                    idle = System.currentTimeMillis() - lastUsed;
-//                    Log.d("something", "Application is idle for " + idle + " ms");
-//
-//                    if (idle > 5000) {
-//                        if (!screensaverDialog.isShowing()) {
-//                            runOnUiThread(new Runnable() {
-//                                @Override
-//                                public void run() {
-//
-//                                    screensaverDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-//                                        @Override
-//                                        public void onDismiss(DialogInterface dialog) {
-//                                            stopScreenSaver = false;
-//                                        }
-//                                    });
-//                                    screensaverDialog.show();
-//                                }
-//                            });
-//                        } else {
-//                            runOnUiThread(new Runnable() {
-//                                @Override
-//                                public void run() {
-//                                    screensaverDialog.screensaverIV.setImageBitmap(screensaverDialog.bitmapArray.get(screensaverDialog.nextImage()));
-//                                }
-//                            });
-//
-//                        }
-//                    }
-//                    try {
-//                        Thread.sleep(5000); //check every 5 seconds
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//                while (!stopScreenSaver);
-//            }
-//
-//        });
-//        thread.start();
-//
-//    }
+    @Override
+    public void onUserInteraction() {
+        super.onUserInteraction();
+    }
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        preferences.edit().putBoolean("greetings", true);
+    }
 }
